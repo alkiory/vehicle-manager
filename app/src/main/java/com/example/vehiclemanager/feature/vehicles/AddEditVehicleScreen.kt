@@ -31,9 +31,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.vehiclemanager.core.domain.FuelType
+import com.example.vehiclemanager.core.ui.components.UnsavedChangesGuard
 import com.example.vehiclemanager.core.ui.components.VehicleManagerAppBar
 import com.example.vehiclemanager.core.ui.components.VehicleManagerPrimaryButton
 import com.example.vehiclemanager.core.ui.components.VehicleManagerScreen
+import com.example.vehiclemanager.core.ui.components.rememberUnsavedChangesState
 
 @Composable
 fun AddEditVehicleScreen(
@@ -41,6 +43,7 @@ fun AddEditVehicleScreen(
     viewModel: AddEditVehicleViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val unsavedChangesState = rememberUnsavedChangesState()
 
     LaunchedEffect(uiState.saveCompleted) {
         if (uiState.saveCompleted) {
@@ -49,12 +52,20 @@ fun AddEditVehicleScreen(
         }
     }
 
+    UnsavedChangesGuard(
+        state = unsavedChangesState,
+        isDirty = uiState.isDirty && !uiState.isSaving,
+        onDiscard = onNavigateBack,
+    )
+
     VehicleManagerScreen(
         topBar = {
             VehicleManagerAppBar(
                 title = if (uiState.isEditing) "Editar vehículo" else "Nuevo vehículo",
                 actions = {
-                    TextButton(onClick = onNavigateBack) {
+                    TextButton(onClick = {
+                        if (uiState.isDirty) unsavedChangesState.requestConfirmation() else onNavigateBack()
+                    }) {
                         Text(text = "Cancelar")
                     }
                 },

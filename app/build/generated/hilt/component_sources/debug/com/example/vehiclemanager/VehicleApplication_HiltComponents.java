@@ -8,6 +8,7 @@ import com.example.vehiclemanager.core.data.maintenance.MaintenanceScheduleDataM
 import com.example.vehiclemanager.core.data.theme.ThemeDataModule;
 import com.example.vehiclemanager.core.data.vehicle.ActiveVehicleDataModule;
 import com.example.vehiclemanager.core.data.vehicle.VehicleDataModule;
+import com.example.vehiclemanager.core.ui.navigation.AppScaffoldViewModel_HiltModules;
 import com.example.vehiclemanager.feature.dashboard.DashboardViewModel_HiltModules;
 import com.example.vehiclemanager.feature.fuel.AddFuelViewModel_HiltModules;
 import com.example.vehiclemanager.feature.fuel.FuelDetailViewModel_HiltModules;
@@ -179,6 +180,7 @@ public final class VehicleApplication_HiltComponents {
           AddEditVehicleViewModel_HiltModules.KeyModule.class,
           AddFuelViewModel_HiltModules.KeyModule.class,
           AddMaintenanceViewModel_HiltModules.KeyModule.class,
+          AppScaffoldViewModel_HiltModules.KeyModule.class,
           DashboardViewModel_HiltModules.KeyModule.class,
           FuelDetailViewModel_HiltModules.KeyModule.class,
           FuelHistoryViewModel_HiltModules.KeyModule.class,
@@ -228,6 +230,7 @@ public final class VehicleApplication_HiltComponents {
           AddEditVehicleViewModel_HiltModules.BindsModule.class,
           AddFuelViewModel_HiltModules.BindsModule.class,
           AddMaintenanceViewModel_HiltModules.BindsModule.class,
+          AppScaffoldViewModel_HiltModules.BindsModule.class,
           DashboardViewModel_HiltModules.BindsModule.class,
           FuelDetailViewModel_HiltModules.BindsModule.class,
           FuelHistoryViewModel_HiltModules.BindsModule.class,

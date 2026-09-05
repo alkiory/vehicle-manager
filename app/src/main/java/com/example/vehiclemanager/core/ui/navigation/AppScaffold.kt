@@ -23,13 +23,19 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.NavigationRailItemDefaults
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -45,6 +51,7 @@ import com.example.vehiclemanager.feature.maintenance.AddMaintenanceScreen
 import com.example.vehiclemanager.feature.maintenance.MaintenanceHistoryScreen
 import com.example.vehiclemanager.feature.settings.SettingsScreen
 import com.example.vehiclemanager.feature.statistics.StatisticsScreen
+import com.example.vehiclemanager.R
 import com.example.vehiclemanager.feature.vehicles.AddEditVehicleScreen
 import com.example.vehiclemanager.feature.vehicles.VehiclesScreen
 
@@ -141,18 +148,23 @@ private val primaryDestinations = listOf(
 fun AppScaffold(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
+    viewModel: AppScaffoldViewModel = hiltViewModel(),
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
+    val scaffoldState by viewModel.uiState.collectAsStateWithLifecycle()
 
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         val useNavigationRail = maxWidth >= TABLET_BREAKPOINT_DP.dp
+        val onDestinationSelected: (PrimaryDestination) -> Unit = { destination ->
+            viewModel.onPrimaryDestinationSelected { destination.navigate(navController) }
+        }
 
         if (useNavigationRail) {
             Row(modifier = Modifier.fillMaxSize()) {
                 AppNavigationRail(
                     currentDestination = currentDestination,
-                    onDestinationSelected = { it.navigate(navController) },
+                    onDestinationSelected = onDestinationSelected,
                 )
                 AppNavHost(
                     navController = navController,
@@ -165,7 +177,7 @@ fun AppScaffold(
                 bottomBar = {
                     AppNavigationBar(
                         currentDestination = currentDestination,
-                        onDestinationSelected = { it.navigate(navController) },
+                        onDestinationSelected = onDestinationSelected,
                     )
                 },
             ) { paddingValues ->
@@ -175,6 +187,24 @@ fun AppScaffold(
                 )
             }
         }
+    }
+
+    if (scaffoldState.pendingDestination != null) {
+        AlertDialog(
+            onDismissRequest = viewModel::dismiss,
+            title = { Text(text = stringResource(R.string.unsaved_changes_title)) },
+            text = { Text(text = stringResource(R.string.unsaved_changes_message)) },
+            confirmButton = {
+                Button(onClick = viewModel::confirmDiscard) {
+                    Text(text = stringResource(R.string.unsaved_changes_discard))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = viewModel::dismiss) {
+                    Text(text = stringResource(R.string.unsaved_changes_keep))
+                }
+            },
+        )
     }
 }
 

@@ -33,9 +33,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.vehiclemanager.core.ui.components.UnsavedChangesGuard
 import com.example.vehiclemanager.core.ui.components.VehicleManagerAppBar
 import com.example.vehiclemanager.core.ui.components.VehicleManagerPrimaryButton
 import com.example.vehiclemanager.core.ui.components.VehicleManagerScreen
+import com.example.vehiclemanager.core.ui.components.rememberUnsavedChangesState
 import java.text.DateFormat
 import java.util.Date
 
@@ -46,6 +48,7 @@ fun AddFuelScreen(
     viewModel: AddFuelViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val unsavedChangesState = rememberUnsavedChangesState()
 
     LaunchedEffect(uiState.saveCompleted) {
         if (uiState.saveCompleted) {
@@ -54,12 +57,20 @@ fun AddFuelScreen(
         }
     }
 
+    UnsavedChangesGuard(
+        state = unsavedChangesState,
+        isDirty = uiState.isDirty && !uiState.isSaving,
+        onDiscard = onNavigateBack,
+    )
+
     VehicleManagerScreen(
         topBar = {
             VehicleManagerAppBar(
                 title = "Nuevo repostaje",
                 actions = {
-                    TextButton(onClick = onNavigateBack) {
+                    TextButton(onClick = {
+                        if (uiState.isDirty) unsavedChangesState.requestConfirmation() else onNavigateBack()
+                    }) {
                         Text(text = "Cancelar")
                     }
                 },

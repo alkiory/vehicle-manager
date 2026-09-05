@@ -10,8 +10,13 @@ string backup_exported
 string backup_imported
 string backup_title
 string backup_working
+string data_management_title
 string export_backup
 string import_backup
+string unsaved_changes_discard
+string unsaved_changes_keep
+string unsaved_changes_message
+string unsaved_changes_title
 string vehicles_description
 string vehicles_title
 style Theme.VehicleManager

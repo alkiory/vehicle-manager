@@ -10,8 +10,13 @@
     <string name="backup_imported">Backup imported successfully.</string>
     <string name="backup_title">Data backup</string>
     <string name="backup_working">Processing backup…</string>
+    <string name="data_management_title">Data management</string>
     <string name="export_backup">Export backup</string>
     <string name="import_backup">Import backup</string>
+    <string name="unsaved_changes_discard">Discard</string>
+    <string name="unsaved_changes_keep">Keep editing</string>
+    <string name="unsaved_changes_message">Your changes have not been saved yet. If you leave this screen they will be lost.</string>
+    <string name="unsaved_changes_title">Discard unsaved changes?</string>
     <string name="vehicles_description">Manage your vehicles and keep a portable backup of your data.</string>
     <string name="vehicles_title">Vehicles</string>
     <style name="Theme.VehicleManager" parent="android:style/Theme.Material.Light.NoActionBar"/>

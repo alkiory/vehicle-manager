@@ -22,3 +22,7 @@
 - Implemented EPIC-007 versioned JSON backup/restore, transactional Room replacement, active-vehicle restoration, SAF export/import actions, localized backup strings, accessibility semantics, R8 rules, resource shrinking, and release verification.
 - Added repository-level Android/Gradle ignore rules while preserving Room schema history.
 - Updated Java and Kotlin compilation targets from JDK 17 to JDK 21.
+- Implemented EPIC-007 / TASK-005 refueling dynamic calculator: any two of total/liters/price auto-populate the third with exact minor-unit BigDecimal math, auto-fill refresh and invalid-input clearing, no circular loops; added the total-cost field to the refuel form.
+- Implemented EPIC-007 / TASK-005 unsaved-changes guard: isDirty tracking in the three form ViewModels via a singleton FormDirtyStateHolder, back-gesture interception on form screens, tab/rail navigation interception in AppScaffold, and a shared localized discard-confirmation dialog.
+- Implemented EPIC-007 / TASK-005 backup relocation: removed DataBackupCard from VehiclesScreen and added the Data Management section with export/import actions in SettingsScreen.
+- Implemented EPIC-007 / TASK-005 dashboard metric fix: fuel card shows "Sin datos suficientes" instead of 0.00 L/100km when full-tank history is insufficient.

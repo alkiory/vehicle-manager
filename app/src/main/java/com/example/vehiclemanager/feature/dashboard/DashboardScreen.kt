@@ -264,8 +264,16 @@ private fun QuickSummarySection(
                 accentColor = MaterialTheme.colorScheme.primary,
                 accentContainer = MaterialTheme.colorScheme.primaryContainer,
                 label = "Combustible",
-                value = if (latestFuel == null) "Sin registros" else "${formatDecimalHundredths(consumptionX100 ?: 0)} L/100km",
-                caption = if (latestFuel == null) "Añade tu primer repostaje" else "Consumo medio",
+                value = when {
+                    latestFuel == null -> "Sin registros"
+                    consumptionX100 == null -> "Sin datos suficientes"
+                    else -> "${formatDecimalHundredths(consumptionX100)} L/100km"
+                },
+                caption = when {
+                    latestFuel == null -> "Añade tu primer repostaje"
+                    consumptionX100 == null -> "Se necesitan dos depósitos llenos"
+                    else -> "Consumo medio"
+                },
             )
             QuickSummaryCard(
                 modifier = Modifier.weight(1f),

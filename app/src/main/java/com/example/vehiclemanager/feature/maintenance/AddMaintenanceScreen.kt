@@ -37,9 +37,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.vehiclemanager.core.domain.MaintenanceCategory
+import com.example.vehiclemanager.core.ui.components.UnsavedChangesGuard
 import com.example.vehiclemanager.core.ui.components.VehicleManagerAppBar
 import com.example.vehiclemanager.core.ui.components.VehicleManagerPrimaryButton
 import com.example.vehiclemanager.core.ui.components.VehicleManagerScreen
+import com.example.vehiclemanager.core.ui.components.rememberUnsavedChangesState
 import java.text.DateFormat
 import java.util.Date
 
@@ -50,6 +52,7 @@ fun AddMaintenanceScreen(
     viewModel: AddMaintenanceViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val unsavedChangesState = rememberUnsavedChangesState()
 
     LaunchedEffect(uiState.saveCompleted) {
         if (uiState.saveCompleted) {
@@ -58,12 +61,20 @@ fun AddMaintenanceScreen(
         }
     }
 
+    UnsavedChangesGuard(
+        state = unsavedChangesState,
+        isDirty = uiState.isDirty && !uiState.isSaving,
+        onDiscard = onNavigateBack,
+    )
+
     VehicleManagerScreen(
         topBar = {
             VehicleManagerAppBar(
                 title = if (uiState.isEditing) "Editar servicio" else "Nuevo servicio",
                 actions = {
-                    TextButton(onClick = onNavigateBack) { Text(text = "Cancelar") }
+                    TextButton(onClick = {
+                        if (uiState.isDirty) unsavedChangesState.requestConfirmation() else onNavigateBack()
+                    }) { Text(text = "Cancelar") }
                 },
             )
         },

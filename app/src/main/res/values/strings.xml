@@ -13,5 +13,10 @@
     <string name="backup_imported">Backup imported successfully.</string>
     <string name="backup_working">Processing backup…</string>
     <string name="backup_error">Backup error: %1$s</string>
+    <string name="data_management_title">Data management</string>
     <string name="add_vehicle_content_description">Add vehicle</string>
+    <string name="unsaved_changes_title">Discard unsaved changes?</string>
+    <string name="unsaved_changes_message">Your changes have not been saved yet. If you leave this screen they will be lost.</string>
+    <string name="unsaved_changes_discard">Discard</string>
+    <string name="unsaved_changes_keep">Keep editing</string>
 </resources>

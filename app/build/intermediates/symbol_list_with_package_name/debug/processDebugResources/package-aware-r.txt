@@ -218,6 +218,7 @@ string call_notification_ongoing_text
 string call_notification_screening_text
 string close_drawer
 string close_sheet
+string data_management_title
 string default_error_message
 string default_popup_window_title
 string dropdown_menu
@@ -296,6 +297,10 @@ string tab
 string template_percent
 string tooltip_description
 string tooltip_label
+string unsaved_changes_discard
+string unsaved_changes_keep
+string unsaved_changes_message
+string unsaved_changes_title
 string vehicles_description
 string vehicles_title
 style DialogWindowTheme

@@ -9,6 +9,7 @@ import com.example.vehiclemanager.core.domain.MaintenanceRecord
 import com.example.vehiclemanager.core.domain.MaintenanceRecordRepository
 import com.example.vehiclemanager.core.domain.Vehicle
 import com.example.vehiclemanager.core.domain.VehicleRepository
+import com.example.vehiclemanager.core.ui.navigation.FormDirtyStateHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import javax.inject.Inject
@@ -23,9 +24,11 @@ class AddMaintenanceViewModel @Inject constructor(
     private val activeVehicleRepository: ActiveVehicleRepository,
     private val maintenanceRecordRepository: MaintenanceRecordRepository,
     private val vehicleRepository: VehicleRepository,
+    private val formDirtyStateHolder: FormDirtyStateHolder,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val recordId = savedStateHandle.get<Long>(RECORD_ID_KEY) ?: 0L
+    private val dirtyToken = Any()
     private val _uiState = MutableStateFlow(
         AddMaintenanceUiState(isEditing = recordId != 0L, recordId = recordId),
     )
@@ -33,6 +36,16 @@ class AddMaintenanceViewModel @Inject constructor(
 
     init {
         if (recordId != 0L) loadRecord(recordId) else startCreateMode()
+        viewModelScope.launch {
+            _uiState.collect { state ->
+                formDirtyStateHolder.setDirty(token = dirtyToken, isDirty = state.isDirty)
+            }
+        }
+    }
+
+    override fun onCleared() {
+        formDirtyStateHolder.setDirty(dirtyToken, false)
+        super.onCleared()
     }
 
     fun updateTitle(value: String) = updateForm { copy(title = value) }
@@ -106,7 +119,7 @@ class AddMaintenanceViewModel @Inject constructor(
         }
     }
 
-    fun consumeSaveCompleted() = _uiState.update { it.copy(saveCompleted = false) }
+    fun consumeSaveCompleted() = _uiState.update { it.copy(saveCompleted = false, isDirty = false) }
 
     private fun startCreateMode() {
         viewModelScope.launch {
@@ -155,6 +168,7 @@ class AddMaintenanceViewModel @Inject constructor(
                 errors = MaintenanceValidationErrors(),
                 saveError = null,
                 odometerManuallyEdited = true,
+                isDirty = true,
             )
         }
     }
@@ -178,6 +192,8 @@ data class AddMaintenanceUiState(
     val saveCompleted: Boolean = false,
     val loadError: String? = null,
     val saveError: String? = null,
+    /** True once the user has modified the form (drives the unsaved-changes guard). */
+    val isDirty: Boolean = false,
 )
 
 private fun MaintenanceRecord.toFormData() = MaintenanceFormData(

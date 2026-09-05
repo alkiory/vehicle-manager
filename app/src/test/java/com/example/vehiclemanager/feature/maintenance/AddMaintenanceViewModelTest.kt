@@ -8,6 +8,7 @@ import com.example.vehiclemanager.core.domain.MaintenanceRecordRepository
 import com.example.vehiclemanager.core.domain.Vehicle
 import com.example.vehiclemanager.core.domain.VehicleRepository
 import com.example.vehiclemanager.core.ui.navigation.AddEditMaintenanceRoute
+import com.example.vehiclemanager.core.ui.navigation.FormDirtyStateHolder
 import com.example.vehiclemanager.feature.fuel.MainDispatcherRule
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +31,7 @@ class AddMaintenanceViewModelTest {
             activeVehicleRepository = FakeActiveVehicleRepository(vehicle),
             maintenanceRecordRepository = recordRepository,
             vehicleRepository = FakeVehicleRepository(updatedVehicles),
+            formDirtyStateHolder = FormDirtyStateHolder(),
             savedStateHandle = SavedStateHandle(mapOf("recordId" to null)),
         )
 
@@ -40,6 +42,23 @@ class AddMaintenanceViewModelTest {
 
         assertEquals("Brake service", recordRepository.inserted?.title)
         assertEquals(10_500L, updatedVehicles.single().primaryOdometerKm)
+    }
+
+    @Test
+    fun formEditsMarkTheStateDirtyAndRegisterWithTheHolder() = runTest {
+        val formDirtyStateHolder = FormDirtyStateHolder()
+        val viewModel = AddMaintenanceViewModel(
+            activeVehicleRepository = FakeActiveVehicleRepository(vehicle(10_000)),
+            maintenanceRecordRepository = FakeMaintenanceRepository(),
+            vehicleRepository = FakeVehicleRepository(mutableListOf()),
+            formDirtyStateHolder = formDirtyStateHolder,
+            savedStateHandle = SavedStateHandle(mapOf("recordId" to null)),
+        )
+
+        viewModel.updateTitle("Oil change")
+
+        assertEquals(true, viewModel.uiState.value.isDirty)
+        assertEquals(1, formDirtyStateHolder.dirtyTokens.value.size)
     }
 
     private fun vehicle(odometerKm: Long) = Vehicle(

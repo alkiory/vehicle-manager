@@ -72,6 +72,9 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 *If blocked, state transitions to `BLOCKED` with mandatory `blocked_by` details recorded in `agent/CURRENT.md`.*
 
+> **CRITICAL AGENT MEMORY MANDATE:**
+> Upon starting and completing any task, the agent **MUST** explicitly update the memory files located inside the `agent/` folder (`agent/CURRENT.md`, `agent/CHANGELOG.md`, `agent/MEMORY.md`, and `agent/BACKLOG.md`). The repository files remain the single source of truth across development sessions.
+
 ---
 
 ## 3. Detailed Epics & Task Specification
@@ -84,7 +87,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-001 — Project Foundation & Dependency Configuration
 
-* **Status:** `READY`
+* **Status:** `🟢 DONE`
 * **Objective:** Initialize Android project structure, Gradle version catalog, Hilt, KSP, and Room build dependencies.
 * **Requirements:**
 1. Configure `gradle/libs.versions.toml` with Compose, Hilt, Room, Navigation, and Coroutines versions.
@@ -102,7 +105,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-002 — Base Design System & Material 3 Theme
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Set up M3 color palette, typography, shapes, and theme components.
 * **Requirements:**
 1. Create `Theme.kt`, `Color.kt`, `Type.kt`, `Shape.kt` in `core/ui/theme`.
@@ -118,7 +121,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-003 — Room Base Infrastructure & Converters
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Instantiate Room database and standard type converters.
 * **Requirements:**
 1. Define `VehicleDatabase.kt` extending `RoomDatabase`.
@@ -135,7 +138,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-004 — Navigation Skeleton & Main Scaffold
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Set up type-safe Navigation Compose routes and main app layout.
 * **Requirements:**
 1. Define `@Serializable` routes (`DashboardRoute`, `VehiclesRoute`, `FuelRoute`, `MaintenanceRoute`, `StatsRoute`).
@@ -158,7 +161,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-001 — Vehicle Domain Model & Data Layer
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Define Vehicle domain models, Room entity, DAO, and repository implementation.
 * **Requirements:**
 1. Create pure Kotlin `Vehicle` domain model (`id`, `name`, `make`, `model`, `year`, `licensePlate`, `vin`, `fuelType`, `primaryOdometerKm`).
@@ -176,7 +179,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-002 — Vehicle Entry & Editing Flow
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Implement Compose UI and ViewModels to create and edit vehicles.
 * **Requirements:**
 1. Build `AddEditVehicleViewModel` with validation (year range, required fields, positive odometer).
@@ -193,7 +196,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-003 — Active Vehicle State Management
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Manage currently selected vehicle state across application scope.
 * **Requirements:**
 1. Build `ActiveVehicleRepository` backed by DataStore or database setting.
@@ -215,7 +218,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-001 — Fuel Domain Model & Database Infrastructure
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Create domain models, Room entity, DAO, and repository for fuel records.
 * **Requirements:**
 1. Create `FuelRecord` domain model (`id`, `vehicleId`, `timestampMs`, `odometerKm`, `litersX100`, `pricePerLiterCents`, `totalCostCents`, `isFullTank`, `stationName`, `notes`).
@@ -231,7 +234,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-002 — Refueling Entry UI & Validation
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** UI and ViewModel to log a refuel event.
 * **Requirements:**
 1. Build `AddFuelViewModel` with auto-calculation: `totalCost = liters * pricePerLiter`.
@@ -248,7 +251,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-003 — Fuel History List & Detail View
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Display chronologically sorted refuel entries for active vehicle.
 * **Requirements:**
 1. Implement `FuelHistoryScreen` with LazyColumn displaying refuel cards.
@@ -265,7 +268,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-004 — Fuel Consumption Engine
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Build algorithm to compute consumption ($L/100\text{ km}$) across full-tank sequences.
 * **Requirements:**
 1. Implement `CalculateFuelConsumptionUseCase`.
@@ -288,7 +291,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-001 — Maintenance Domain & Data Infrastructure
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Data models and persistence layer for service records and categories.
 * **Requirements:**
 1. Create `MaintenanceRecord` (`id`, `vehicleId`, `title`, `category`, `costCents`, `odometerKm`, `timestampMs`, `notes`, `performedBy`).
@@ -304,7 +307,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-002 — Service Record Entry & History UI
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Form interface and history timeline for logged maintenance.
 * **Requirements:**
 1. Implement `AddMaintenanceScreen` with category selector and cost logging.
@@ -319,7 +322,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-003 — Service Reminders & Schedule Engine
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Calculate upcoming and overdue service intervals based on distance or time.
 * **Requirements:**
 1. Create `MaintenanceSchedule` entity (`serviceTitle`, `intervalKm`, `intervalMonths`, `lastPerformedKm`, `lastPerformedDateMs`).
@@ -340,7 +343,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-001 — Dashboard Aggregation Use Cases
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Combine domain streams for UI representation.
 * **Requirements:**
 1. Build `GetDashboardSummaryUseCase` combining `ActiveVehicle`, latest `FuelRecord`, average consumption, and urgent maintenance alerts.
@@ -355,7 +358,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-002 — Dashboard UI & Quick Action Floating Hub
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Compose dashboard home layout.
 * **Requirements:**
 1. Build `DashboardScreen` displaying:
@@ -381,7 +384,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-001 — Analytics Calculations Engine
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Pure Kotlin analytics engine for period-based financial and mileage aggregations.
 * **Requirements:**
 1. Implement `CalculateVehicleStatsUseCase` with time period filtering (Last 30 Days, Last 6 Months, Year-to-Date, All Time).
@@ -396,7 +399,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-002 — Chart Visualizations Screen
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Native Compose canvas charts for trends.
 * **Requirements:**
 1. Implement custom Compose canvas bar/line charts for Fuel Price Trends and Monthly Expenditure.
@@ -411,13 +414,13 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 ---
 
-### EPIC-007 — Polish, Data Export & Release Preparation
+### EPIC-007 — Polish, Data Export & Refactoring Iteration
 
-**Objective:** Implement data portability (JSON import/export), local backup/restore, accessibility, and release build verification.
+**Objective:** Implement data portability (JSON import/export), local backup/restore, accessibility, release build verification, and smart form interactions.
 
 #### TASK-001 — JSON Backup & Restore Engine
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Allow full database import/export for user data ownership.
 * **Requirements:**
 1. Implement `ExportDatabaseUseCase` converting Room records to versioned JSON schema.
@@ -433,7 +436,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-002 — Accessibility, Localization & UI Polish
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Ensure accessibility compliance and localized string resources.
 * **Requirements:**
 1. Add content descriptions to all interactive iconography and chart canvas elements.
@@ -449,7 +452,7 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 #### TASK-003 — Release Build Verification & Audit
 
-* **Status:** `BACKLOG`
+* **Status:** `🟢 DONE`
 * **Objective:** Final release readiness audit.
 * **Requirements:**
 1. Configure ProGuard/R8 rules for Room and Kotlinx Serialization.
@@ -461,5 +464,41 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 
 * **Verification:** `./gradlew check assembleRelease`
+
+#### TASK-005 — Form Auto-Calculations, Unsaved Changes Guard, Backup Migration & Metric Cards Fix
+
+* **Status:** `🟢 DONE`
+* **Objective:** Implement smart refueling calculations, unsaved form navigation guards, relocate backup UI to settings, and fix dashboard placeholder metrics.
+* **Requirements:**
+1. **Refueling Dynamic Calculator (`AddFuelViewModel`):**
+* Track user input across `Total Cost`, `Liters`, and `Price per Liter`.
+* Dynamically calculate and populate the missing 3rd value whenever any 2 fields are entered by the user ($\text{Total} = \text{Liters} \times \text{Price/L}$).
+
+
+2. **Unsaved Changes Confirmation Dialog (`AppScaffold` & Form Screens):**
+* Track `isDirty` state in active form ViewModels (`AddFuelViewModel`, `AddEditVehicleViewModel`, `AddMaintenanceViewModel`).
+* Intercept bottom tab or top navigation when `isDirty == true` and display an `AlertDialog` asking to confirm discarding unsaved changes.
+
+
+3. **Settings Backup Relocation:**
+* Remove `DataBackupCard` from `VehiclesScreen`.
+* Add a dedicated **Data Management** section in `SettingsScreen` with "Export Backup" and "Import Backup" actions bound to `VehicleBackupViewModel`.
+
+
+4. **Dashboard Zero-Value Metric Fix:**
+* Fix `DashboardScreen` / `DashboardViewModel` metric presentation: display **"Sin datos suficientes"** instead of formatting `0.00 L/100km` when insufficient full-tank history exists.
+
+
+
+
+* **Acceptance Criteria:**
+* Auto-calculation populates the 3rd field correctly without circular update loops.
+* Navigating away from a partially filled form triggers the confirmation dialog.
+* Backup & restore functions are fully accessible from `SettingsScreen`.
+* Dashboard fuel card cleanly states "Sin datos suficientes" when missing data.
+* All unit tests pass cleanly via `./gradlew testDebugUnitTest`.
+
+
+* **Verification:** `./gradlew testDebugUnitTest assembleDebug`
 
 ---

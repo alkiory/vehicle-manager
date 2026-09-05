@@ -8,6 +8,7 @@ import com.example.vehiclemanager.core.ui.navigation.AddEditVehicleRoute
 import com.example.vehiclemanager.core.domain.FuelType
 import com.example.vehiclemanager.core.domain.Vehicle
 import com.example.vehiclemanager.core.domain.VehicleRepository
+import com.example.vehiclemanager.core.ui.navigation.FormDirtyStateHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import javax.inject.Inject
@@ -20,10 +21,12 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class AddEditVehicleViewModel @Inject constructor(
     private val vehicleRepository: VehicleRepository,
+    private val formDirtyStateHolder: FormDirtyStateHolder,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val route = savedStateHandle.toRoute<AddEditVehicleRoute>()
     private val currentYear = LocalDate.now().year
+    private val dirtyToken = Any()
     private val _uiState = MutableStateFlow(
         AddEditVehicleUiState(isEditing = route.vehicleId != null),
     )
@@ -32,6 +35,16 @@ class AddEditVehicleViewModel @Inject constructor(
     init {
         route.vehicleId?.let(::loadVehicle)
             ?: _uiState.update { it.copy(isLoading = false) }
+        viewModelScope.launch {
+            _uiState.collect { state ->
+                formDirtyStateHolder.setDirty(dirtyToken, state.isDirty)
+            }
+        }
+    }
+
+    override fun onCleared() {
+        formDirtyStateHolder.setDirty(dirtyToken, false)
+        super.onCleared()
     }
 
     fun updateName(value: String) = updateForm { copy(name = value) }
@@ -81,7 +94,7 @@ class AddEditVehicleViewModel @Inject constructor(
     }
 
     fun consumeSaveCompleted() {
-        _uiState.update { it.copy(saveCompleted = false) }
+        _uiState.update { it.copy(saveCompleted = false, isDirty = false) }
     }
 
     private fun loadVehicle(vehicleId: Long) {
@@ -104,6 +117,7 @@ class AddEditVehicleViewModel @Inject constructor(
         _uiState.update { state ->
             state.copy(
                 form = state.form.transform(),
+                isDirty = true,
                 errors = VehicleValidationErrors(),
                 saveError = null,
             )
@@ -121,6 +135,8 @@ data class AddEditVehicleUiState(
     val saveCompleted: Boolean = false,
     val loadError: String? = null,
     val saveError: String? = null,
+    /** True once the user has modified the form (drives the unsaved-changes guard). */
+    val isDirty: Boolean = false,
 )
 
 private fun VehicleFormData.toVehicle(id: Long): Vehicle = Vehicle(

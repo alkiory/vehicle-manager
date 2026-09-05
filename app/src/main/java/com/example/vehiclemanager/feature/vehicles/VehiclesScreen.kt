@@ -1,18 +1,13 @@
 package com.example.vehiclemanager.feature.vehicles
 
-import android.content.Context
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,12 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Backup
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.CloudDownload
-import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.DirectionsCar
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -36,24 +26,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.vehiclemanager.R
 import com.example.vehiclemanager.core.domain.Vehicle
 import com.example.vehiclemanager.core.ui.components.VehicleManagerAppBar
 import com.example.vehiclemanager.core.ui.components.VehicleManagerScreen
-import kotlinx.coroutines.launch
 
 @Composable
 fun VehiclesScreen(
@@ -61,43 +45,8 @@ fun VehiclesScreen(
     onOpenVehicle: (Long) -> Unit = {},
     viewModel: VehicleBackupViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
     val vehiclesState by viewModel.vehicles.collectAsState()
     val activeVehicleId by viewModel.activeVehicleId.collectAsState()
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-
-    val createBackupLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.CreateDocument("application/json"),
-    ) { uri ->
-        val json = uiState.exportJson
-        if (uri != null && json != null) {
-            scope.launch {
-                writeBackup(context, uri, json)
-                viewModel.consumeExportJson()
-            }
-        }
-    }
-    val openBackupLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument(),
-    ) { uri ->
-        if (uri != null) {
-            scope.launch {
-                val json = readBackup(context, uri)
-                if (json == null) {
-                    viewModel.importBackup("invalid")
-                } else {
-                    viewModel.importBackup(json)
-                }
-            }
-        }
-    }
-
-    LaunchedEffect(uiState.exportJson) {
-        if (uiState.exportJson != null) {
-            createBackupLauncher.launch(context.getString(R.string.backup_export_filename))
-        }
-    }
 
     VehicleManagerScreen(
         topBar = { VehicleManagerAppBar(title = "Vehículos") },
@@ -114,7 +63,7 @@ fun VehiclesScreen(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(20.dp),
+            contentPadding = PaddingValues(20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
@@ -130,7 +79,7 @@ fun VehiclesScreen(
                         fontWeight = FontWeight.Bold,
                     )
                     Text(
-                        text = "Gestiona la información, el historial y los datos de respaldo de tu flota.",
+                        text = "Gestiona la información y el historial de tu flota.",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp),
@@ -149,36 +98,6 @@ fun VehiclesScreen(
                         isActive = vehicle.id == activeVehicleId,
                         onClick = { onOpenVehicle(vehicle.id) },
                         onActivate = { viewModel.setActiveVehicle(vehicle.id) },
-                    )
-                }
-            }
-            item {
-                BackupCard(
-                    isBusy = uiState.isBusy,
-                    onExport = viewModel::exportBackup,
-                    onImport = { openBackupLauncher.launch(arrayOf("application/json", "text/json")) },
-                )
-            }
-            item {
-                when {
-                    uiState.importCompleted -> Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.tertiary,
-                            modifier = Modifier.size(18.dp),
-                        )
-                        Text(
-                            text = "Backup importado correctamente.",
-                            color = MaterialTheme.colorScheme.tertiary,
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(start = 6.dp),
-                        )
-                    }
-                    uiState.error != null -> Text(
-                        text = stringResource(R.string.backup_error, uiState.error.orEmpty()),
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }
@@ -329,84 +248,3 @@ private fun StatusPill() {
         )
     }
 }
-
-@Composable
-private fun BackupCard(
-    isBusy: Boolean,
-    onExport: () -> Unit,
-    onImport: () -> Unit,
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-    ) {
-        Column(modifier = Modifier.padding(20.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(36.dp)
-                        .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(10.dp)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Backup,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(18.dp),
-                    )
-                }
-                Text(
-                    text = stringResource(R.string.backup_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 10.dp),
-                )
-            }
-            Text(
-                text = stringResource(R.string.backup_description),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 8.dp),
-            )
-
-            if (isBusy) {
-                CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally))
-                Text(
-                    text = stringResource(R.string.backup_working),
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 4.dp),
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            } else {
-                Button(
-                    onClick = onExport,
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp).semantics {
-                        contentDescription = "Exportar backup de datos"
-                    },
-                ) {
-                    Icon(imageVector = Icons.Default.CloudUpload, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Text(text = "  " + stringResource(R.string.export_backup))
-                }
-                OutlinedButton(
-                    onClick = onImport,
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp).semantics {
-                        contentDescription = "Importar backup de datos"
-                    },
-                ) {
-                    Icon(imageVector = Icons.Default.CloudDownload, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Text(text = "  " + stringResource(R.string.import_backup))
-                }
-            }
-        }
-    }
-}
-
-private fun writeBackup(context: Context, uri: Uri, json: String) {
-    context.contentResolver.openOutputStream(uri)?.bufferedWriter()?.use { writer ->
-        writer.write(json)
-    }
-}
-
-private fun readBackup(context: Context, uri: Uri): String? = runCatching {
-    context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
-}.getOrNull()

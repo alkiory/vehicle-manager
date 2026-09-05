@@ -6,11 +6,11 @@ import com.example.vehiclemanager.core.domain.ActiveVehicleRepository
 import com.example.vehiclemanager.core.domain.FuelRecord
 import com.example.vehiclemanager.core.domain.FuelRecordRepository
 import com.example.vehiclemanager.core.domain.Vehicle
+import com.example.vehiclemanager.core.ui.navigation.FormDirtyStateHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -24,7 +24,9 @@ import kotlinx.coroutines.launch
 class AddFuelViewModel @Inject constructor(
     private val activeVehicleRepository: ActiveVehicleRepository,
     private val fuelRecordRepository: FuelRecordRepository,
+    private val formDirtyStateHolder: FormDirtyStateHolder,
 ) : ViewModel() {
+    private val dirtyToken = Any()
     private val _uiState = MutableStateFlow(AddFuelUiState())
     val uiState: StateFlow<AddFuelUiState> = _uiState.asStateFlow()
 
@@ -35,6 +37,11 @@ class AddFuelViewModel @Inject constructor(
         }
 
     init {
+        viewModelScope.launch {
+            _uiState.collect { state ->
+                formDirtyStateHolder.setDirty(dirtyToken, state.isDirty)
+            }
+        }
         viewModelScope.launch {
             combine(
                 activeVehicleRepository.activeVehicle,
@@ -72,15 +79,18 @@ class AddFuelViewModel @Inject constructor(
             state.copy(
                 form = state.form.copy(odometerKm = value),
                 odometerManuallyEdited = true,
+                isDirty = true,
                 errors = FuelValidationErrors(),
                 saveError = null,
             )
         }
     }
 
-    fun updateLiters(value: String) = updateForm { copy(liters = value) }
+    fun updateLiters(value: String) = updateFuelAmounts(lastEditedField = FuelAmountField.LITERS, value = value)
 
-    fun updatePricePerLiter(value: String) = updateForm { copy(pricePerLiter = value) }
+    fun updatePricePerLiter(value: String) = updateFuelAmounts(lastEditedField = FuelAmountField.PRICE_PER_LITER, value = value)
+
+    fun updateTotalCost(value: String) = updateFuelAmounts(lastEditedField = FuelAmountField.TOTAL_COST, value = value)
 
     fun updateFullTank(value: Boolean) = updateForm { copy(isFullTank = value) }
 
@@ -102,10 +112,7 @@ class AddFuelViewModel @Inject constructor(
 
         val litersX100 = litersToX100(state.form.liters)
         val pricePerLiterCents = calculatePricePerLiterCents(state.form.pricePerLiter)
-        val totalCostCents = calculateTotalCostCents(
-            liters = state.form.liters,
-            pricePerLiter = state.form.pricePerLiter,
-        )
+        val totalCostCents = calculateTotalCostCents(state.form.totalCost)
         if (litersX100 == null || pricePerLiterCents == null || totalCostCents == null) {
             _uiState.update {
                 it.copy(
@@ -146,13 +153,83 @@ class AddFuelViewModel @Inject constructor(
     }
 
     fun consumeSaveCompleted() {
-        _uiState.update { it.copy(saveCompleted = false) }
+        _uiState.update { it.copy(saveCompleted = false, isDirty = false) }
+    }
+
+    override fun onCleared() {
+        formDirtyStateHolder.setDirty(dirtyToken, false)
+        super.onCleared()
     }
 
     private fun updateForm(transform: FuelFormData.() -> FuelFormData) {
         _uiState.update { state ->
             state.copy(
                 form = state.form.transform(),
+                isDirty = true,
+                errors = FuelValidationErrors(),
+                saveError = null,
+            )
+        }
+    }
+
+    /**
+     * Dynamic refuel calculator: whenever any two of the three amount fields
+     * (liters, price per liter, total cost) hold valid positive values entered
+     * by the user, the missing third field is computed automatically.
+     *
+     * Only user edits feed the calculation, so an auto-filled value never
+     * re-triggers it and no circular update loop is possible.
+     */
+    private fun updateFuelAmounts(lastEditedField: FuelAmountField, value: String) {
+        _uiState.update { state ->
+            val edited = state.fuelAmountsEdited + lastEditedField
+            val liters = if (lastEditedField == FuelAmountField.LITERS) value else state.form.liters
+            val pricePerLiter = if (lastEditedField == FuelAmountField.PRICE_PER_LITER) value else state.form.pricePerLiter
+            val totalCost = if (lastEditedField == FuelAmountField.TOTAL_COST) value else state.form.totalCost
+
+            val missingField = edited.missingAmountField()
+            val computed = when (missingField) {
+                FuelAmountField.LITERS -> computeLiters(pricePerLiter, totalCost)
+                FuelAmountField.PRICE_PER_LITER -> computePricePerLiterCents(liters, totalCost)
+                FuelAmountField.TOTAL_COST -> computeTotalCostFromParts(liters, pricePerLiter)
+                null -> null
+            }
+
+            var form = state.form.copy(
+                liters = liters,
+                pricePerLiter = pricePerLiter,
+                totalCost = totalCost,
+                autoFilledField = when {
+                    computed != null -> missingField
+                    state.form.autoFilledField != null -> state.form.autoFilledField
+                    else -> null
+                },
+            )
+            if (computed != null) {
+                form = when (missingField) {
+                    FuelAmountField.LITERS -> form.copy(liters = computed.toUserText())
+                    FuelAmountField.PRICE_PER_LITER -> form.copy(pricePerLiter = computed.toUserText())
+                    FuelAmountField.TOTAL_COST -> form.copy(totalCost = computed.toUserText())
+                    null -> form
+                }
+            } else {
+                // Con menos de dos entradas válidas, el campo autocalculado se limpia.
+                val stale = form.autoFilledField
+                if (stale != null && stale != lastEditedField) {
+                    form = when (stale) {
+                        FuelAmountField.LITERS -> form.copy(liters = "")
+                        FuelAmountField.PRICE_PER_LITER -> form.copy(pricePerLiter = "")
+                        FuelAmountField.TOTAL_COST -> form.copy(totalCost = "")
+                        else -> form
+                    }
+                    form = form.copy(autoFilledField = null)
+                }
+            }
+
+            state.copy(
+                form = form,
+                fuelAmountsEdited = edited,
+                isDirty = true,
                 errors = FuelValidationErrors(),
                 saveError = null,
             )
@@ -171,4 +248,8 @@ data class AddFuelUiState(
     val isSaving: Boolean = false,
     val saveCompleted: Boolean = false,
     val saveError: String? = null,
+    /** Amount fields the user has typed into during this session. */
+    val fuelAmountsEdited: Set<FuelAmountField> = emptySet(),
+    /** True once the user has modified the form (drives the unsaved-changes guard). */
+    val isDirty: Boolean = false,
 )
