@@ -38,6 +38,8 @@ class MaintenanceScheduleRepositoryTest {
             object : MaintenanceScheduleDao {
                 override fun observeForVehicle(vehicleId: Long) = flowOf(listOf(schedule.toEntity()))
                 override suspend fun findById(id: Long) = schedule.toEntity()
+                override suspend fun findAll() = listOf(schedule.toEntity())
+                override suspend fun deleteAll() = Unit
                 override suspend fun insert(schedule: MaintenanceScheduleEntity) = schedule.id
                 override suspend fun update(schedule: MaintenanceScheduleEntity) = Unit
                 override suspend fun delete(schedule: MaintenanceScheduleEntity) = Unit

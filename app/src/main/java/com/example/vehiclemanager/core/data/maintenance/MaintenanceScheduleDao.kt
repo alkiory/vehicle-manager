@@ -15,6 +15,12 @@ interface MaintenanceScheduleDao {
     @Query("SELECT * FROM maintenance_schedules WHERE id = :id")
     suspend fun findById(id: Long): MaintenanceScheduleEntity?
 
+    @Query("SELECT * FROM maintenance_schedules ORDER BY id ASC")
+    suspend fun findAll(): List<MaintenanceScheduleEntity>
+
+    @Query("DELETE FROM maintenance_schedules")
+    suspend fun deleteAll()
+
     @Insert
     suspend fun insert(schedule: MaintenanceScheduleEntity): Long
 

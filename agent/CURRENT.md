@@ -1,18 +1,18 @@
 # Current Task
 
-# Current Task
-
-- **Task:** EPIC-006 — Statistics & Analytics Engine
+- **Task:** EPIC-007 — Polish, Data Export & Release Preparation
 - **State:** DONE
-- **Objective:** Generate offline period-based financial, mileage, consumption, and fuel-price analytics.
-- **Completed:** Added `CalculateVehicleStatsUseCase`, period filtering, integer-safe ownership metrics, weighted monthly fuel prices, monthly expenditure series, reactive `StatisticsViewModel`, period chips, metric cards, Canvas charts, and tests.
+- **Objective:** Provide validated JSON backup/restore, SAF data portability, accessibility polish, localization groundwork, and release verification.
+- **Completed:** Added versioned full-database JSON export/import with validation and transactional Room replacement, active-vehicle restoration, SAF file actions, localized backup strings, chart/action accessibility descriptions, R8 rules, resource shrinking, and release build configuration.
 
 ## Verification
 
-- `./gradlew testDebugUnitTest compileDebugAndroidTestKotlin --no-daemon --max-workers=1 --console=plain` passes.
-- JVM tests cover period boundaries, all-time aggregation, total cost, cost per kilometer, average monthly spend, distance, weighted fuel prices, chart series, zero-distance safety, and reactive period selection.
-- Android test sources compile successfully; instrumented execution still requires a connected Android device or emulator.
+- `./gradlew check assembleRelease --no-daemon --max-workers=1 --console=plain` passes.
+- JVM tests cover backup round-trip preservation and rejection before mutation.
+- Debug lint/check and Android test-source compilation pass.
+- Release R8 minification, resource shrinking, and APK assembly pass.
+- Gradle reports a non-fatal dependency native-library strip warning for `libandroidx.graphics.path.so` and `libdatastore_shared_counter.so`; those libraries are packaged unchanged.
 
 ## Next Task
 
-- EPIC-007 — Polish, Data Export & Release Preparation
+- Project release-ready; no backlog items remain.

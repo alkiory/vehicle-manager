@@ -56,6 +56,8 @@ class MaintenanceRecordRepositoryTest {
             object : MaintenanceRecordDao {
                 override fun observeForVehicle(vehicleId: Long) = flowOf(listOf(record.toEntity()))
                 override suspend fun findById(id: Long) = record.toEntity()
+                override suspend fun findAll() = listOf(record.toEntity())
+                override suspend fun deleteAll() = Unit
                 override suspend fun insert(record: MaintenanceRecordEntity) = record.id
                 override suspend fun update(record: MaintenanceRecordEntity) = Unit
                 override suspend fun delete(record: MaintenanceRecordEntity) = Unit

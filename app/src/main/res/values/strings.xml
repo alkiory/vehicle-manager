@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Vehicle Manager</string>
+    <string name="vehicles_title">Vehicles</string>
+    <string name="vehicles_description">Manage your vehicles and keep a portable backup of your data.</string>
+    <string name="add_vehicle">Add vehicle</string>
+    <string name="backup_title">Data backup</string>
+    <string name="backup_description">Export your vehicle data to a JSON file or restore a previous backup.</string>
+    <string name="export_backup">Export backup</string>
+    <string name="import_backup">Import backup</string>
+    <string name="backup_export_filename">vehicle-manager-backup.json</string>
+    <string name="backup_exported">Backup exported successfully.</string>
+    <string name="backup_imported">Backup imported successfully.</string>
+    <string name="backup_working">Processing backup…</string>
+    <string name="backup_error">Backup error: %1$s</string>
+    <string name="add_vehicle_content_description">Add vehicle</string>
 </resources>

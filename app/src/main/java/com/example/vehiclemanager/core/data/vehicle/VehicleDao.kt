@@ -15,6 +15,11 @@ interface VehicleDao {
     @Query("SELECT * FROM vehicles WHERE id = :id")
     suspend fun findById(id: Long): VehicleEntity?
 
+    @Query("SELECT * FROM vehicles ORDER BY id ASC")
+    suspend fun findAll(): List<VehicleEntity>
+
+    @Query("DELETE FROM vehicles")
+    suspend fun deleteAll()
     @Insert
     suspend fun insert(vehicle: VehicleEntity): Long
 

@@ -15,6 +15,12 @@ interface MaintenanceRecordDao {
     @Query("SELECT * FROM maintenance_records WHERE id = :id")
     suspend fun findById(id: Long): MaintenanceRecordEntity?
 
+    @Query("SELECT * FROM maintenance_records ORDER BY id ASC")
+    suspend fun findAll(): List<MaintenanceRecordEntity>
+
+    @Query("DELETE FROM maintenance_records")
+    suspend fun deleteAll()
+
     @Insert
     suspend fun insert(record: MaintenanceRecordEntity): Long
 

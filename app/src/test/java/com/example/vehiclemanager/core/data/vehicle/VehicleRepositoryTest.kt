@@ -70,6 +70,10 @@ class VehicleRepositoryTest {
 
         override suspend fun findById(id: Long): VehicleEntity? = entities.firstOrNull { it.id == id }
 
+        override suspend fun findAll(): List<VehicleEntity> = entities
+
+        override suspend fun deleteAll() = Unit
+
         override suspend fun insert(vehicle: VehicleEntity): Long = vehicle.id
 
         override suspend fun update(vehicle: VehicleEntity) = Unit

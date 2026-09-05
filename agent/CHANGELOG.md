@@ -19,5 +19,6 @@
 - Implemented EPIC-004 / TASK-003 maintenance schedules with vehicle ownership, distance/time intervals, Room version 4 migration, cascade deletion, configurable due-soon evaluation, and reminder status tests.
 - Implemented EPIC-005 dashboard aggregation, active-vehicle health cards, fuel economy summary, maintenance alert banner, responsive layout, and quick-action hub.
 - Implemented EPIC-006 statistics calculations, period filtering, cost and mileage metrics, weighted fuel-price trends, monthly expenditure series, reactive statistics state, period chips, and Canvas charts.
+- Implemented EPIC-007 versioned JSON backup/restore, transactional Room replacement, active-vehicle restoration, SAF export/import actions, localized backup strings, accessibility semantics, R8 rules, resource shrinking, and release verification.
 - Added repository-level Android/Gradle ignore rules while preserving Room schema history.
 - Updated Java and Kotlin compilation targets from JDK 17 to JDK 21.

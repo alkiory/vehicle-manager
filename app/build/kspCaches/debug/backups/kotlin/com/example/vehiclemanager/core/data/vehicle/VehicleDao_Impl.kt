@@ -9,6 +9,7 @@ import androidx.room.EntityInsertionAdapter
 import androidx.room.RoomDatabase
 import androidx.room.RoomSQLiteQuery
 import androidx.room.RoomSQLiteQuery.Companion.acquire
+import androidx.room.SharedSQLiteStatement
 import androidx.room.util.createCancellationSignal
 import androidx.room.util.getColumnIndexOrThrow
 import androidx.room.util.query
@@ -43,6 +44,8 @@ public class VehicleDao_Impl(
   private val __deletionAdapterOfVehicleEntity: EntityDeletionOrUpdateAdapter<VehicleEntity>
 
   private val __updateAdapterOfVehicleEntity: EntityDeletionOrUpdateAdapter<VehicleEntity>
+
+  private val __preparedStmtOfDeleteAll: SharedSQLiteStatement
   init {
     this.__db = __db
     this.__insertionAdapterOfVehicleEntity = object : EntityInsertionAdapter<VehicleEntity>(__db) {
@@ -107,6 +110,12 @@ public class VehicleDao_Impl(
         statement.bindLong(10, entity.id)
       }
     }
+    this.__preparedStmtOfDeleteAll = object : SharedSQLiteStatement(__db) {
+      public override fun createQuery(): String {
+        val _query: String = "DELETE FROM vehicles"
+        return _query
+      }
+    }
   }
 
   public override suspend fun insert(vehicle: VehicleEntity): Long = CoroutinesRoom.execute(__db,
@@ -145,6 +154,24 @@ public class VehicleDao_Impl(
         __db.setTransactionSuccessful()
       } finally {
         __db.endTransaction()
+      }
+    }
+  })
+
+  public override suspend fun deleteAll(): Unit = CoroutinesRoom.execute(__db, true, object :
+      Callable<Unit> {
+    public override fun call() {
+      val _stmt: SupportSQLiteStatement = __preparedStmtOfDeleteAll.acquire()
+      try {
+        __db.beginTransaction()
+        try {
+          _stmt.executeUpdateDelete()
+          __db.setTransactionSuccessful()
+        } finally {
+          __db.endTransaction()
+        }
+      } finally {
+        __preparedStmtOfDeleteAll.release(_stmt)
       }
     }
   })
@@ -278,6 +305,73 @@ public class VehicleDao_Impl(
                 VehicleEntity(_tmpId,_tmpName,_tmpMake,_tmpModel,_tmpYear,_tmpLicensePlate,_tmpVin,_tmpFuelType,_tmpPrimaryOdometerKm)
           } else {
             _result = null
+          }
+          return _result
+        } finally {
+          _cursor.close()
+          _statement.release()
+        }
+      }
+    })
+  }
+
+  public override suspend fun findAll(): List<VehicleEntity> {
+    val _sql: String = "SELECT * FROM vehicles ORDER BY id ASC"
+    val _statement: RoomSQLiteQuery = acquire(_sql, 0)
+    val _cancellationSignal: CancellationSignal? = createCancellationSignal()
+    return execute(__db, false, _cancellationSignal, object : Callable<List<VehicleEntity>> {
+      public override fun call(): List<VehicleEntity> {
+        val _cursor: Cursor = query(__db, _statement, false, null)
+        try {
+          val _cursorIndexOfId: Int = getColumnIndexOrThrow(_cursor, "id")
+          val _cursorIndexOfName: Int = getColumnIndexOrThrow(_cursor, "name")
+          val _cursorIndexOfMake: Int = getColumnIndexOrThrow(_cursor, "make")
+          val _cursorIndexOfModel: Int = getColumnIndexOrThrow(_cursor, "model")
+          val _cursorIndexOfYear: Int = getColumnIndexOrThrow(_cursor, "year")
+          val _cursorIndexOfLicensePlate: Int = getColumnIndexOrThrow(_cursor, "licensePlate")
+          val _cursorIndexOfVin: Int = getColumnIndexOrThrow(_cursor, "vin")
+          val _cursorIndexOfFuelType: Int = getColumnIndexOrThrow(_cursor, "fuelType")
+          val _cursorIndexOfPrimaryOdometerKm: Int = getColumnIndexOrThrow(_cursor,
+              "primaryOdometerKm")
+          val _result: MutableList<VehicleEntity> = ArrayList<VehicleEntity>(_cursor.getCount())
+          while (_cursor.moveToNext()) {
+            val _item: VehicleEntity
+            val _tmpId: Long
+            _tmpId = _cursor.getLong(_cursorIndexOfId)
+            val _tmpName: String
+            _tmpName = _cursor.getString(_cursorIndexOfName)
+            val _tmpMake: String
+            _tmpMake = _cursor.getString(_cursorIndexOfMake)
+            val _tmpModel: String
+            _tmpModel = _cursor.getString(_cursorIndexOfModel)
+            val _tmpYear: Int
+            _tmpYear = _cursor.getInt(_cursorIndexOfYear)
+            val _tmpLicensePlate: String
+            _tmpLicensePlate = _cursor.getString(_cursorIndexOfLicensePlate)
+            val _tmpVin: String?
+            if (_cursor.isNull(_cursorIndexOfVin)) {
+              _tmpVin = null
+            } else {
+              _tmpVin = _cursor.getString(_cursorIndexOfVin)
+            }
+            val _tmpFuelType: FuelType
+            val _tmp: String?
+            if (_cursor.isNull(_cursorIndexOfFuelType)) {
+              _tmp = null
+            } else {
+              _tmp = _cursor.getString(_cursorIndexOfFuelType)
+            }
+            val _tmp_1: FuelType? = __converters.nameToFuelType(_tmp)
+            if (_tmp_1 == null) {
+              error("Expected NON-NULL 'com.example.vehiclemanager.core.domain.FuelType', but it was NULL.")
+            } else {
+              _tmpFuelType = _tmp_1
+            }
+            val _tmpPrimaryOdometerKm: Long
+            _tmpPrimaryOdometerKm = _cursor.getLong(_cursorIndexOfPrimaryOdometerKm)
+            _item =
+                VehicleEntity(_tmpId,_tmpName,_tmpMake,_tmpModel,_tmpYear,_tmpLicensePlate,_tmpVin,_tmpFuelType,_tmpPrimaryOdometerKm)
+            _result.add(_item)
           }
           return _result
         } finally {

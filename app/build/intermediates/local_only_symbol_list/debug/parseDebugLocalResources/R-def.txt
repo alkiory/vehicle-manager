@@ -1,4 +1,17 @@
 R_DEF: Internal format may change without notice
 local
+string add_vehicle
+string add_vehicle_content_description
 string app_name
+string backup_description
+string backup_error
+string backup_export_filename
+string backup_exported
+string backup_imported
+string backup_title
+string backup_working
+string export_backup
+string import_backup
+string vehicles_description
+string vehicles_title
 style Theme.VehicleManager

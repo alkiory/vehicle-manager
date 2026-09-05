@@ -58,6 +58,8 @@ class FuelRecordRepositoryTest {
             object : FuelRecordDao {
                 override fun observeForVehicle(vehicleId: Long) = flowOf(listOf(record.toEntity()))
                 override suspend fun findById(id: Long) = record.toEntity()
+                override suspend fun findAll() = listOf(record.toEntity())
+                override suspend fun deleteAll() = Unit
                 override suspend fun insert(record: FuelRecordEntity) = record.id
                 override suspend fun update(record: FuelRecordEntity) = Unit
                 override suspend fun delete(record: FuelRecordEntity) = Unit

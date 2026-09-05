@@ -1,5 +1,6 @@
 package com.example.vehiclemanager;
 
+import com.example.vehiclemanager.core.data.database.BackupDataModule;
 import com.example.vehiclemanager.core.data.database.DatabaseModule;
 import com.example.vehiclemanager.core.data.fuel.FuelDataModule;
 import com.example.vehiclemanager.core.data.maintenance.MaintenanceDataModule;
@@ -14,6 +15,7 @@ import com.example.vehiclemanager.feature.maintenance.AddMaintenanceViewModel_Hi
 import com.example.vehiclemanager.feature.maintenance.MaintenanceHistoryViewModel_HiltModules;
 import com.example.vehiclemanager.feature.statistics.StatisticsViewModel_HiltModules;
 import com.example.vehiclemanager.feature.vehicles.AddEditVehicleViewModel_HiltModules;
+import com.example.vehiclemanager.feature.vehicles.VehicleBackupViewModel_HiltModules;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -140,6 +142,7 @@ public final class VehicleApplication_HiltComponents {
       modules = {
           ActiveVehicleDataModule.class,
           ApplicationContextModule.class,
+          BackupDataModule.class,
           DatabaseModule.class,
           FuelDataModule.class,
           HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule.class,
@@ -181,7 +184,8 @@ public final class VehicleApplication_HiltComponents {
           MaintenanceHistoryViewModel_HiltModules.KeyModule.class,
           StatisticsViewModel_HiltModules.KeyModule.class,
           ActivityCBuilderModule.class,
-          ViewModelCBuilderModule.class
+          ViewModelCBuilderModule.class,
+          VehicleBackupViewModel_HiltModules.KeyModule.class
       }
   )
   @ActivityRetainedScoped
@@ -225,7 +229,8 @@ public final class VehicleApplication_HiltComponents {
           FuelHistoryViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           MaintenanceHistoryViewModel_HiltModules.BindsModule.class,
-          StatisticsViewModel_HiltModules.BindsModule.class
+          StatisticsViewModel_HiltModules.BindsModule.class,
+          VehicleBackupViewModel_HiltModules.BindsModule.class
       }
   )
   @ViewModelScoped

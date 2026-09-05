@@ -15,6 +15,12 @@ interface FuelRecordDao {
     @Query("SELECT * FROM fuel_records WHERE id = :id")
     suspend fun findById(id: Long): FuelRecordEntity?
 
+    @Query("SELECT * FROM fuel_records ORDER BY id ASC")
+    suspend fun findAll(): List<FuelRecordEntity>
+
+    @Query("DELETE FROM fuel_records")
+    suspend fun deleteAll()
+
     @Insert
     suspend fun insert(record: FuelRecordEntity): Long
 
