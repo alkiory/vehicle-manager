@@ -193,7 +193,12 @@ private fun AppNavHost(
         startDestination = DashboardRoute,
         modifier = modifier,
     ) {
-        composable<DashboardRoute> { DashboardScreen() }
+        composable<DashboardRoute> {
+            DashboardScreen(
+                onAddFuel = { navController.navigate(AddFuelRoute) },
+                onAddMaintenance = { navController.navigate(AddEditMaintenanceRoute()) },
+            )
+        }
         composable<VehiclesRoute> {
             VehiclesScreen(
                 onAddVehicle = { navController.navigate(AddEditVehicleRoute()) },

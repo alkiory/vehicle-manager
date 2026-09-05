@@ -7,6 +7,8 @@ import com.example.vehiclemanager.core.data.fuel.FuelRecordDao
 import com.example.vehiclemanager.core.data.fuel.FuelRecordEntity
 import com.example.vehiclemanager.core.data.maintenance.MaintenanceRecordDao
 import com.example.vehiclemanager.core.data.maintenance.MaintenanceRecordEntity
+import com.example.vehiclemanager.core.data.maintenance.MaintenanceScheduleDao
+import com.example.vehiclemanager.core.data.maintenance.MaintenanceScheduleEntity
 import com.example.vehiclemanager.core.data.vehicle.VehicleDao
 import com.example.vehiclemanager.core.data.vehicle.VehicleEntity
 
@@ -17,8 +19,13 @@ import com.example.vehiclemanager.core.data.vehicle.VehicleEntity
  * database as the single Room entry point lets those features share one schema.
  */
 @Database(
-    entities = [VehicleEntity::class, FuelRecordEntity::class, MaintenanceRecordEntity::class],
-    version = 3,
+    entities = [
+        VehicleEntity::class,
+        FuelRecordEntity::class,
+        MaintenanceRecordEntity::class,
+        MaintenanceScheduleEntity::class,
+    ],
+    version = 4,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -26,4 +33,5 @@ abstract class VehicleDatabase : RoomDatabase() {
     abstract fun vehicleDao(): VehicleDao
     abstract fun fuelRecordDao(): FuelRecordDao
     abstract fun maintenanceRecordDao(): MaintenanceRecordDao
+    abstract fun maintenanceScheduleDao(): MaintenanceScheduleDao
 }

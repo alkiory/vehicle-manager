@@ -1,16 +1,18 @@
 # Current Task
 
-- **Task:** EPIC-004 / TASK-002 — Service Record Entry & History UI
+# Current Task
+
+- **Task:** EPIC-006 — Statistics & Analytics Engine
 - **State:** DONE
-- **Objective:** Add and review vehicle maintenance records with active-vehicle context.
-- **Completed:** Added maintenance form validation and cost conversion, `AddMaintenanceViewModel`, active-vehicle-scoped service persistence, primary odometer advancement, category/date/notes/provider fields, maintenance history list, edit navigation, swipe-to-delete confirmation, and tests.
+- **Objective:** Generate offline period-based financial, mileage, consumption, and fuel-price analytics.
+- **Completed:** Added `CalculateVehicleStatsUseCase`, period filtering, integer-safe ownership metrics, weighted monthly fuel prices, monthly expenditure series, reactive `StatisticsViewModel`, period chips, metric cards, Canvas charts, and tests.
 
 ## Verification
 
 - `./gradlew testDebugUnitTest compileDebugAndroidTestKotlin --no-daemon --max-workers=1 --console=plain` passes.
-- JVM tests cover required fields, cost conversion, odometer ordering, and ViewModel persistence behavior.
+- JVM tests cover period boundaries, all-time aggregation, total cost, cost per kilometer, average monthly spend, distance, weighted fuel prices, chart series, zero-distance safety, and reactive period selection.
 - Android test sources compile successfully; instrumented execution still requires a connected Android device or emulator.
 
 ## Next Task
 
-- EPIC-004 / TASK-003 — Service Reminders & Schedule Engine
+- EPIC-007 — Polish, Data Export & Release Preparation
