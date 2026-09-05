@@ -1,16 +1,17 @@
 # Current Task
 
-- **Task:** EPIC-002 / TASK-001 — Vehicle Domain Model & Data Layer
+- **Task:** EPIC-003 / TASK-002 — Refueling Entry UI & Validation
 - **State:** DONE
-- **Objective:** Define the pure Kotlin vehicle model and Room-backed CRUD data layer.
-- **Completed:** Added `Vehicle`, repository contract/implementation, explicit entity mappers, vehicle DAO, Hilt repository binding, JVM mapping tests, and an in-memory Room DAO instrumentation test.
+- **Objective:** Implement fuel entry with active-vehicle context, validation, and exact minor-unit calculations.
+- **Completed:** Added `FuelFormData` validation, liters×100 and price/cost cents calculations, `AddFuelViewModel`, active-vehicle and previous-odometer prefill, typed add-fuel route, Material 3 date picker, full-tank toggle, station/notes fields, save flow, and tests.
 
 ## Verification
 
-- `./gradlew --stop && ./gradlew testDebugUnitTest compileDebugKotlin` passes.
-- `./gradlew connectedDebugAndroidTest` compiles and packages the instrumentation APK but cannot execute because no connected Android devices are available.
-- `.gitignore` added for Android/Gradle build output, IDE files, local secrets, and local toolchains while preserving `app/schemas`.
+- `./gradlew --stop && ./gradlew testDebugUnitTest compileDebugAndroidTestKotlin` passes.
+- JVM tests cover positive values, lower-than-previous odometer rejection, malformed input, liters×100 conversion, price cents, and total cost cents.
+- Android test sources compile successfully; instrumented execution still requires a connected Android device or emulator.
+- Fuel values are persisted as integer minor units: liters×100, price cents, and total cost cents.
 
 ## Next Task
 
-- EPIC-002 / TASK-002 — Vehicle Entry & Editing Flow
+- EPIC-003 / TASK-003 — Fuel History List & Detail View

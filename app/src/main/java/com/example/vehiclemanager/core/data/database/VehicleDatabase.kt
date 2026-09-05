@@ -3,8 +3,10 @@ package com.example.vehiclemanager.core.data.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.vehiclemanager.core.data.vehicle.VehicleEntity
+import com.example.vehiclemanager.core.data.fuel.FuelRecordDao
+import com.example.vehiclemanager.core.data.fuel.FuelRecordEntity
 import com.example.vehiclemanager.core.data.vehicle.VehicleDao
+import com.example.vehiclemanager.core.data.vehicle.VehicleEntity
 
 /**
  * Local, offline-first database for Vehicle Manager.
@@ -13,11 +15,12 @@ import com.example.vehiclemanager.core.data.vehicle.VehicleDao
  * database as the single Room entry point lets those features share one schema.
  */
 @Database(
-    entities = [VehicleEntity::class],
-    version = 1,
+    entities = [VehicleEntity::class, FuelRecordEntity::class],
+    version = 2,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
 abstract class VehicleDatabase : RoomDatabase() {
     abstract fun vehicleDao(): VehicleDao
+    abstract fun fuelRecordDao(): FuelRecordDao
 }

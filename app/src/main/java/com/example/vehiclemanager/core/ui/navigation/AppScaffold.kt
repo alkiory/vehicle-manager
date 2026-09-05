@@ -22,9 +22,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import com.example.vehiclemanager.feature.dashboard.DashboardScreen
+import com.example.vehiclemanager.feature.fuel.AddFuelScreen
 import com.example.vehiclemanager.feature.fuel.FuelScreen
 import com.example.vehiclemanager.feature.maintenance.MaintenanceScreen
 import com.example.vehiclemanager.feature.statistics.StatisticsScreen
+import com.example.vehiclemanager.feature.vehicles.AddEditVehicleScreen
 import com.example.vehiclemanager.feature.vehicles.VehiclesScreen
 
 private const val TABLET_BREAKPOINT_DP = 600
@@ -188,8 +190,22 @@ private fun AppNavHost(
         modifier = modifier,
     ) {
         composable<DashboardRoute> { DashboardScreen() }
-        composable<VehiclesRoute> { VehiclesScreen() }
-        composable<FuelRoute> { FuelScreen() }
+        composable<VehiclesRoute> {
+            VehiclesScreen(
+                onAddVehicle = { navController.navigate(AddEditVehicleRoute()) },
+            )
+        }
+        composable<AddEditVehicleRoute> {
+            AddEditVehicleScreen(onNavigateBack = { navController.popBackStack() })
+        }
+        composable<FuelRoute> {
+            FuelScreen(
+                onAddFuel = { navController.navigate(AddFuelRoute) },
+            )
+        }
+        composable<AddFuelRoute> {
+            AddFuelScreen(onNavigateBack = { navController.popBackStack() })
+        }
         composable<MaintenanceRoute> { MaintenanceScreen() }
         composable<StatsRoute> { StatisticsScreen() }
     }

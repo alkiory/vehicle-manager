@@ -2,6 +2,7 @@ package com.example.vehiclemanager.core.data.database
 
 import android.content.Context
 import androidx.room.Room
+import com.example.vehiclemanager.core.data.fuel.FuelRecordDao
 import com.example.vehiclemanager.core.data.vehicle.VehicleDao
 import dagger.Module
 import dagger.Provides
@@ -21,11 +22,15 @@ object DatabaseModule {
         context,
         VehicleDatabase::class.java,
         DATABASE_NAME,
-    ).build()
+    ).addMigrations(MIGRATION_1_2).build()
 
     @Provides
     @Singleton
     fun provideVehicleDao(database: VehicleDatabase): VehicleDao = database.vehicleDao()
+
+    @Provides
+    @Singleton
+    fun provideFuelRecordDao(database: VehicleDatabase): FuelRecordDao = database.fuelRecordDao()
 
     private const val DATABASE_NAME = "vehicle_manager.db"
 }

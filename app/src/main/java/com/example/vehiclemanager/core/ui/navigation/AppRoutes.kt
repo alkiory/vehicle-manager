@@ -9,7 +9,15 @@ data object DashboardRoute
 data object VehiclesRoute
 
 @Serializable
+data class AddEditVehicleRoute(
+    val vehicleId: Long? = null,
+)
+
+@Serializable
 data object FuelRoute
+
+@Serializable
+data object AddFuelRoute
 
 @Serializable
 data object MaintenanceRoute

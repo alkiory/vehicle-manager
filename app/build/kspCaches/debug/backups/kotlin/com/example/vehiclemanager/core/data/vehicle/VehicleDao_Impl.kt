@@ -150,7 +150,7 @@ public class VehicleDao_Impl(
   })
 
   public override fun observeAll(): Flow<List<VehicleEntity>> {
-    val _sql: String = "SELECT * FROM vehicles ORDER BY name COLLATE NOCASE"
+    val _sql: String = "SELECT * FROM vehicles ORDER BY id ASC"
     val _statement: RoomSQLiteQuery = acquire(_sql, 0)
     return CoroutinesRoom.createFlow(__db, false, arrayOf("vehicles"), object :
         Callable<List<VehicleEntity>> {

@@ -11,6 +11,8 @@ import androidx.room.util.TableInfo.Companion.read
 import androidx.room.util.dropFtsSyncTriggers
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
+import com.example.vehiclemanager.core.`data`.fuel.FuelRecordDao
+import com.example.vehiclemanager.core.`data`.fuel.FuelRecordDao_Impl
 import com.example.vehiclemanager.core.`data`.vehicle.VehicleDao
 import com.example.vehiclemanager.core.`data`.vehicle.VehicleDao_Impl
 import java.lang.Class
@@ -19,6 +21,7 @@ import java.util.HashMap
 import java.util.HashSet
 import javax.`annotation`.processing.Generated
 import kotlin.Any
+import kotlin.Boolean
 import kotlin.Lazy
 import kotlin.String
 import kotlin.Suppress
@@ -35,17 +38,25 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
   }
 
 
+  private val _fuelRecordDao: Lazy<FuelRecordDao> = lazy {
+    FuelRecordDao_Impl(this)
+  }
+
+
   protected override fun createOpenHelper(config: DatabaseConfiguration): SupportSQLiteOpenHelper {
     val _openCallback: SupportSQLiteOpenHelper.Callback = RoomOpenHelper(config, object :
-        RoomOpenHelper.Delegate(1) {
+        RoomOpenHelper.Delegate(2) {
       public override fun createAllTables(db: SupportSQLiteDatabase) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `vehicles` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `make` TEXT NOT NULL, `model` TEXT NOT NULL, `year` INTEGER NOT NULL, `licensePlate` TEXT NOT NULL, `vin` TEXT, `fuelType` TEXT NOT NULL, `primaryOdometerKm` INTEGER NOT NULL)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `fuel_records` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `vehicleId` INTEGER NOT NULL, `timestampMs` INTEGER NOT NULL, `odometerKm` INTEGER NOT NULL, `litersX100` INTEGER NOT NULL, `pricePerLiterCents` INTEGER NOT NULL, `totalCostCents` INTEGER NOT NULL, `isFullTank` INTEGER NOT NULL, `stationName` TEXT, `notes` TEXT, FOREIGN KEY(`vehicleId`) REFERENCES `vehicles`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_fuel_records_vehicleId_timestampMs` ON `fuel_records` (`vehicleId`, `timestampMs`)")
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)")
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f0558f124fee0bdb7e335d1fde66b47f')")
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e43db1ef96252f53395a73f3556949fc')")
       }
 
       public override fun dropAllTables(db: SupportSQLiteDatabase) {
         db.execSQL("DROP TABLE IF EXISTS `vehicles`")
+        db.execSQL("DROP TABLE IF EXISTS `fuel_records`")
         val _callbacks: List<RoomDatabase.Callback>? = mCallbacks
         if (_callbacks != null) {
           for (_callback: RoomDatabase.Callback in _callbacks) {
@@ -65,6 +76,7 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
 
       public override fun onOpen(db: SupportSQLiteDatabase) {
         mDatabase = db
+        db.execSQL("PRAGMA foreign_keys = ON")
         internalInitInvalidationTracker(db)
         val _callbacks: List<RoomDatabase.Callback>? = mCallbacks
         if (_callbacks != null) {
@@ -117,9 +129,50 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
               | Found:
               |""".trimMargin() + _existingVehicles)
         }
+        val _columnsFuelRecords: HashMap<String, TableInfo.Column> =
+            HashMap<String, TableInfo.Column>(10)
+        _columnsFuelRecords.put("id", TableInfo.Column("id", "INTEGER", true, 1, null,
+            TableInfo.CREATED_FROM_ENTITY))
+        _columnsFuelRecords.put("vehicleId", TableInfo.Column("vehicleId", "INTEGER", true, 0, null,
+            TableInfo.CREATED_FROM_ENTITY))
+        _columnsFuelRecords.put("timestampMs", TableInfo.Column("timestampMs", "INTEGER", true, 0,
+            null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsFuelRecords.put("odometerKm", TableInfo.Column("odometerKm", "INTEGER", true, 0,
+            null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsFuelRecords.put("litersX100", TableInfo.Column("litersX100", "INTEGER", true, 0,
+            null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsFuelRecords.put("pricePerLiterCents", TableInfo.Column("pricePerLiterCents",
+            "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsFuelRecords.put("totalCostCents", TableInfo.Column("totalCostCents", "INTEGER",
+            true, 0, null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsFuelRecords.put("isFullTank", TableInfo.Column("isFullTank", "INTEGER", true, 0,
+            null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsFuelRecords.put("stationName", TableInfo.Column("stationName", "TEXT", false, 0,
+            null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsFuelRecords.put("notes", TableInfo.Column("notes", "TEXT", false, 0, null,
+            TableInfo.CREATED_FROM_ENTITY))
+        val _foreignKeysFuelRecords: HashSet<TableInfo.ForeignKey> =
+            HashSet<TableInfo.ForeignKey>(1)
+        _foreignKeysFuelRecords.add(TableInfo.ForeignKey("vehicles", "CASCADE", "NO ACTION",
+            listOf("vehicleId"), listOf("id")))
+        val _indicesFuelRecords: HashSet<TableInfo.Index> = HashSet<TableInfo.Index>(1)
+        _indicesFuelRecords.add(TableInfo.Index("index_fuel_records_vehicleId_timestampMs", false,
+            listOf("vehicleId", "timestampMs"), listOf("ASC", "ASC")))
+        val _infoFuelRecords: TableInfo = TableInfo("fuel_records", _columnsFuelRecords,
+            _foreignKeysFuelRecords, _indicesFuelRecords)
+        val _existingFuelRecords: TableInfo = read(db, "fuel_records")
+        if (!_infoFuelRecords.equals(_existingFuelRecords)) {
+          return RoomOpenHelper.ValidationResult(false, """
+              |fuel_records(com.example.vehiclemanager.core.data.fuel.FuelRecordEntity).
+              | Expected:
+              |""".trimMargin() + _infoFuelRecords + """
+              |
+              | Found:
+              |""".trimMargin() + _existingFuelRecords)
+        }
         return RoomOpenHelper.ValidationResult(true, null)
       }
-    }, "f0558f124fee0bdb7e335d1fde66b47f", "80de93acf5bdfe73ff1f8f7864baf7e9")
+    }, "e43db1ef96252f53395a73f3556949fc", "e22e6440260500644b40efa63cb33a19")
     val _sqliteConfig: SupportSQLiteOpenHelper.Configuration =
         SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build()
     val _helper: SupportSQLiteOpenHelper = config.sqliteOpenHelperFactory.create(_sqliteConfig)
@@ -129,18 +182,30 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
   protected override fun createInvalidationTracker(): InvalidationTracker {
     val _shadowTablesMap: HashMap<String, String> = HashMap<String, String>(0)
     val _viewTables: HashMap<String, Set<String>> = HashMap<String, Set<String>>(0)
-    return InvalidationTracker(this, _shadowTablesMap, _viewTables, "vehicles")
+    return InvalidationTracker(this, _shadowTablesMap, _viewTables, "vehicles","fuel_records")
   }
 
   public override fun clearAllTables() {
     super.assertNotMainThread()
     val _db: SupportSQLiteDatabase = super.openHelper.writableDatabase
+    val _supportsDeferForeignKeys: Boolean = android.os.Build.VERSION.SDK_INT >=
+        android.os.Build.VERSION_CODES.LOLLIPOP
     try {
+      if (!_supportsDeferForeignKeys) {
+        _db.execSQL("PRAGMA foreign_keys = FALSE")
+      }
       super.beginTransaction()
+      if (_supportsDeferForeignKeys) {
+        _db.execSQL("PRAGMA defer_foreign_keys = TRUE")
+      }
       _db.execSQL("DELETE FROM `vehicles`")
+      _db.execSQL("DELETE FROM `fuel_records`")
       super.setTransactionSuccessful()
     } finally {
       super.endTransaction()
+      if (!_supportsDeferForeignKeys) {
+        _db.execSQL("PRAGMA foreign_keys = TRUE")
+      }
       _db.query("PRAGMA wal_checkpoint(FULL)").close()
       if (!_db.inTransaction()) {
         _db.execSQL("VACUUM")
@@ -152,6 +217,7 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
     val _typeConvertersMap: HashMap<Class<out Any>, List<Class<out Any>>> =
         HashMap<Class<out Any>, List<Class<out Any>>>()
     _typeConvertersMap.put(VehicleDao::class.java, VehicleDao_Impl.getRequiredConverters())
+    _typeConvertersMap.put(FuelRecordDao::class.java, FuelRecordDao_Impl.getRequiredConverters())
     return _typeConvertersMap
   }
 
@@ -169,4 +235,6 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
   }
 
   public override fun vehicleDao(): VehicleDao = _vehicleDao.value
+
+  public override fun fuelRecordDao(): FuelRecordDao = _fuelRecordDao.value
 }

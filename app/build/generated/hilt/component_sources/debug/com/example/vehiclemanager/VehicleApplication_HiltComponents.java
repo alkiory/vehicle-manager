@@ -1,7 +1,11 @@
 package com.example.vehiclemanager;
 
 import com.example.vehiclemanager.core.data.database.DatabaseModule;
+import com.example.vehiclemanager.core.data.fuel.FuelDataModule;
+import com.example.vehiclemanager.core.data.vehicle.ActiveVehicleDataModule;
 import com.example.vehiclemanager.core.data.vehicle.VehicleDataModule;
+import com.example.vehiclemanager.feature.fuel.AddFuelViewModel_HiltModules;
+import com.example.vehiclemanager.feature.vehicles.AddEditVehicleViewModel_HiltModules;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -126,8 +130,10 @@ public final class VehicleApplication_HiltComponents {
 
   @Component(
       modules = {
+          ActiveVehicleDataModule.class,
           ApplicationContextModule.class,
           DatabaseModule.class,
+          FuelDataModule.class,
           HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule.class,
           ActivityRetainedCBuilderModule.class,
           ServiceCBuilderModule.class,
@@ -154,6 +160,8 @@ public final class VehicleApplication_HiltComponents {
 
   @Subcomponent(
       modules = {
+          AddEditVehicleViewModel_HiltModules.KeyModule.class,
+          AddFuelViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HiltWrapper_SavedStateHandleModule.class,
           ActivityCBuilderModule.class,
@@ -192,7 +200,11 @@ public final class VehicleApplication_HiltComponents {
   }
 
   @Subcomponent(
-      modules = HiltWrapper_HiltViewModelFactory_ViewModelModule.class
+      modules = {
+          AddEditVehicleViewModel_HiltModules.BindsModule.class,
+          AddFuelViewModel_HiltModules.BindsModule.class,
+          HiltWrapper_HiltViewModelFactory_ViewModelModule.class
+      }
   )
   @ViewModelScoped
   public abstract static class ViewModelC implements ViewModelComponent,

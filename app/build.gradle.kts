@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.datastore.preferences)
 
     ksp(libs.androidx.room.compiler)
     ksp(libs.hilt.compiler)
