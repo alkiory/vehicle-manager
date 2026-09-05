@@ -57,10 +57,10 @@ fun AddFuelScreen(
     VehicleManagerScreen(
         topBar = {
             VehicleManagerAppBar(
-                title = "Add refuel",
+                title = "Nuevo repostaje",
                 actions = {
                     TextButton(onClick = onNavigateBack) {
-                        Text(text = "Cancel")
+                        Text(text = "Cancelar")
                     }
                 },
             )
@@ -105,11 +105,11 @@ private fun NoActiveVehicleContent(onNavigateBack: () -> Unit) {
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = "Add a vehicle before logging a refuel.",
+            text = "Añade un vehículo antes de registrar un repostaje.",
             style = MaterialTheme.typography.bodyLarge,
         )
         TextButton(onClick = onNavigateBack) {
-            Text(text = "Go back")
+            Text(text = "Volver")
         }
     }
 }
@@ -140,7 +140,7 @@ private fun FuelFormContent(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text(
-            text = uiState.activeVehicle?.let { "For ${it.name}" } ?: "Active vehicle",
+            text = uiState.activeVehicle?.let { "Para ${it.name}" } ?: "Vehículo activo",
             style = MaterialTheme.typography.titleMedium,
         )
 
@@ -154,26 +154,26 @@ private fun FuelFormContent(
         FuelTextField(
             value = form.odometerKm,
             onValueChange = onOdometerChanged,
-            label = "Odometer (km)",
+            label = "Odómetro (km)",
             keyboardType = KeyboardType.Number,
             error = errors.odometer != null,
-            supportingText = errors.odometer?.fuelValidationMessage("Enter the odometer."),
+            supportingText = errors.odometer?.fuelValidationMessage("Introduce el odómetro."),
         )
         FuelTextField(
             value = form.liters,
             onValueChange = onLitersChanged,
-            label = "Fuel quantity (liters)",
+            label = "Cantidad de combustible (litros)",
             keyboardType = KeyboardType.Decimal,
             error = errors.liters != null,
-            supportingText = errors.liters?.fuelValidationMessage("Enter the fuel quantity."),
+            supportingText = errors.liters?.fuelValidationMessage("Introduce la cantidad de combustible."),
         )
         FuelTextField(
             value = form.pricePerLiter,
             onValueChange = onPriceChanged,
-            label = "Price per liter",
+            label = "Precio por litro",
             keyboardType = KeyboardType.Decimal,
             error = errors.pricePerLiter != null,
-            supportingText = errors.pricePerLiter?.fuelValidationMessage("Enter the price."),
+            supportingText = errors.pricePerLiter?.fuelValidationMessage("Introduce el precio."),
         )
 
         Row(
@@ -181,25 +181,25 @@ private fun FuelFormContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(text = "Full tank", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Depósito lleno", style = MaterialTheme.typography.bodyLarge)
             Switch(checked = form.isFullTank, onCheckedChange = onFullTankChanged)
         }
 
         FuelTextField(
             value = form.stationName,
             onValueChange = onStationChanged,
-            label = "Station name (optional)",
+            label = "Nombre de la gasolinera (opcional)",
         )
         FuelTextField(
             value = form.notes,
             onValueChange = onNotesChanged,
-            label = "Notes (optional)",
+            label = "Notas (opcional)",
             singleLine = false,
         )
 
         uiState.previousOdometerKm?.let { previous ->
             Text(
-                text = "Previous odometer: $previous km",
+                text = "Odómetro anterior: $previous km",
                 style = MaterialTheme.typography.bodySmall,
             )
         }
@@ -213,7 +213,7 @@ private fun FuelFormContent(
         }
 
         VehicleManagerPrimaryButton(
-            text = if (uiState.isSaving) "Saving…" else "Save refuel",
+            text = if (uiState.isSaving) "Guardando…" else "Guardar repostaje",
             onClick = onSave,
             enabled = !uiState.isSaving,
             modifier = Modifier.fillMaxWidth(),
@@ -229,12 +229,12 @@ private fun FuelFormContent(
                     datePickerState.selectedDateMillis?.let(onTimestampChanged)
                     datePickerVisible = false
                 }) {
-                    Text(text = "Select")
+                    Text(text = "Seleccionar")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { datePickerVisible = false }) {
-                    Text(text = "Cancel")
+                    Text(text = "Cancelar")
                 }
             },
         ) {
@@ -268,8 +268,8 @@ private fun FuelTextField(
 }
 
 private fun String.fuelValidationMessage(default: String): String = when (this) {
-    "positive" -> "Value must be greater than zero."
-    "lower_than_previous" -> "Odometer cannot be lower than the previous refuel."
-    "invalid" -> "Enter a valid number."
+    "positive" -> "El valor debe ser mayor que cero."
+    "lower_than_previous" -> "El odómetro no puede ser menor que el del repostaje anterior."
+    "invalid" -> "Introduce un número válido."
     else -> default
 }

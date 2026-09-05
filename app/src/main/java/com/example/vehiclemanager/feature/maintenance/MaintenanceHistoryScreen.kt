@@ -9,10 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
@@ -52,15 +55,17 @@ fun MaintenanceHistoryScreen(
     }
 
     VehicleManagerScreen(
-        topBar = { VehicleManagerAppBar(title = uiState.activeVehicle?.name?.let { "$it · Maintenance" } ?: "Maintenance") },
+        topBar = { VehicleManagerAppBar(title = uiState.activeVehicle?.name?.let { "$it · Servicios" } ?: "Mantenimiento") },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddMaintenance) { Text(text = "+") }
+            FloatingActionButton(onClick = onAddMaintenance) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Añadir servicio")
+            }
         },
     ) {
         when {
             uiState.isLoading -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
-            uiState.activeVehicle == null -> EmptyMaintenanceContent("Add a vehicle to view maintenance history.")
-            uiState.records.isEmpty() -> EmptyMaintenanceContent("No service records yet.")
+            uiState.activeVehicle == null -> EmptyMaintenanceContent("Añade un vehículo para ver el historial de mantenimiento.")
+            uiState.records.isEmpty() -> EmptyMaintenanceContent("Aún no hay registros de servicio.")
             else -> MaintenanceRecordList(
                 records = uiState.records,
                 onOpenEdit = onOpenEdit,
@@ -72,14 +77,14 @@ fun MaintenanceHistoryScreen(
     uiState.recordPendingDeletion?.let {
         AlertDialog(
             onDismissRequest = viewModel::dismissDelete,
-            title = { Text(text = "Delete service record?") },
-            text = { Text(text = "This maintenance record will be permanently removed.") },
+            title = { Text(text = "¿Eliminar registro de servicio?") },
+            text = { Text(text = "Este registro de mantenimiento se eliminará permanentemente.") },
             confirmButton = {
                 TextButton(onClick = viewModel::confirmDelete) {
-                    Text(text = "Delete", color = MaterialTheme.colorScheme.error)
+                    Text(text = "Eliminar", color = MaterialTheme.colorScheme.error)
                 }
             },
-            dismissButton = { TextButton(onClick = viewModel::dismissDelete) { Text(text = "Cancel") } },
+            dismissButton = { TextButton(onClick = viewModel::dismissDelete) { Text(text = "Cancelar") } },
         )
     }
 }
@@ -115,10 +120,10 @@ private fun MaintenanceRecordList(
                 enableDismissFromStartToEnd = false,
                 backgroundContent = {
                     Box(
-                        modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Delete maintenance record" },
+                        modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Eliminar registro de mantenimiento" },
                         contentAlignment = Alignment.CenterEnd,
                     ) {
-                        Text(text = "Delete", color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(horizontal = 20.dp))
+                        Text(text = "Eliminar", color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(horizontal = 20.dp))
                     }
                 },
                 content = { MaintenanceRecordCard(record, onClick = { onOpenEdit(record.id) }) },

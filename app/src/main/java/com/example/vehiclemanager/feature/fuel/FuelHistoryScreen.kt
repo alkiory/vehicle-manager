@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
@@ -55,11 +58,11 @@ fun FuelHistoryScreen(
     VehicleManagerScreen(
         topBar = {
             VehicleManagerAppBar(
-                title = uiState.activeVehicle?.name?.let { "$it · Fuel" } ?: "Fuel history",
+                title = uiState.activeVehicle?.name?.let { "$it · Combustible" } ?: "Historial de combustible",
                 actions = {
                     onNavigateBack?.let { onBack ->
                         TextButton(onClick = onBack) {
-                            Text(text = "Back")
+                            Text(text = "Volver")
                         }
                     }
                 },
@@ -67,14 +70,14 @@ fun FuelHistoryScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddFuel) {
-                Text(text = "+")
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Añadir repostaje")
             }
         },
     ) {
         when {
             uiState.isLoading -> LoadingContent()
-            uiState.activeVehicle == null -> EmptyFuelContent("Add a vehicle to view fuel history.")
-            uiState.records.isEmpty() -> EmptyFuelContent("No refuels recorded yet.")
+            uiState.activeVehicle == null -> EmptyFuelContent("Añade un vehículo para ver el historial de combustible.")
+            uiState.records.isEmpty() -> EmptyFuelContent("Aún no hay repostajes registrados.")
             else -> FuelRecordList(
                 records = uiState.records,
                 onOpenDetail = onOpenDetail,
@@ -86,16 +89,16 @@ fun FuelHistoryScreen(
     uiState.recordPendingDeletion?.let {
         AlertDialog(
             onDismissRequest = viewModel::dismissDelete,
-            title = { Text(text = "Delete refuel?") },
-            text = { Text(text = "This fuel record will be permanently removed.") },
+            title = { Text(text = "¿Eliminar repostaje?") },
+            text = { Text(text = "Este registro de combustible se eliminará permanentemente.") },
             confirmButton = {
                 TextButton(onClick = viewModel::confirmDelete) {
-                    Text(text = "Delete", color = MaterialTheme.colorScheme.error)
+                    Text(text = "Eliminar", color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
                 TextButton(onClick = viewModel::dismissDelete) {
-                    Text(text = "Cancel")
+                    Text(text = "Cancelar")
                 }
             },
         )
@@ -159,12 +162,12 @@ private fun DeleteBackground() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .semantics { contentDescription = "Delete fuel record" }
+            .semantics { contentDescription = "Eliminar registro de combustible" }
             .padding(horizontal = 20.dp),
         contentAlignment = Alignment.CenterEnd,
     ) {
         Text(
-            text = "Delete",
+            text = "Eliminar",
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.labelLarge,
         )
@@ -192,7 +195,7 @@ private fun FuelRecordCard(
                 Column(horizontalAlignment = Alignment.End) {
                     Text(text = formatCents(record.totalCostCents))
                     Text(
-                        text = if (record.isFullTank) "Full tank" else "Partial",
+                        text = if (record.isFullTank) "Lleno" else "Parcial",
                         color = if (record.isFullTank) {
                             MaterialTheme.colorScheme.primary
                         } else {

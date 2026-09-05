@@ -5,6 +5,7 @@ import com.example.vehiclemanager.core.data.database.DatabaseModule;
 import com.example.vehiclemanager.core.data.fuel.FuelDataModule;
 import com.example.vehiclemanager.core.data.maintenance.MaintenanceDataModule;
 import com.example.vehiclemanager.core.data.maintenance.MaintenanceScheduleDataModule;
+import com.example.vehiclemanager.core.data.theme.ThemeDataModule;
 import com.example.vehiclemanager.core.data.vehicle.ActiveVehicleDataModule;
 import com.example.vehiclemanager.core.data.vehicle.VehicleDataModule;
 import com.example.vehiclemanager.feature.dashboard.DashboardViewModel_HiltModules;
@@ -13,6 +14,7 @@ import com.example.vehiclemanager.feature.fuel.FuelDetailViewModel_HiltModules;
 import com.example.vehiclemanager.feature.fuel.FuelHistoryViewModel_HiltModules;
 import com.example.vehiclemanager.feature.maintenance.AddMaintenanceViewModel_HiltModules;
 import com.example.vehiclemanager.feature.maintenance.MaintenanceHistoryViewModel_HiltModules;
+import com.example.vehiclemanager.feature.settings.SettingsViewModel_HiltModules;
 import com.example.vehiclemanager.feature.statistics.StatisticsViewModel_HiltModules;
 import com.example.vehiclemanager.feature.vehicles.AddEditVehicleViewModel_HiltModules;
 import com.example.vehiclemanager.feature.vehicles.VehicleBackupViewModel_HiltModules;
@@ -148,6 +150,7 @@ public final class VehicleApplication_HiltComponents {
           HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule.class,
           MaintenanceDataModule.class,
           MaintenanceScheduleDataModule.class,
+          ThemeDataModule.class,
           ActivityRetainedCBuilderModule.class,
           ServiceCBuilderModule.class,
           VehicleDataModule.class
@@ -182,6 +185,7 @@ public final class VehicleApplication_HiltComponents {
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HiltWrapper_SavedStateHandleModule.class,
           MaintenanceHistoryViewModel_HiltModules.KeyModule.class,
+          SettingsViewModel_HiltModules.KeyModule.class,
           StatisticsViewModel_HiltModules.KeyModule.class,
           ActivityCBuilderModule.class,
           ViewModelCBuilderModule.class,
@@ -229,6 +233,7 @@ public final class VehicleApplication_HiltComponents {
           FuelHistoryViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           MaintenanceHistoryViewModel_HiltModules.BindsModule.class,
+          SettingsViewModel_HiltModules.BindsModule.class,
           StatisticsViewModel_HiltModules.BindsModule.class,
           VehicleBackupViewModel_HiltModules.BindsModule.class
       }

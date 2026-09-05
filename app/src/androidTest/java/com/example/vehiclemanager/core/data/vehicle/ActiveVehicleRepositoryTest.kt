@@ -1,12 +1,19 @@
 package com.example.vehiclemanager.core.data.vehicle
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.vehiclemanager.core.data.database.VehicleDatabase
 import com.example.vehiclemanager.core.domain.FuelType
 import com.example.vehiclemanager.core.domain.Vehicle
 import com.example.vehiclemanager.core.domain.VehicleRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -18,16 +25,30 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class ActiveVehicleRepositoryTest {
     private lateinit var repository: ActiveVehicleRepositoryImpl
     private lateinit var vehicles: MutableStateFlow<List<Vehicle>>
 
+    // Un único DataStore por proceso y archivo (mismo comportamiento que el delegate
+    // `preferencesDataStore`); crear más de uno para el mismo archivo lanza IllegalStateException.
+    private companion object {
+        private val dataStore: DataStore<Preferences> by lazy {
+            PreferenceDataStoreFactory.create(
+                scope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
+                produceFile = {
+                    ApplicationProvider.getApplicationContext<Context>()
+                        .preferencesDataStoreFile("active_vehicle_preferences")
+                },
+            )
+        }
+    }
+
     @Before
     fun setUp() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
         vehicles = MutableStateFlow(emptyList())
         repository = ActiveVehicleRepositoryImpl(
-            context = context,
+            dataStore = dataStore,
             vehicleRepository = FakeVehicleRepository(vehicleFlow = vehicles),
         )
     }
@@ -54,7 +75,7 @@ class ActiveVehicleRepositoryTest {
 
         repository.setActiveVehicle(second.id)
         val recreatedRepository = ActiveVehicleRepositoryImpl(
-            context = ApplicationProvider.getApplicationContext(),
+            dataStore = dataStore,
             vehicleRepository = FakeVehicleRepository(vehicleFlow = vehicles),
         )
 

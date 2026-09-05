@@ -34,3 +34,6 @@ data class AddEditMaintenanceRoute(
 
 @Serializable
 data object StatsRoute
+
+@Serializable
+data object SettingsRoute

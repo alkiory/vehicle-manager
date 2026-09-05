@@ -4,15 +4,31 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.LocalGasStation
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Build
+import androidx.compose.material.icons.outlined.Dashboard
+import androidx.compose.material.icons.outlined.DirectionsCar
+import androidx.compose.material.icons.outlined.LocalGasStation
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
@@ -25,10 +41,9 @@ import com.example.vehiclemanager.feature.dashboard.DashboardScreen
 import com.example.vehiclemanager.feature.fuel.AddFuelScreen
 import com.example.vehiclemanager.feature.fuel.FuelDetailScreen
 import com.example.vehiclemanager.feature.fuel.FuelHistoryScreen
-import com.example.vehiclemanager.feature.fuel.FuelScreen
 import com.example.vehiclemanager.feature.maintenance.AddMaintenanceScreen
 import com.example.vehiclemanager.feature.maintenance.MaintenanceHistoryScreen
-import com.example.vehiclemanager.feature.maintenance.MaintenanceScreen
+import com.example.vehiclemanager.feature.settings.SettingsScreen
 import com.example.vehiclemanager.feature.statistics.StatisticsScreen
 import com.example.vehiclemanager.feature.vehicles.AddEditVehicleScreen
 import com.example.vehiclemanager.feature.vehicles.VehiclesScreen
@@ -38,6 +53,8 @@ private const val TABLET_BREAKPOINT_DP = 600
 private data class PrimaryDestination(
     val label: String,
     val shortLabel: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
     val navigate: (NavHostController) -> Unit,
     val isSelected: (NavDestination?) -> Boolean,
 )
@@ -49,26 +66,27 @@ private fun NavHostController.navigateTo(destination: Any) {
             launchSingleTop = true
             restoreState = true
         }
-
         VehiclesRoute -> navigate(VehiclesRoute) {
             popUpTo(graph.startDestinationId) { saveState = true }
             launchSingleTop = true
             restoreState = true
         }
-
         FuelRoute -> navigate(FuelRoute) {
             popUpTo(graph.startDestinationId) { saveState = true }
             launchSingleTop = true
             restoreState = true
         }
-
         MaintenanceRoute -> navigate(MaintenanceRoute) {
             popUpTo(graph.startDestinationId) { saveState = true }
             launchSingleTop = true
             restoreState = true
         }
-
         StatsRoute -> navigate(StatsRoute) {
+            popUpTo(graph.startDestinationId) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+        SettingsRoute -> navigate(SettingsRoute) {
             popUpTo(graph.startDestinationId) { saveState = true }
             launchSingleTop = true
             restoreState = true
@@ -78,34 +96,44 @@ private fun NavHostController.navigateTo(destination: Any) {
 
 private val primaryDestinations = listOf(
     PrimaryDestination(
-        label = "Dashboard",
-        shortLabel = "D",
+        label = "Inicio",
+        shortLabel = "Inicio",
+        selectedIcon = Icons.Filled.Dashboard,
+        unselectedIcon = Icons.Outlined.Dashboard,
         navigate = { it.navigateTo(DashboardRoute) },
         isSelected = { it?.hasRoute<DashboardRoute>() == true },
     ),
     PrimaryDestination(
-        label = "Vehicles",
-        shortLabel = "V",
+        label = "Vehículos",
+        shortLabel = "Vehículos",
+        selectedIcon = Icons.Filled.DirectionsCar,
+        unselectedIcon = Icons.Outlined.DirectionsCar,
         navigate = { it.navigateTo(VehiclesRoute) },
         isSelected = { it?.hasRoute<VehiclesRoute>() == true },
     ),
     PrimaryDestination(
-        label = "Fuel",
-        shortLabel = "F",
+        label = "Combustible",
+        shortLabel = "Combustible",
+        selectedIcon = Icons.Filled.LocalGasStation,
+        unselectedIcon = Icons.Outlined.LocalGasStation,
         navigate = { it.navigateTo(FuelRoute) },
         isSelected = { it?.hasRoute<FuelRoute>() == true },
     ),
     PrimaryDestination(
-        label = "Maintenance",
-        shortLabel = "M",
+        label = "Servicios",
+        shortLabel = "Servicios",
+        selectedIcon = Icons.Filled.Build,
+        unselectedIcon = Icons.Outlined.Build,
         navigate = { it.navigateTo(MaintenanceRoute) },
         isSelected = { it?.hasRoute<MaintenanceRoute>() == true },
     ),
     PrimaryDestination(
-        label = "Statistics",
-        shortLabel = "S",
-        navigate = { it.navigateTo(StatsRoute) },
-        isSelected = { it?.hasRoute<StatsRoute>() == true },
+        label = "Ajustes",
+        shortLabel = "Ajustes",
+        selectedIcon = Icons.Filled.Settings,
+        unselectedIcon = Icons.Outlined.Settings,
+        navigate = { it.navigateTo(SettingsRoute) },
+        isSelected = { it?.hasRoute<SettingsRoute>() == true },
     ),
 )
 
@@ -133,6 +161,7 @@ fun AppScaffold(
             }
         } else {
             Scaffold(
+                containerColor = MaterialTheme.colorScheme.background,
                 bottomBar = {
                     AppNavigationBar(
                         currentDestination = currentDestination,
@@ -154,13 +183,29 @@ private fun AppNavigationBar(
     currentDestination: NavDestination?,
     onDestinationSelected: (PrimaryDestination) -> Unit,
 ) {
-    NavigationBar {
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.surface,
+        tonalElevation = 0.dp,
+    ) {
         primaryDestinations.forEach { destination ->
+            val selected = destination.isSelected(currentDestination)
             NavigationBarItem(
-                selected = destination.isSelected(currentDestination),
+                selected = selected,
                 onClick = { onDestinationSelected(destination) },
-                icon = { Text(text = destination.shortLabel) },
+                icon = {
+                    Icon(
+                        imageVector = if (selected) destination.selectedIcon else destination.unselectedIcon,
+                        contentDescription = destination.label,
+                    )
+                },
                 label = { Text(text = destination.label) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                ),
             )
         }
     }
@@ -171,13 +216,28 @@ private fun AppNavigationRail(
     currentDestination: NavDestination?,
     onDestinationSelected: (PrimaryDestination) -> Unit,
 ) {
-    NavigationRail {
+    NavigationRail(
+        containerColor = MaterialTheme.colorScheme.surface,
+    ) {
         primaryDestinations.forEach { destination ->
+            val selected = destination.isSelected(currentDestination)
             NavigationRailItem(
-                selected = destination.isSelected(currentDestination),
+                selected = selected,
                 onClick = { onDestinationSelected(destination) },
-                icon = { Text(text = destination.shortLabel) },
+                icon = {
+                    Icon(
+                        imageVector = if (selected) destination.selectedIcon else destination.unselectedIcon,
+                        contentDescription = destination.label,
+                    )
+                },
                 label = { Text(text = destination.label) },
+                colors = NavigationRailItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                ),
             )
         }
     }
@@ -197,11 +257,13 @@ private fun AppNavHost(
             DashboardScreen(
                 onAddFuel = { navController.navigate(AddFuelRoute) },
                 onAddMaintenance = { navController.navigate(AddEditMaintenanceRoute()) },
+                onViewAll = { navController.navigate(FuelRoute) },
             )
         }
         composable<VehiclesRoute> {
             VehiclesScreen(
                 onAddVehicle = { navController.navigate(AddEditVehicleRoute()) },
+                onOpenVehicle = { vehicleId -> navController.navigate(AddEditVehicleRoute(vehicleId)) },
             )
         }
         composable<AddEditVehicleRoute> {
@@ -229,5 +291,6 @@ private fun AppNavHost(
             AddMaintenanceScreen(onNavigateBack = { navController.popBackStack() })
         }
         composable<StatsRoute> { StatisticsScreen() }
+        composable<SettingsRoute> { SettingsScreen() }
     }
 }

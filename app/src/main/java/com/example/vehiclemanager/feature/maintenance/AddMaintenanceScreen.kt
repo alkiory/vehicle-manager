@@ -61,9 +61,9 @@ fun AddMaintenanceScreen(
     VehicleManagerScreen(
         topBar = {
             VehicleManagerAppBar(
-                title = if (uiState.isEditing) "Edit service" else "Add service",
+                title = if (uiState.isEditing) "Editar servicio" else "Nuevo servicio",
                 actions = {
-                    TextButton(onClick = onNavigateBack) { Text(text = "Cancel") }
+                    TextButton(onClick = onNavigateBack) { Text(text = "Cancelar") }
                 },
             )
         },
@@ -71,11 +71,11 @@ fun AddMaintenanceScreen(
         when {
             uiState.isLoading -> BoxedLoadingContent()
             uiState.loadError != null -> FormErrorContent(
-                message = "Unable to load service record.",
+                message = "No se pudo cargar el registro de servicio.",
                 onNavigateBack = onNavigateBack,
             )
             uiState.noActiveVehicle -> FormErrorContent(
-                message = "Add a vehicle before logging service.",
+                message = "Añade un vehículo antes de registrar un servicio.",
                 onNavigateBack = onNavigateBack,
             )
             else -> MaintenanceFormContent(
@@ -110,7 +110,7 @@ private fun FormErrorContent(message: String, onNavigateBack: () -> Unit) {
         verticalArrangement = Arrangement.Center,
     ) {
         Text(text = message, style = MaterialTheme.typography.bodyLarge)
-        TextButton(onClick = onNavigateBack) { Text(text = "Go back") }
+        TextButton(onClick = onNavigateBack) { Text(text = "Volver") }
     }
 }
 
@@ -137,13 +137,13 @@ private fun MaintenanceFormContent(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text(text = uiState.activeVehicle?.let { "For ${it.name}" } ?: "Active vehicle", style = MaterialTheme.typography.titleMedium)
+        Text(text = uiState.activeVehicle?.let { "Para ${it.name}" } ?: "Vehículo activo", style = MaterialTheme.typography.titleMedium)
         MaintenanceTextField(
             value = form.title,
             onValueChange = onTitleChanged,
-            label = "Service title",
+            label = "Título del servicio",
             error = errors.title != null,
-            supportingText = errors.title?.maintenanceMessage("Enter a service title."),
+            supportingText = errors.title?.maintenanceMessage("Introduce un título de servicio."),
         )
 
         ExposedDropdownMenuBox(
@@ -154,7 +154,7 @@ private fun MaintenanceFormContent(
                 value = form.category.displayName,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text(text = "Category") },
+                label = { Text(text = "Categoría") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = categoryExpanded) },
                 modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable),
             )
@@ -174,18 +174,18 @@ private fun MaintenanceFormContent(
         MaintenanceTextField(
             value = form.cost,
             onValueChange = onCostChanged,
-            label = "Cost",
+            label = "Coste",
             keyboardType = KeyboardType.Decimal,
             error = errors.cost != null,
-            supportingText = errors.cost?.maintenanceMessage("Enter a valid cost."),
+            supportingText = errors.cost?.maintenanceMessage("Introduce un coste válido."),
         )
         MaintenanceTextField(
             value = form.odometerKm,
             onValueChange = onOdometerChanged,
-            label = "Odometer (km)",
+            label = "Odómetro (km)",
             keyboardType = KeyboardType.Number,
             error = errors.odometer != null,
-            supportingText = errors.odometer?.maintenanceMessage("Enter the service odometer."),
+            supportingText = errors.odometer?.maintenanceMessage("Introduce el odómetro del servicio."),
         )
 
         OutlinedButton(onClick = { datePickerVisible = true }, modifier = Modifier.fillMaxWidth()) {
@@ -194,19 +194,19 @@ private fun MaintenanceFormContent(
         MaintenanceTextField(
             value = form.performedBy,
             onValueChange = onPerformedByChanged,
-            label = "Performed by (optional)",
+            label = "Realizado por (opcional)",
         )
         MaintenanceTextField(
             value = form.notes,
             onValueChange = onNotesChanged,
-            label = "Notes (optional)",
+            label = "Notas (opcional)",
             singleLine = false,
         )
 
-        uiState.previousOdometerKm?.let { Text(text = "Current odometer: $it km", style = MaterialTheme.typography.bodySmall) }
+        uiState.previousOdometerKm?.let { Text(text = "Odómetro actual: $it km", style = MaterialTheme.typography.bodySmall) }
         uiState.saveError?.let { Text(text = it, color = MaterialTheme.colorScheme.error) }
         VehicleManagerPrimaryButton(
-            text = if (uiState.isSaving) "Saving…" else "Save service",
+            text = if (uiState.isSaving) "Guardando…" else "Guardar servicio",
             onClick = onSave,
             enabled = !uiState.isSaving,
             modifier = Modifier.fillMaxWidth(),
@@ -218,9 +218,9 @@ private fun MaintenanceFormContent(
         DatePickerDialog(
             onDismissRequest = { datePickerVisible = false },
             confirmButton = {
-                Button(onClick = { pickerState.selectedDateMillis?.let(onTimestampChanged); datePickerVisible = false }) { Text(text = "Select") }
+                Button(onClick = { pickerState.selectedDateMillis?.let(onTimestampChanged); datePickerVisible = false }) { Text(text = "Seleccionar") }
             },
-            dismissButton = { TextButton(onClick = { datePickerVisible = false }) { Text(text = "Cancel") } },
+            dismissButton = { TextButton(onClick = { datePickerVisible = false }) { Text(text = "Cancelar") } },
         ) { DatePicker(state = pickerState) }
     }
 }
@@ -248,9 +248,9 @@ private fun MaintenanceTextField(
 }
 
 private fun String.maintenanceMessage(default: String): String = when (this) {
-    "positive" -> "Value must be greater than zero."
-    "lower_than_previous" -> "Odometer cannot be lower than the previous service."
-    "invalid" -> "Enter a valid number."
+    "positive" -> "El valor debe ser mayor que cero."
+    "lower_than_previous" -> "El odómetro no puede ser menor que el del servicio anterior."
+    "invalid" -> "Introduce un número válido."
     else -> default
 }
 

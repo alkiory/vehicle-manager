@@ -52,10 +52,10 @@ fun AddEditVehicleScreen(
     VehicleManagerScreen(
         topBar = {
             VehicleManagerAppBar(
-                title = if (uiState.isEditing) "Edit vehicle" else "Add vehicle",
+                title = if (uiState.isEditing) "Editar vehículo" else "Nuevo vehículo",
                 actions = {
                     TextButton(onClick = onNavigateBack) {
-                        Text(text = "Cancel")
+                        Text(text = "Cancelar")
                     }
                 },
             )
@@ -64,7 +64,7 @@ fun AddEditVehicleScreen(
         when {
             uiState.isLoading -> LoadingContent()
             uiState.loadError != null -> ErrorContent(
-                message = "Unable to load vehicle.",
+                message = "No se pudo cargar el vehículo.",
                 onNavigateBack = onNavigateBack,
             )
             else -> VehicleFormContent(
@@ -108,7 +108,7 @@ private fun ErrorContent(
     ) {
         Text(text = message, style = MaterialTheme.typography.bodyLarge)
         TextButton(onClick = onNavigateBack) {
-            Text(text = "Go back")
+            Text(text = "Volver")
         }
     }
 }
@@ -141,43 +141,43 @@ private fun VehicleFormContent(
         VehicleTextField(
             value = form.name,
             onValueChange = onNameChanged,
-            label = "Vehicle name",
+            label = "Nombre del vehículo",
             error = errors.name != null,
-            supportingText = errors.name?.validationMessage("Enter a vehicle name."),
+            supportingText = errors.name?.validationMessage("Introduce un nombre de vehículo."),
         )
         VehicleTextField(
             value = form.make,
             onValueChange = onMakeChanged,
-            label = "Make",
+            label = "Marca",
             error = errors.make != null,
-            supportingText = errors.make?.validationMessage("Enter the vehicle make."),
+            supportingText = errors.make?.validationMessage("Introduce la marca del vehículo."),
         )
         VehicleTextField(
             value = form.model,
             onValueChange = onModelChanged,
-            label = "Model",
+            label = "Modelo",
             error = errors.model != null,
-            supportingText = errors.model?.validationMessage("Enter the vehicle model."),
+            supportingText = errors.model?.validationMessage("Introduce el modelo del vehículo."),
         )
         VehicleTextField(
             value = form.year,
             onValueChange = onYearChanged,
-            label = "Year",
+            label = "Año",
             keyboardType = KeyboardType.Number,
             error = errors.year != null,
-            supportingText = errors.year?.validationMessage("Enter a valid vehicle year."),
+            supportingText = errors.year?.validationMessage("Introduce un año de vehículo válido."),
         )
         VehicleTextField(
             value = form.licensePlate,
             onValueChange = onLicensePlateChanged,
-            label = "License plate",
+            label = "Matrícula",
             error = errors.licensePlate != null,
-            supportingText = errors.licensePlate?.validationMessage("Enter a license plate."),
+            supportingText = errors.licensePlate?.validationMessage("Introduce una matrícula."),
         )
         VehicleTextField(
             value = form.vin,
             onValueChange = onVinChanged,
-            label = "VIN (optional)",
+            label = "VIN (opcional)",
         )
 
         ExposedDropdownMenuBox(
@@ -188,7 +188,7 @@ private fun VehicleFormContent(
                 value = form.fuelType.displayName,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text(text = "Fuel type") },
+                label = { Text(text = "Tipo de combustible") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = fuelMenuExpanded) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -213,10 +213,10 @@ private fun VehicleFormContent(
         VehicleTextField(
             value = form.primaryOdometerKm,
             onValueChange = onOdometerChanged,
-            label = "Odometer (km)",
+            label = "Odómetro (km)",
             keyboardType = KeyboardType.Number,
             error = errors.odometer != null,
-            supportingText = errors.odometer?.validationMessage("Enter an odometer greater than zero."),
+            supportingText = errors.odometer?.validationMessage("Introduce un odómetro mayor que cero."),
         )
 
         uiState.saveError?.let { error ->
@@ -228,7 +228,7 @@ private fun VehicleFormContent(
         }
 
         VehicleManagerPrimaryButton(
-            text = if (uiState.isSaving) "Saving…" else "Save vehicle",
+            text = if (uiState.isSaving) "Guardando…" else "Guardar vehículo",
             onClick = onSave,
             enabled = !uiState.isSaving,
             modifier = Modifier.fillMaxWidth(),
@@ -260,9 +260,9 @@ private fun VehicleTextField(
 }
 
 private fun String.validationMessage(default: String): String = when (this) {
-    "positive" -> "Value must be greater than zero."
-    "range" -> "Enter a realistic vehicle year."
-    "invalid" -> "Enter a valid number."
+    "positive" -> "El valor debe ser mayor que cero."
+    "range" -> "Introduce un año de vehículo realista."
+    "invalid" -> "Introduce un número válido."
     else -> default
 }
 

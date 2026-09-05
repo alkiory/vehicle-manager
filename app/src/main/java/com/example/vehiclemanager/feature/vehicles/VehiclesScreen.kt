@@ -4,15 +4,34 @@ import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Backup
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.CloudDownload
+import androidx.compose.material.icons.filled.CloudUpload
+import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -27,9 +46,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.vehiclemanager.R
+import com.example.vehiclemanager.core.domain.Vehicle
 import com.example.vehiclemanager.core.ui.components.VehicleManagerAppBar
 import com.example.vehiclemanager.core.ui.components.VehicleManagerScreen
 import kotlinx.coroutines.launch
@@ -37,9 +58,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun VehiclesScreen(
     onAddVehicle: () -> Unit = {},
+    onOpenVehicle: (Long) -> Unit = {},
     viewModel: VehicleBackupViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val vehiclesState by viewModel.vehicles.collectAsState()
+    val activeVehicleId by viewModel.activeVehicleId.collectAsState()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -76,44 +100,233 @@ fun VehiclesScreen(
     }
 
     VehicleManagerScreen(
-        topBar = { VehicleManagerAppBar(title = stringResource(R.string.vehicles_title)) },
+        topBar = { VehicleManagerAppBar(title = "Vehículos") },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onAddVehicle,
                 modifier = Modifier.semantics {
-                    contentDescription = context.getString(R.string.add_vehicle_content_description)
+                    contentDescription = "Añadir vehículo"
                 },
-            ) { Text(text = "+") }
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            }
         },
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(text = stringResource(R.string.vehicles_title), style = MaterialTheme.typography.headlineSmall)
-            Text(
-                text = stringResource(R.string.vehicles_description),
-                style = MaterialTheme.typography.bodyLarge,
-            )
-            BackupCard(
-                isBusy = uiState.isBusy,
-                onExport = viewModel::exportBackup,
-                onImport = { openBackupLauncher.launch(arrayOf("application/json", "text/json")) },
-            )
-            when {
-                uiState.importCompleted -> Text(
-                    text = stringResource(R.string.backup_imported),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-                uiState.error != null -> Text(
-                    text = stringResource(R.string.backup_error, uiState.error.orEmpty()),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium,
+            item {
+                Column {
+                    Text(
+                        text = "GESTIÓN",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Text(
+                        text = "Tus vehículos",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Text(
+                        text = "Gestiona la información, el historial y los datos de respaldo de tu flota.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 4.dp),
+                    )
+                }
+            }
+            val vehicles = vehiclesState
+            if (vehicles == null) {
+                item { VehicleListLoadingHint() }
+            } else if (vehicles.isEmpty()) {
+                item { VehicleListEmptyHint(onAddVehicle = onAddVehicle) }
+            } else {
+                items(vehicles, key = Vehicle::id) { vehicle ->
+                    VehicleRow(
+                        vehicle = vehicle,
+                        isActive = vehicle.id == activeVehicleId,
+                        onClick = { onOpenVehicle(vehicle.id) },
+                        onActivate = { viewModel.setActiveVehicle(vehicle.id) },
+                    )
+                }
+            }
+            item {
+                BackupCard(
+                    isBusy = uiState.isBusy,
+                    onExport = viewModel::exportBackup,
+                    onImport = { openBackupLauncher.launch(arrayOf("application/json", "text/json")) },
                 )
             }
+            item {
+                when {
+                    uiState.importCompleted -> Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.tertiary,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Text(
+                            text = "Backup importado correctamente.",
+                            color = MaterialTheme.colorScheme.tertiary,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(start = 6.dp),
+                        )
+                    }
+                    uiState.error != null -> Text(
+                        text = stringResource(R.string.backup_error, uiState.error.orEmpty()),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun VehicleListLoadingHint() {
+    Box(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun VehicleListEmptyHint(onAddVehicle: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.DirectionsCar,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(28.dp),
+                )
+            }
+            Text(
+                text = "Aún no hay vehículos",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 12.dp),
+            )
+            Text(
+                text = "Añade tu primer vehículo para empezar a registrar repostajes y servicios.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 4.dp),
+            )
+            OutlinedButton(
+                onClick = onAddVehicle,
+                modifier = Modifier.padding(top = 12.dp),
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                Text(text = "  Añadir vehículo")
+            }
+        }
+    }
+}
+
+@Composable
+private fun VehicleRow(
+    vehicle: Vehicle,
+    isActive: Boolean,
+    onClick: () -> Unit,
+    onActivate: () -> Unit,
+) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { contentDescription = "Editar ${vehicle.name}" },
+        colors = CardDefaults.cardColors(
+            containerColor = if (isActive) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.surface
+            },
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .background(
+                        if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
+                        RoundedCornerShape(12.dp),
+                    ),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.DirectionsCar,
+                    contentDescription = null,
+                    tint = if (isActive) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(22.dp),
+                )
+            }
+            Column(modifier = Modifier.weight(1f).padding(horizontal = 12.dp)) {
+                Text(
+                    text = vehicle.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    text = "${vehicle.make} ${vehicle.model} · ${vehicle.primaryOdometerKm} km",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 2.dp),
+                )
+            }
+            if (isActive) {
+                StatusPill()
+            } else {
+                OutlinedButton(onClick = onActivate) {
+                    Text(text = "Activar")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun StatusPill() {
+    Row(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(50))
+            .padding(horizontal = 10.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            modifier = Modifier
+                .size(6.dp)
+                .background(MaterialTheme.colorScheme.onPrimary, CircleShape),
+        )
+        Text(
+            text = "  Activo",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onPrimary,
+        )
     }
 }
 
@@ -123,31 +336,67 @@ private fun BackupCard(
     onExport: () -> Unit,
     onImport: () -> Unit,
 ) {
-    Column(
+    Card(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
-        Text(text = stringResource(R.string.backup_title), style = MaterialTheme.typography.titleLarge)
-        Text(text = stringResource(R.string.backup_description), style = MaterialTheme.typography.bodyMedium)
-        if (isBusy) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+        Column(modifier = Modifier.padding(20.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(10.dp)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Backup,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(18.dp),
+                    )
+                }
+                Text(
+                    text = stringResource(R.string.backup_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 10.dp),
+                )
+            }
             Text(
-                text = stringResource(R.string.backup_working),
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = stringResource(R.string.backup_description),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp),
             )
-        } else {
-            Button(
-                onClick = onExport,
-                modifier = Modifier.fillMaxWidth().semantics {
-                    contentDescription = "Export vehicle data backup"
-                },
-            ) { Text(text = stringResource(R.string.export_backup)) }
-            OutlinedButton(
-                onClick = onImport,
-                modifier = Modifier.fillMaxWidth().semantics {
-                    contentDescription = "Import vehicle data backup"
-                },
-            ) { Text(text = stringResource(R.string.import_backup)) }
+
+            if (isBusy) {
+                CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally))
+                Text(
+                    text = stringResource(R.string.backup_working),
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 4.dp),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            } else {
+                Button(
+                    onClick = onExport,
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp).semantics {
+                        contentDescription = "Exportar backup de datos"
+                    },
+                ) {
+                    Icon(imageVector = Icons.Default.CloudUpload, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Text(text = "  " + stringResource(R.string.export_backup))
+                }
+                OutlinedButton(
+                    onClick = onImport,
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp).semantics {
+                        contentDescription = "Importar backup de datos"
+                    },
+                ) {
+                    Icon(imageVector = Icons.Default.CloudDownload, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Text(text = "  " + stringResource(R.string.import_backup))
+                }
+            }
         }
     }
 }

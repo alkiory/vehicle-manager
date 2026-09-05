@@ -44,10 +44,10 @@ fun FuelDetailScreen(
     VehicleManagerScreen(
         topBar = {
             VehicleManagerAppBar(
-                title = "Refuel details",
+                title = "Detalles del repostaje",
                 actions = {
                     TextButton(onClick = onNavigateBack) {
-                        Text(text = "Back")
+                        Text(text = "Volver")
                     }
                 },
             )
@@ -62,7 +62,7 @@ fun FuelDetailScreen(
                 CircularProgressIndicator(modifier = Modifier.padding(24.dp))
             }
             uiState.record == null -> Text(
-                text = "Fuel record not found.",
+                text = "Registro de combustible no encontrado.",
                 modifier = Modifier.padding(24.dp),
             )
             else -> FuelDetailContent(record!!)
@@ -83,13 +83,13 @@ private fun FuelDetailContent(record: FuelRecord) {
             text = dateFormatter.format(Date(record.timestampMs)),
             style = MaterialTheme.typography.headlineSmall,
         )
-        DetailRow("Fuel quantity", formatLiters(record.litersX100))
-        DetailRow("Price per liter", formatCents(record.pricePerLiterCents))
-        DetailRow("Total cost", formatCents(record.totalCostCents))
-        DetailRow("Odometer", "${record.odometerKm} km")
-        DetailRow("Tank status", if (record.isFullTank) "Full tank" else "Partial refuel")
-        record.stationName?.let { DetailRow("Station", it) }
-        record.notes?.let { DetailRow("Notes", it) }
+        DetailRow("Cantidad", formatLiters(record.litersX100))
+        DetailRow("Precio por litro", formatCents(record.pricePerLiterCents))
+        DetailRow("Coste total", formatCents(record.totalCostCents))
+        DetailRow("Odómetro", "${record.odometerKm} km")
+        DetailRow("Estado del depósito", if (record.isFullTank) "Depósito lleno" else "Repostaje parcial")
+        record.stationName?.let { DetailRow("Gasolinera", it) }
+        record.notes?.let { DetailRow("Notas", it) }
     }
 }
 

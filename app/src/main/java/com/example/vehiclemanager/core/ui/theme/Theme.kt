@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun VehicleManagerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current

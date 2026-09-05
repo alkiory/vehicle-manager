@@ -59,5 +59,6 @@ data class DashboardUiState(
     val activeVehicle get() = summary.activeVehicle
     val latestFuelRecord get() = summary.latestFuelRecord
     val averageConsumptionLitersPer100KmX100 get() = summary.averageConsumptionLitersPer100KmX100
+    val costPerKmCentsX100 get() = summary.costPerKmCentsX100
     val maintenanceAlerts get() = summary.maintenanceAlerts
 }
