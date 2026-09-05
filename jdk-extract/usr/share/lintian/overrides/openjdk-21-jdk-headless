@@ -1,0 +1,2 @@
+# repeated lib due to upstream implementation directory layout
+openjdk-21-jdk-headless binary: repeated-path-segment

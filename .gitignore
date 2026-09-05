@@ -1,0 +1,81 @@
+# =========================
+# Gradle
+# =========================
+.gradle/
+**/build/
+
+# Gradle local configuration
+gradle-app.setting
+!gradle/wrapper/gradle-wrapper.jar
+
+# =========================
+# Kotlin
+# =========================
+.kotlin/
+.kotlin-errors/
+
+# =========================
+# Android Studio / IntelliJ
+# =========================
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Android Studio local config
+local.properties
+
+# =========================
+# Android build outputs
+# =========================
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# =========================
+# Native / C++ builds
+# =========================
+.externalNativeBuild/
+**/.externalNativeBuild/
+.cxx/
+**/.cxx/
+
+# =========================
+# Generated Android files
+# =========================
+captures/
+
+# =========================
+# Room schemas
+# =========================
+# Keep Room schema history under version control
+# app/schemas/
+
+# =========================
+# Signing / secrets
+# =========================
+*.jks
+*.keystore
+*.p12
+*.key
+*.pem
+secrets.properties
+
+# =========================
+# OS / Editor files
+# =========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# =========================
+# Local toolchains / archives
+# =========================
+/jdk-extract/
+*.deb
+*.tar
+*.tar.gz
+*.zip
