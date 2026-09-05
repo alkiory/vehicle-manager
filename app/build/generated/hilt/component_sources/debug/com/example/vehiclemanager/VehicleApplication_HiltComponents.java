@@ -2,9 +2,14 @@ package com.example.vehiclemanager;
 
 import com.example.vehiclemanager.core.data.database.DatabaseModule;
 import com.example.vehiclemanager.core.data.fuel.FuelDataModule;
+import com.example.vehiclemanager.core.data.maintenance.MaintenanceDataModule;
 import com.example.vehiclemanager.core.data.vehicle.ActiveVehicleDataModule;
 import com.example.vehiclemanager.core.data.vehicle.VehicleDataModule;
 import com.example.vehiclemanager.feature.fuel.AddFuelViewModel_HiltModules;
+import com.example.vehiclemanager.feature.fuel.FuelDetailViewModel_HiltModules;
+import com.example.vehiclemanager.feature.fuel.FuelHistoryViewModel_HiltModules;
+import com.example.vehiclemanager.feature.maintenance.AddMaintenanceViewModel_HiltModules;
+import com.example.vehiclemanager.feature.maintenance.MaintenanceHistoryViewModel_HiltModules;
 import com.example.vehiclemanager.feature.vehicles.AddEditVehicleViewModel_HiltModules;
 import dagger.Binds;
 import dagger.Component;
@@ -135,6 +140,7 @@ public final class VehicleApplication_HiltComponents {
           DatabaseModule.class,
           FuelDataModule.class,
           HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule.class,
+          MaintenanceDataModule.class,
           ActivityRetainedCBuilderModule.class,
           ServiceCBuilderModule.class,
           VehicleDataModule.class
@@ -162,8 +168,12 @@ public final class VehicleApplication_HiltComponents {
       modules = {
           AddEditVehicleViewModel_HiltModules.KeyModule.class,
           AddFuelViewModel_HiltModules.KeyModule.class,
+          AddMaintenanceViewModel_HiltModules.KeyModule.class,
+          FuelDetailViewModel_HiltModules.KeyModule.class,
+          FuelHistoryViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HiltWrapper_SavedStateHandleModule.class,
+          MaintenanceHistoryViewModel_HiltModules.KeyModule.class,
           ActivityCBuilderModule.class,
           ViewModelCBuilderModule.class
       }
@@ -203,7 +213,11 @@ public final class VehicleApplication_HiltComponents {
       modules = {
           AddEditVehicleViewModel_HiltModules.BindsModule.class,
           AddFuelViewModel_HiltModules.BindsModule.class,
-          HiltWrapper_HiltViewModelFactory_ViewModelModule.class
+          AddMaintenanceViewModel_HiltModules.BindsModule.class,
+          FuelDetailViewModel_HiltModules.BindsModule.class,
+          FuelHistoryViewModel_HiltModules.BindsModule.class,
+          HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
+          MaintenanceHistoryViewModel_HiltModules.BindsModule.class
       }
   )
   @ViewModelScoped

@@ -2,6 +2,7 @@ package com.example.vehiclemanager.core.data.database
 
 import androidx.room.TypeConverter
 import com.example.vehiclemanager.core.domain.FuelType
+import com.example.vehiclemanager.core.domain.MaintenanceCategory
 import java.time.Instant
 
 /**
@@ -23,4 +24,10 @@ class Converters {
 
     @TypeConverter
     fun nameToFuelType(value: String?): FuelType? = value?.let(FuelType::valueOf)
+
+    @TypeConverter
+    fun maintenanceCategoryToName(value: MaintenanceCategory?): String? = value?.name
+
+    @TypeConverter
+    fun nameToMaintenanceCategory(value: String?): MaintenanceCategory? = value?.let(MaintenanceCategory::valueOf)
 }

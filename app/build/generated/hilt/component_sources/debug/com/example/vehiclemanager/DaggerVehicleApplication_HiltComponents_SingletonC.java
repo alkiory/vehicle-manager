@@ -7,20 +7,40 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 import com.example.vehiclemanager.core.data.database.DatabaseModule_ProvideFuelRecordDaoFactory;
+import com.example.vehiclemanager.core.data.database.DatabaseModule_ProvideMaintenanceRecordDaoFactory;
 import com.example.vehiclemanager.core.data.database.DatabaseModule_ProvideVehicleDaoFactory;
 import com.example.vehiclemanager.core.data.database.DatabaseModule_ProvideVehicleDatabaseFactory;
 import com.example.vehiclemanager.core.data.database.VehicleDatabase;
 import com.example.vehiclemanager.core.data.fuel.FuelRecordDao;
 import com.example.vehiclemanager.core.data.fuel.FuelRecordRepositoryImpl;
+import com.example.vehiclemanager.core.data.maintenance.MaintenanceRecordDao;
+import com.example.vehiclemanager.core.data.maintenance.MaintenanceRecordRepositoryImpl;
 import com.example.vehiclemanager.core.data.vehicle.ActiveVehicleRepositoryImpl;
 import com.example.vehiclemanager.core.data.vehicle.VehicleDao;
 import com.example.vehiclemanager.core.data.vehicle.VehicleRepositoryImpl;
 import com.example.vehiclemanager.core.domain.FuelRecordRepository;
+import com.example.vehiclemanager.core.domain.MaintenanceRecordRepository;
 import com.example.vehiclemanager.core.domain.VehicleRepository;
 import com.example.vehiclemanager.feature.fuel.AddFuelViewModel;
 import com.example.vehiclemanager.feature.fuel.AddFuelViewModel_HiltModules;
 import com.example.vehiclemanager.feature.fuel.AddFuelViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
 import com.example.vehiclemanager.feature.fuel.AddFuelViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
+import com.example.vehiclemanager.feature.fuel.FuelDetailViewModel;
+import com.example.vehiclemanager.feature.fuel.FuelDetailViewModel_HiltModules;
+import com.example.vehiclemanager.feature.fuel.FuelDetailViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.example.vehiclemanager.feature.fuel.FuelDetailViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
+import com.example.vehiclemanager.feature.fuel.FuelHistoryViewModel;
+import com.example.vehiclemanager.feature.fuel.FuelHistoryViewModel_HiltModules;
+import com.example.vehiclemanager.feature.fuel.FuelHistoryViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.example.vehiclemanager.feature.fuel.FuelHistoryViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
+import com.example.vehiclemanager.feature.maintenance.AddMaintenanceViewModel;
+import com.example.vehiclemanager.feature.maintenance.AddMaintenanceViewModel_HiltModules;
+import com.example.vehiclemanager.feature.maintenance.AddMaintenanceViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.example.vehiclemanager.feature.maintenance.AddMaintenanceViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
+import com.example.vehiclemanager.feature.maintenance.MaintenanceHistoryViewModel;
+import com.example.vehiclemanager.feature.maintenance.MaintenanceHistoryViewModel_HiltModules;
+import com.example.vehiclemanager.feature.maintenance.MaintenanceHistoryViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.example.vehiclemanager.feature.maintenance.MaintenanceHistoryViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
 import com.example.vehiclemanager.feature.vehicles.AddEditVehicleViewModel;
 import com.example.vehiclemanager.feature.vehicles.AddEditVehicleViewModel_HiltModules;
 import com.example.vehiclemanager.feature.vehicles.AddEditVehicleViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
@@ -385,7 +405,7 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(2).put(AddEditVehicleViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AddEditVehicleViewModel_HiltModules.KeyModule.provide()).put(AddFuelViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AddFuelViewModel_HiltModules.KeyModule.provide()).build());
+      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(6).put(AddEditVehicleViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AddEditVehicleViewModel_HiltModules.KeyModule.provide()).put(AddFuelViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AddFuelViewModel_HiltModules.KeyModule.provide()).put(AddMaintenanceViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AddMaintenanceViewModel_HiltModules.KeyModule.provide()).put(FuelDetailViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, FuelDetailViewModel_HiltModules.KeyModule.provide()).put(FuelHistoryViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, FuelHistoryViewModel_HiltModules.KeyModule.provide()).put(MaintenanceHistoryViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, MaintenanceHistoryViewModel_HiltModules.KeyModule.provide()).build());
     }
 
     @Override
@@ -417,6 +437,14 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
 
     private Provider<AddFuelViewModel> addFuelViewModelProvider;
 
+    private Provider<AddMaintenanceViewModel> addMaintenanceViewModelProvider;
+
+    private Provider<FuelDetailViewModel> fuelDetailViewModelProvider;
+
+    private Provider<FuelHistoryViewModel> fuelHistoryViewModelProvider;
+
+    private Provider<MaintenanceHistoryViewModel> maintenanceHistoryViewModelProvider;
+
     private ViewModelCImpl(SingletonCImpl singletonCImpl,
         ActivityRetainedCImpl activityRetainedCImpl, SavedStateHandle savedStateHandleParam,
         ViewModelLifecycle viewModelLifecycleParam) {
@@ -432,11 +460,15 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
         final ViewModelLifecycle viewModelLifecycleParam) {
       this.addEditVehicleViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
       this.addFuelViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
+      this.addMaintenanceViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
+      this.fuelDetailViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
+      this.fuelHistoryViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
+      this.maintenanceHistoryViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
     }
 
     @Override
     public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
-      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(2).put(AddEditVehicleViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) addEditVehicleViewModelProvider)).put(AddFuelViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) addFuelViewModelProvider)).build());
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(6).put(AddEditVehicleViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) addEditVehicleViewModelProvider)).put(AddFuelViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) addFuelViewModelProvider)).put(AddMaintenanceViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) addMaintenanceViewModelProvider)).put(FuelDetailViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) fuelDetailViewModelProvider)).put(FuelHistoryViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) fuelHistoryViewModelProvider)).put(MaintenanceHistoryViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) maintenanceHistoryViewModelProvider)).build());
     }
 
     @Override
@@ -470,6 +502,18 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
 
           case 1: // com.example.vehiclemanager.feature.fuel.AddFuelViewModel 
           return (T) new AddFuelViewModel(singletonCImpl.activeVehicleRepositoryImplProvider.get(), singletonCImpl.bindFuelRecordRepositoryProvider.get());
+
+          case 2: // com.example.vehiclemanager.feature.maintenance.AddMaintenanceViewModel 
+          return (T) new AddMaintenanceViewModel(singletonCImpl.activeVehicleRepositoryImplProvider.get(), singletonCImpl.bindMaintenanceRecordRepositoryProvider.get(), singletonCImpl.bindVehicleRepositoryProvider.get(), viewModelCImpl.savedStateHandle);
+
+          case 3: // com.example.vehiclemanager.feature.fuel.FuelDetailViewModel 
+          return (T) new FuelDetailViewModel(viewModelCImpl.savedStateHandle, singletonCImpl.bindFuelRecordRepositoryProvider.get());
+
+          case 4: // com.example.vehiclemanager.feature.fuel.FuelHistoryViewModel 
+          return (T) new FuelHistoryViewModel(singletonCImpl.activeVehicleRepositoryImplProvider.get(), singletonCImpl.bindFuelRecordRepositoryProvider.get());
+
+          case 5: // com.example.vehiclemanager.feature.maintenance.MaintenanceHistoryViewModel 
+          return (T) new MaintenanceHistoryViewModel(singletonCImpl.activeVehicleRepositoryImplProvider.get(), singletonCImpl.bindMaintenanceRecordRepositoryProvider.get());
 
           default: throw new AssertionError(id);
         }
@@ -567,6 +611,12 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
 
     private Provider<FuelRecordRepository> bindFuelRecordRepositoryProvider;
 
+    private Provider<MaintenanceRecordDao> provideMaintenanceRecordDaoProvider;
+
+    private Provider<MaintenanceRecordRepositoryImpl> maintenanceRecordRepositoryImplProvider;
+
+    private Provider<MaintenanceRecordRepository> bindMaintenanceRecordRepositoryProvider;
+
     private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
       this.applicationContextModule = applicationContextModuleParam;
       initialize(applicationContextModuleParam);
@@ -583,6 +633,9 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
       this.provideFuelRecordDaoProvider = DoubleCheck.provider(new SwitchingProvider<FuelRecordDao>(singletonCImpl, 5));
       this.fuelRecordRepositoryImplProvider = new SwitchingProvider<>(singletonCImpl, 4);
       this.bindFuelRecordRepositoryProvider = DoubleCheck.provider((Provider) fuelRecordRepositoryImplProvider);
+      this.provideMaintenanceRecordDaoProvider = DoubleCheck.provider(new SwitchingProvider<MaintenanceRecordDao>(singletonCImpl, 7));
+      this.maintenanceRecordRepositoryImplProvider = new SwitchingProvider<>(singletonCImpl, 6);
+      this.bindMaintenanceRecordRepositoryProvider = DoubleCheck.provider((Provider) maintenanceRecordRepositoryImplProvider);
     }
 
     @Override
@@ -635,6 +688,12 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
 
           case 5: // com.example.vehiclemanager.core.data.fuel.FuelRecordDao 
           return (T) DatabaseModule_ProvideFuelRecordDaoFactory.provideFuelRecordDao(singletonCImpl.provideVehicleDatabaseProvider.get());
+
+          case 6: // com.example.vehiclemanager.core.data.maintenance.MaintenanceRecordRepositoryImpl 
+          return (T) new MaintenanceRecordRepositoryImpl(singletonCImpl.provideMaintenanceRecordDaoProvider.get());
+
+          case 7: // com.example.vehiclemanager.core.data.maintenance.MaintenanceRecordDao 
+          return (T) DatabaseModule_ProvideMaintenanceRecordDaoFactory.provideMaintenanceRecordDao(singletonCImpl.provideVehicleDatabaseProvider.get());
 
           default: throw new AssertionError(id);
         }

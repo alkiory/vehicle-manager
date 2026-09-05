@@ -3,6 +3,7 @@ package com.example.vehiclemanager.core.data.database
 import android.content.Context
 import androidx.room.Room
 import com.example.vehiclemanager.core.data.fuel.FuelRecordDao
+import com.example.vehiclemanager.core.data.maintenance.MaintenanceRecordDao
 import com.example.vehiclemanager.core.data.vehicle.VehicleDao
 import dagger.Module
 import dagger.Provides
@@ -22,7 +23,7 @@ object DatabaseModule {
         context,
         VehicleDatabase::class.java,
         DATABASE_NAME,
-    ).addMigrations(MIGRATION_1_2).build()
+    ).addMigrations(MIGRATION_1_2, MIGRATION_2_3).build()
 
     @Provides
     @Singleton
@@ -31,6 +32,11 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideFuelRecordDao(database: VehicleDatabase): FuelRecordDao = database.fuelRecordDao()
+
+    @Provides
+    @Singleton
+    fun provideMaintenanceRecordDao(database: VehicleDatabase): MaintenanceRecordDao =
+        database.maintenanceRecordDao()
 
     private const val DATABASE_NAME = "vehicle_manager.db"
 }

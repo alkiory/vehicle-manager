@@ -23,7 +23,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import com.example.vehiclemanager.feature.dashboard.DashboardScreen
 import com.example.vehiclemanager.feature.fuel.AddFuelScreen
+import com.example.vehiclemanager.feature.fuel.FuelDetailScreen
+import com.example.vehiclemanager.feature.fuel.FuelHistoryScreen
 import com.example.vehiclemanager.feature.fuel.FuelScreen
+import com.example.vehiclemanager.feature.maintenance.AddMaintenanceScreen
+import com.example.vehiclemanager.feature.maintenance.MaintenanceHistoryScreen
 import com.example.vehiclemanager.feature.maintenance.MaintenanceScreen
 import com.example.vehiclemanager.feature.statistics.StatisticsScreen
 import com.example.vehiclemanager.feature.vehicles.AddEditVehicleScreen
@@ -199,14 +203,26 @@ private fun AppNavHost(
             AddEditVehicleScreen(onNavigateBack = { navController.popBackStack() })
         }
         composable<FuelRoute> {
-            FuelScreen(
+            FuelHistoryScreen(
                 onAddFuel = { navController.navigate(AddFuelRoute) },
+                onOpenDetail = { recordId -> navController.navigate(FuelDetailRoute(recordId)) },
             )
         }
         composable<AddFuelRoute> {
             AddFuelScreen(onNavigateBack = { navController.popBackStack() })
         }
-        composable<MaintenanceRoute> { MaintenanceScreen() }
+        composable<FuelDetailRoute> {
+            FuelDetailScreen(onNavigateBack = { navController.popBackStack() })
+        }
+        composable<MaintenanceRoute> {
+            MaintenanceHistoryScreen(
+                onAddMaintenance = { navController.navigate(AddEditMaintenanceRoute()) },
+                onOpenEdit = { recordId -> navController.navigate(AddEditMaintenanceRoute(recordId)) },
+            )
+        }
+        composable<AddEditMaintenanceRoute> {
+            AddMaintenanceScreen(onNavigateBack = { navController.popBackStack() })
+        }
         composable<StatsRoute> { StatisticsScreen() }
     }
 }

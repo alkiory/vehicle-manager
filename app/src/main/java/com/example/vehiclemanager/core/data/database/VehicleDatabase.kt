@@ -5,6 +5,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.vehiclemanager.core.data.fuel.FuelRecordDao
 import com.example.vehiclemanager.core.data.fuel.FuelRecordEntity
+import com.example.vehiclemanager.core.data.maintenance.MaintenanceRecordDao
+import com.example.vehiclemanager.core.data.maintenance.MaintenanceRecordEntity
 import com.example.vehiclemanager.core.data.vehicle.VehicleDao
 import com.example.vehiclemanager.core.data.vehicle.VehicleEntity
 
@@ -15,12 +17,13 @@ import com.example.vehiclemanager.core.data.vehicle.VehicleEntity
  * database as the single Room entry point lets those features share one schema.
  */
 @Database(
-    entities = [VehicleEntity::class, FuelRecordEntity::class],
-    version = 2,
+    entities = [VehicleEntity::class, FuelRecordEntity::class, MaintenanceRecordEntity::class],
+    version = 3,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
 abstract class VehicleDatabase : RoomDatabase() {
     abstract fun vehicleDao(): VehicleDao
     abstract fun fuelRecordDao(): FuelRecordDao
+    abstract fun maintenanceRecordDao(): MaintenanceRecordDao
 }

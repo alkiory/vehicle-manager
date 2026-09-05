@@ -13,5 +13,9 @@
 - Implemented EPIC-002 / TASK-003 persistent active vehicle selection with DataStore, automatic fallback, Hilt binding, and tests.
 - Implemented EPIC-003 / TASK-001 fuel record domain and Room data layer, cascade migration, vehicle-filtered DAO, repository, and tests.
 - Implemented EPIC-003 / TASK-002 refueling form, exact minor-unit calculations, active-vehicle odometer prefill, date picker, and save flow.
+- Implemented EPIC-003 / TASK-003 active-vehicle fuel history, detail view, swipe-to-delete confirmation, and tests.
+- Implemented EPIC-003 / TASK-004 full-tank fuel consumption use case with partial-refuel accumulation and edge-case tests.
+- Implemented EPIC-004 / TASK-001 maintenance domain/data infrastructure, category converters, Room migration, cascade relationship, Hilt binding, and tests.
+- Implemented EPIC-004 / TASK-002 maintenance entry/history UI, active-vehicle persistence, odometer advancement, edit flow, deletion confirmation, and tests.
 - Added repository-level Android/Gradle ignore rules while preserving Room schema history.
 - Updated Java and Kotlin compilation targets from JDK 17 to JDK 21.
