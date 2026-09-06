@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Vehicle and fuel drop iconography -->
+    <!-- All artwork contained within central 72dp safe zone (from x=18 to x=90, y=18 to y=90) -->
+
+    <!-- Vehicle silhouette - simplified car shape -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,70 L30,60 L36,60 L38,50 L70,50 L72,60 L78,60 L78,70 L74,70 L73,66 L35,66 L34,70 Z"/>
+
+    <!-- Vehicle roof/windows -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,50 L38,40 L44,40 L46,48 L48,48 L50,40 L56,40 L58,48 L60,48 L62,40 L68,40 L70,50 Z"
+        android:fillAlpha="0.9"/>
+
+    <!-- Fuel drop icon -->
+    <path
+        android:fillColor="#3D5AFE"
+        android:pathData="M78,28 Q78,20 82,20 Q86,20 86,28 Q86,34 82,37 Q78,34 78,28 Z"/>
+
+    <!-- Fuel nozzle/spout -->
+    <path
+        android:fillColor="#3D5AFE"
+        android:pathData="M80,37 L80,44 M82,37 L82,44"/>
+
+    <!-- Small accent circle -->
+    <path
+        android:fillColor="#3D5AFE"
+        android:pathData="M54,82m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0"/>
+
+</vector>
