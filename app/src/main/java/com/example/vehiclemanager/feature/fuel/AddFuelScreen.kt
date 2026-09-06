@@ -86,6 +86,7 @@ fun AddFuelScreen(
                 onOdometerChanged = viewModel::updateOdometer,
                 onLitersChanged = viewModel::updateLiters,
                 onPriceChanged = viewModel::updatePricePerLiter,
+                onTotalCostChanged = viewModel::updateTotalCost,
                 onFullTankChanged = viewModel::updateFullTank,
                 onStationChanged = viewModel::updateStationName,
                 onNotesChanged = viewModel::updateNotes,
@@ -133,6 +134,7 @@ private fun FuelFormContent(
     onOdometerChanged: (String) -> Unit,
     onLitersChanged: (String) -> Unit,
     onPriceChanged: (String) -> Unit,
+    onTotalCostChanged: (String) -> Unit,
     onFullTankChanged: (Boolean) -> Unit,
     onStationChanged: (String) -> Unit,
     onNotesChanged: (String) -> Unit,
@@ -171,20 +173,30 @@ private fun FuelFormContent(
             supportingText = errors.odometer?.fuelValidationMessage("Introduce el odómetro."),
         )
         FuelTextField(
+            value = form.pricePerLiter,
+            onValueChange = onPriceChanged,
+            label = "Precio por litro (€/L)",
+            keyboardType = KeyboardType.Decimal,
+            error = errors.pricePerLiter != null,
+            supportingText = errors.pricePerLiter?.fuelValidationMessage("Introduce el precio."),
+        )
+        FuelTextField(
+            value = form.totalCost,
+            onValueChange = onTotalCostChanged,
+            label = "Costo total (€)",
+            keyboardType = KeyboardType.Decimal,
+            error = errors.totalCost != null,
+            supportingText = errors.totalCost?.fuelValidationMessage("Introduce el costo total."),
+            isAutoFilled = form.autoFilledField == FuelAmountField.TOTAL_COST,
+        )
+        FuelTextField(
             value = form.liters,
             onValueChange = onLitersChanged,
             label = "Cantidad de combustible (litros)",
             keyboardType = KeyboardType.Decimal,
             error = errors.liters != null,
             supportingText = errors.liters?.fuelValidationMessage("Introduce la cantidad de combustible."),
-        )
-        FuelTextField(
-            value = form.pricePerLiter,
-            onValueChange = onPriceChanged,
-            label = "Precio por litro",
-            keyboardType = KeyboardType.Decimal,
-            error = errors.pricePerLiter != null,
-            supportingText = errors.pricePerLiter?.fuelValidationMessage("Introduce el precio."),
+            isAutoFilled = form.autoFilledField == FuelAmountField.LITERS,
         )
 
         Row(
@@ -263,6 +275,7 @@ private fun FuelTextField(
     error: Boolean = false,
     supportingText: String? = null,
     singleLine: Boolean = true,
+    isAutoFilled: Boolean = false,
 ) {
     OutlinedTextField(
         value = value,
@@ -275,6 +288,8 @@ private fun FuelTextField(
             { Text(text = message) }
         },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        readOnly = isAutoFilled,
+        enabled = !isAutoFilled,
     )
 }
 

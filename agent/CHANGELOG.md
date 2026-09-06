@@ -161,6 +161,31 @@ All tasks in EPIC-008 (Visual Polish & Fluent Icon System Integration) are now c
 
 ---
 
+---
+
+## EPIC-010 Bug Fixes
+
+### Fuel Odometer Persistence Fix
+
+- Fixed bug where vehicle odometer was not updating after saving a fuel record
+- `AddFuelViewModel` now updates `primaryOdometerKm` when saved fuel record has higher odometer
+- Added `VehicleRepository` dependency to `AddFuelViewModel`
+- Behavior now matches `AddMaintenanceViewModel` which already had this logic
+- Verification: `./gradlew assembleDebug testDebugUnitTest` — builds and tests pass
+
+---
+
+## EPIC-010 UI Enhancement
+
+### Fuel Form Total Cost Field
+
+- Added visible `totalCost` input field to `AddFuelScreen` refueling form
+- Field order updated: Odometer → Price/Liter → Total Cost → Liters
+- Auto-calculated fields show as read-only/disabled to indicate auto-calculation
+- Verification: `./gradlew assembleDebug testDebugUnitTest` — builds and tests pass
+
+---
+
 ## Next Steps
 
 ### EPIC-011 — (TBD)

@@ -5,6 +5,7 @@ import com.example.vehiclemanager.core.domain.FuelRecord
 import com.example.vehiclemanager.core.domain.FuelRecordRepository
 import com.example.vehiclemanager.core.domain.FuelType
 import com.example.vehiclemanager.core.domain.Vehicle
+import com.example.vehiclemanager.core.domain.VehicleRepository
 import com.example.vehiclemanager.core.ui.navigation.FormDirtyStateHolder
 import com.example.vehiclemanager.feature.fuel.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -129,6 +130,7 @@ class AddFuelViewModelTest {
     ): AddFuelViewModel = AddFuelViewModel(
         activeVehicleRepository = FakeActiveVehicleRepository(vehicle()),
         fuelRecordRepository = recordRepository,
+        vehicleRepository = FakeVehicleRepository(),
         formDirtyStateHolder = dirtyStateHolder,
     )
 
@@ -166,5 +168,13 @@ class AddFuelViewModelTest {
         }
         override suspend fun updateFuelRecord(record: FuelRecord) = Unit
         override suspend fun deleteFuelRecord(record: FuelRecord) = Unit
+    }
+
+    private class FakeVehicleRepository : VehicleRepository {
+        override val vehicles: Flow<List<Vehicle>> = MutableStateFlow(emptyList())
+        override suspend fun getVehicle(id: Long): Vehicle? = null
+        override suspend fun insertVehicle(vehicle: Vehicle): Long = 1
+        override suspend fun updateVehicle(vehicle: Vehicle) = Unit
+        override suspend fun deleteVehicle(vehicle: Vehicle) = Unit
     }
 }

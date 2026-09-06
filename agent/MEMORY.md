@@ -21,6 +21,11 @@
 - Unsaved-changes confirmation is shared: `UnsavedChangesGuard` (back gesture on form screens) and the AppScaffold dialog reuse the same localized strings (`unsaved_changes_*` in `strings.xml`).
 - Backup/restore UX lives exclusively in `SettingsScreen` (Data Management section) and is bound to `VehicleBackupViewModel`; feature screens must not embed SAF launchers for backup.
 
+## Conventions established in EPIC-010 Bug Fixes
+
+- **Odometer Update on Save**: When saving a fuel record or maintenance record, if the record's odometer is greater than the vehicle's `primaryOdometerKm`, the vehicle must be updated with the new odometer value. This ensures the odometer reflects in all views (Dashboard, VehiclesScreen, etc.).
+- Both `AddFuelViewModel` and `AddMaintenanceViewModel` must update the vehicle's odometer after saving if the new odometer is higher.
+
 ## Conventions established in EPIC-008 / TASK-001
 
 - **FluentUI Icons:** The FluentUI System Icons library (`com.microsoft.design:fluent-system-icons:1.1.260`) is added to the version catalog for Android vector drawable resources.

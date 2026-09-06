@@ -6,6 +6,7 @@ import com.example.vehiclemanager.core.domain.ActiveVehicleRepository
 import com.example.vehiclemanager.core.domain.FuelRecord
 import com.example.vehiclemanager.core.domain.FuelRecordRepository
 import com.example.vehiclemanager.core.domain.Vehicle
+import com.example.vehiclemanager.core.domain.VehicleRepository
 import com.example.vehiclemanager.core.ui.navigation.FormDirtyStateHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -24,6 +25,7 @@ import kotlinx.coroutines.launch
 class AddFuelViewModel @Inject constructor(
     private val activeVehicleRepository: ActiveVehicleRepository,
     private val fuelRecordRepository: FuelRecordRepository,
+    private val vehicleRepository: VehicleRepository,
     private val formDirtyStateHolder: FormDirtyStateHolder,
 ) : ViewModel() {
     private val dirtyToken = Any()
@@ -137,10 +139,19 @@ class AddFuelViewModel @Inject constructor(
             notes = state.form.notes.trim().ifEmpty { null },
         )
 
+        val currentState = _uiState.value
+        val activeVehicle = currentState.activeVehicle ?: return
         _uiState.update { it.copy(isSaving = true, saveError = null) }
         viewModelScope.launch {
-            runCatching { fuelRecordRepository.insertFuelRecord(record) }
-                .onSuccess { _uiState.update { it.copy(isSaving = false, saveCompleted = true) } }
+            runCatching {
+                fuelRecordRepository.insertFuelRecord(record)
+                // Actualizar el odometro del vehículo si el registro tiene un odometro mayor
+                if (record.odometerKm > activeVehicle.primaryOdometerKm) {
+                    vehicleRepository.updateVehicle(
+                        activeVehicle.copy(primaryOdometerKm = record.odometerKm),
+                    )
+                }
+            }.onSuccess { _uiState.update { it.copy(isSaving = false, saveCompleted = true) } }
                 .onFailure { throwable ->
                     _uiState.update {
                         it.copy(

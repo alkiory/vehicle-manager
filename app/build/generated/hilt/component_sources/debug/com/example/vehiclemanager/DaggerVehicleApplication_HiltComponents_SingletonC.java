@@ -565,7 +565,7 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
           return (T) new AddEditVehicleViewModel(singletonCImpl.bindVehicleRepositoryProvider.get(), singletonCImpl.formDirtyStateHolderProvider.get(), viewModelCImpl.savedStateHandle);
 
           case 1: // com.example.vehiclemanager.feature.fuel.AddFuelViewModel 
-          return (T) new AddFuelViewModel(singletonCImpl.activeVehicleRepositoryImplProvider.get(), singletonCImpl.bindFuelRecordRepositoryProvider.get(), singletonCImpl.formDirtyStateHolderProvider.get());
+          return (T) new AddFuelViewModel(singletonCImpl.activeVehicleRepositoryImplProvider.get(), singletonCImpl.bindFuelRecordRepositoryProvider.get(), singletonCImpl.bindVehicleRepositoryProvider.get(), singletonCImpl.formDirtyStateHolderProvider.get());
 
           case 2: // com.example.vehiclemanager.feature.maintenance.AddMaintenanceViewModel 
           return (T) new AddMaintenanceViewModel(singletonCImpl.activeVehicleRepositoryImplProvider.get(), singletonCImpl.bindMaintenanceRecordRepositoryProvider.get(), singletonCImpl.bindVehicleRepositoryProvider.get(), singletonCImpl.formDirtyStateHolderProvider.get(), viewModelCImpl.savedStateHandle);
