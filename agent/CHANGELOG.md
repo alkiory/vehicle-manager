@@ -261,19 +261,26 @@ All tasks in EPIC-008 (Visual Polish & Fluent Icon System Integration) are now c
 
 ### TASK-002 — Animated Startup Splash Screen Integration (DONE)
 
-- Created `SplashScreenAnimation` composable with:
-  - Scale animation (0 → 1, 800ms, FastOutSlowInEasing)
-  - Alpha/fade animation (0 → 1, 600ms with 200ms delay)
+- Created animated splash screen with:
+  - Scale animation (0.8 → 1, 800ms, tween easing)
+  - Fade animation (fadeIn + fadeOut)
   - 120dp icon size centered on screen
+  - Dark navy (#1A237E) background matching splash theme
 - Updated `MainActivity` to:
   - Call `installSplashScreen()` before `setContent()`
-  - Pass splashScreen to `VehicleManagerApp` composable
-  - Use `splashScreen.setKeepOnScreenCondition { false }` to dismiss after animation
-- Added `LaunchedEffect` to trigger splash screen dismissal after composition
-- Animation uses AndroidX Compose animation APIs:
-  - `animateFloatAsState` for smooth interpolations
-  - `FastOutSlowInEasing` for natural motion feel
+  - Use state-based approach with `showSplash` boolean
+  - Splash screen shows animated icon, then transitions to main AppScaffold
+- Used `LaunchedEffect(Unit)` with 1500ms delay to dismiss splash
+- Used `AnimatedVisibility` for smooth enter/exit transitions:
+  - Enter: fadeIn + scaleIn (0.8 → 1)
+  - Exit: fadeOut + scaleOut (1 → 0.8)
 - Splash screen displays app icon with smooth entrance animation before transitioning to main app
+
+**Bug Fix Applied (2nd iteration):**
+- Replaced complex LaunchedEffect with scale/alpha tracking (which caused crash) with simpler approach:
+  - Use `LaunchedEffect(Unit)` with fixed 1500ms delay
+  - Use `AnimatedVisibility` with enter/exit animations
+  - Ensure stable composition and proper state management
 
 **Verification:** `./gradlew assembleDebug testDebugUnitTest` — builds and tests pass.
 
