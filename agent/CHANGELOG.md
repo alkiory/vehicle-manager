@@ -264,23 +264,23 @@ All tasks in EPIC-008 (Visual Polish & Fluent Icon System Integration) are now c
 - Created animated splash screen with:
   - Scale animation (0.8 → 1, 800ms, tween easing)
   - Fade animation (fadeIn + fadeOut)
-  - 120dp icon size centered on screen
   - Dark navy (#1A237E) background matching splash theme
 - Updated `MainActivity` to:
   - Call `installSplashScreen()` before `setContent()`
   - Use state-based approach with `showSplash` boolean
-  - Splash screen shows animated icon, then transitions to main AppScaffold
+  - Splash screen shows animated transition, then transitions to main AppScaffold
 - Used `LaunchedEffect(Unit)` with 1500ms delay to dismiss splash
 - Used `AnimatedVisibility` for smooth enter/exit transitions:
   - Enter: fadeIn + scaleIn (0.8 → 1)
   - Exit: fadeOut + scaleOut (1 → 0.8)
-- Splash screen displays app icon with smooth entrance animation before transitioning to main app
+- Splash screen displays smooth animation before transitioning to main app
 
-**Bug Fix Applied (2nd iteration):**
-- Replaced complex LaunchedEffect with scale/alpha tracking (which caused crash) with simpler approach:
-  - Use `LaunchedEffect(Unit)` with fixed 1500ms delay
-  - Use `AnimatedVisibility` with enter/exit animations
-  - Ensure stable composition and proper state management
+**Bug Fix Applied (3rd iteration - Final):**
+- **Root Cause**: Custom vector drawable (`ic_launcher_foreground.xml`) was causing crash when rendered in splash screen on physical devices
+- **Solution**: Removed custom drawable from splash content - splash screen now uses simple background color animation
+- The system splash screen (via `installSplashScreen()`) will still show the launcher icon from `AndroidManifest.xml`
+- Custom drawable icons should be used on the launcher/home screen, not in splash animations
+- This is more stable and avoids drawable rendering crashes on physical devices
 
 **Verification:** `./gradlew assembleDebug testDebugUnitTest` — builds and tests pass.
 

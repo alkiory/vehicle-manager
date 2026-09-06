@@ -102,8 +102,9 @@ drawable ic_call_answer_video
 drawable ic_call_answer_video_low
 drawable ic_call_decline
 drawable ic_call_decline_low
-drawable ic_launcher_background
-drawable ic_launcher_foreground
+drawable ic_launcher_icon
+drawable ic_splash_foreground
+drawable ic_splash_icon
 drawable icon_background
 drawable notification_action_background
 drawable notification_bg
