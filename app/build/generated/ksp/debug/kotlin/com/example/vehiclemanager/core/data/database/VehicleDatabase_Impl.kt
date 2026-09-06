@@ -17,6 +17,8 @@ import com.example.vehiclemanager.core.`data`.maintenance.MaintenanceRecordDao
 import com.example.vehiclemanager.core.`data`.maintenance.MaintenanceRecordDao_Impl
 import com.example.vehiclemanager.core.`data`.maintenance.MaintenanceScheduleDao
 import com.example.vehiclemanager.core.`data`.maintenance.MaintenanceScheduleDao_Impl
+import com.example.vehiclemanager.core.`data`.notification.NotificationDao
+import com.example.vehiclemanager.core.`data`.notification.NotificationDao_Impl
 import com.example.vehiclemanager.core.`data`.vehicle.VehicleDao
 import com.example.vehiclemanager.core.`data`.vehicle.VehicleDao_Impl
 import java.lang.Class
@@ -57,9 +59,14 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
   }
 
 
+  private val _notificationDao: Lazy<NotificationDao> = lazy {
+    NotificationDao_Impl(this)
+  }
+
+
   protected override fun createOpenHelper(config: DatabaseConfiguration): SupportSQLiteOpenHelper {
     val _openCallback: SupportSQLiteOpenHelper.Callback = RoomOpenHelper(config, object :
-        RoomOpenHelper.Delegate(4) {
+        RoomOpenHelper.Delegate(5) {
       public override fun createAllTables(db: SupportSQLiteDatabase) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `vehicles` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `make` TEXT NOT NULL, `model` TEXT NOT NULL, `year` INTEGER NOT NULL, `licensePlate` TEXT NOT NULL, `vin` TEXT, `fuelType` TEXT NOT NULL, `primaryOdometerKm` INTEGER NOT NULL)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `fuel_records` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `vehicleId` INTEGER NOT NULL, `timestampMs` INTEGER NOT NULL, `odometerKm` INTEGER NOT NULL, `litersX100` INTEGER NOT NULL, `pricePerLiterCents` INTEGER NOT NULL, `totalCostCents` INTEGER NOT NULL, `isFullTank` INTEGER NOT NULL, `stationName` TEXT, `notes` TEXT, FOREIGN KEY(`vehicleId`) REFERENCES `vehicles`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
@@ -68,8 +75,10 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_maintenance_records_vehicleId_timestampMs` ON `maintenance_records` (`vehicleId`, `timestampMs`)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `maintenance_schedules` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `vehicleId` INTEGER NOT NULL, `serviceTitle` TEXT NOT NULL, `intervalKm` INTEGER, `intervalMonths` INTEGER, `lastPerformedKm` INTEGER, `lastPerformedDateMs` INTEGER, FOREIGN KEY(`vehicleId`) REFERENCES `vehicles`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_maintenance_schedules_vehicleId` ON `maintenance_schedules` (`vehicleId`)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `notification_schedules` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `vehicleId` INTEGER NOT NULL, `serviceTitle` TEXT NOT NULL, `scheduledDateMs` INTEGER NOT NULL, `isDismissed` INTEGER NOT NULL, `isTriggered` INTEGER NOT NULL, `triggeredDateMs` INTEGER, `maintenanceScheduleId` INTEGER)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `notification_preferences` (`id` INTEGER NOT NULL, `maintenanceRemindersEnabled` INTEGER NOT NULL, `fuelPriceAlertsEnabled` INTEGER NOT NULL, `reminderDaysBeforeDue` INTEGER NOT NULL, `fuelPriceAlertThreshold` INTEGER NOT NULL, PRIMARY KEY(`id`))")
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)")
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'da694c54379c1ebfc0df10b160c3fdd7')")
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4f99ba054909e5b6469272aa1efbd220')")
       }
 
       public override fun dropAllTables(db: SupportSQLiteDatabase) {
@@ -77,6 +86,8 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
         db.execSQL("DROP TABLE IF EXISTS `fuel_records`")
         db.execSQL("DROP TABLE IF EXISTS `maintenance_records`")
         db.execSQL("DROP TABLE IF EXISTS `maintenance_schedules`")
+        db.execSQL("DROP TABLE IF EXISTS `notification_schedules`")
+        db.execSQL("DROP TABLE IF EXISTS `notification_preferences`")
         val _callbacks: List<RoomDatabase.Callback>? = mCallbacks
         if (_callbacks != null) {
           for (_callback: RoomDatabase.Callback in _callbacks) {
@@ -266,9 +277,76 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
               | Found:
               |""".trimMargin() + _existingMaintenanceSchedules)
         }
+        val _columnsNotificationSchedules: HashMap<String, TableInfo.Column> =
+            HashMap<String, TableInfo.Column>(8)
+        _columnsNotificationSchedules.put("id", TableInfo.Column("id", "INTEGER", true, 1, null,
+            TableInfo.CREATED_FROM_ENTITY))
+        _columnsNotificationSchedules.put("vehicleId", TableInfo.Column("vehicleId", "INTEGER",
+            true, 0, null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsNotificationSchedules.put("serviceTitle", TableInfo.Column("serviceTitle", "TEXT",
+            true, 0, null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsNotificationSchedules.put("scheduledDateMs", TableInfo.Column("scheduledDateMs",
+            "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsNotificationSchedules.put("isDismissed", TableInfo.Column("isDismissed", "INTEGER",
+            true, 0, null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsNotificationSchedules.put("isTriggered", TableInfo.Column("isTriggered", "INTEGER",
+            true, 0, null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsNotificationSchedules.put("triggeredDateMs", TableInfo.Column("triggeredDateMs",
+            "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsNotificationSchedules.put("maintenanceScheduleId",
+            TableInfo.Column("maintenanceScheduleId", "INTEGER", false, 0, null,
+            TableInfo.CREATED_FROM_ENTITY))
+        val _foreignKeysNotificationSchedules: HashSet<TableInfo.ForeignKey> =
+            HashSet<TableInfo.ForeignKey>(0)
+        val _indicesNotificationSchedules: HashSet<TableInfo.Index> = HashSet<TableInfo.Index>(0)
+        val _infoNotificationSchedules: TableInfo = TableInfo("notification_schedules",
+            _columnsNotificationSchedules, _foreignKeysNotificationSchedules,
+            _indicesNotificationSchedules)
+        val _existingNotificationSchedules: TableInfo = read(db, "notification_schedules")
+        if (!_infoNotificationSchedules.equals(_existingNotificationSchedules)) {
+          return RoomOpenHelper.ValidationResult(false, """
+              |notification_schedules(com.example.vehiclemanager.core.data.notification.NotificationScheduleEntity).
+              | Expected:
+              |""".trimMargin() + _infoNotificationSchedules + """
+              |
+              | Found:
+              |""".trimMargin() + _existingNotificationSchedules)
+        }
+        val _columnsNotificationPreferences: HashMap<String, TableInfo.Column> =
+            HashMap<String, TableInfo.Column>(5)
+        _columnsNotificationPreferences.put("id", TableInfo.Column("id", "INTEGER", true, 1, null,
+            TableInfo.CREATED_FROM_ENTITY))
+        _columnsNotificationPreferences.put("maintenanceRemindersEnabled",
+            TableInfo.Column("maintenanceRemindersEnabled", "INTEGER", true, 0, null,
+            TableInfo.CREATED_FROM_ENTITY))
+        _columnsNotificationPreferences.put("fuelPriceAlertsEnabled",
+            TableInfo.Column("fuelPriceAlertsEnabled", "INTEGER", true, 0, null,
+            TableInfo.CREATED_FROM_ENTITY))
+        _columnsNotificationPreferences.put("reminderDaysBeforeDue",
+            TableInfo.Column("reminderDaysBeforeDue", "INTEGER", true, 0, null,
+            TableInfo.CREATED_FROM_ENTITY))
+        _columnsNotificationPreferences.put("fuelPriceAlertThreshold",
+            TableInfo.Column("fuelPriceAlertThreshold", "INTEGER", true, 0, null,
+            TableInfo.CREATED_FROM_ENTITY))
+        val _foreignKeysNotificationPreferences: HashSet<TableInfo.ForeignKey> =
+            HashSet<TableInfo.ForeignKey>(0)
+        val _indicesNotificationPreferences: HashSet<TableInfo.Index> = HashSet<TableInfo.Index>(0)
+        val _infoNotificationPreferences: TableInfo = TableInfo("notification_preferences",
+            _columnsNotificationPreferences, _foreignKeysNotificationPreferences,
+            _indicesNotificationPreferences)
+        val _existingNotificationPreferences: TableInfo = read(db, "notification_preferences")
+        if (!_infoNotificationPreferences.equals(_existingNotificationPreferences)) {
+          return RoomOpenHelper.ValidationResult(false, """
+              |notification_preferences(com.example.vehiclemanager.core.data.notification.NotificationPreferencesEntity).
+              | Expected:
+              |""".trimMargin() + _infoNotificationPreferences + """
+              |
+              | Found:
+              |""".trimMargin() + _existingNotificationPreferences)
+        }
         return RoomOpenHelper.ValidationResult(true, null)
       }
-    }, "da694c54379c1ebfc0df10b160c3fdd7", "76e3472ad7d6e6af4166fd2c3c08c5cb")
+    }, "4f99ba054909e5b6469272aa1efbd220", "6a2275ee25d7beaf8edce4c129cd6cde")
     val _sqliteConfig: SupportSQLiteOpenHelper.Configuration =
         SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build()
     val _helper: SupportSQLiteOpenHelper = config.sqliteOpenHelperFactory.create(_sqliteConfig)
@@ -279,7 +357,7 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
     val _shadowTablesMap: HashMap<String, String> = HashMap<String, String>(0)
     val _viewTables: HashMap<String, Set<String>> = HashMap<String, Set<String>>(0)
     return InvalidationTracker(this, _shadowTablesMap, _viewTables,
-        "vehicles","fuel_records","maintenance_records","maintenance_schedules")
+        "vehicles","fuel_records","maintenance_records","maintenance_schedules","notification_schedules","notification_preferences")
   }
 
   public override fun clearAllTables() {
@@ -299,6 +377,8 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
       _db.execSQL("DELETE FROM `fuel_records`")
       _db.execSQL("DELETE FROM `maintenance_records`")
       _db.execSQL("DELETE FROM `maintenance_schedules`")
+      _db.execSQL("DELETE FROM `notification_schedules`")
+      _db.execSQL("DELETE FROM `notification_preferences`")
       super.setTransactionSuccessful()
     } finally {
       super.endTransaction()
@@ -321,6 +401,8 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
         MaintenanceRecordDao_Impl.getRequiredConverters())
     _typeConvertersMap.put(MaintenanceScheduleDao::class.java,
         MaintenanceScheduleDao_Impl.getRequiredConverters())
+    _typeConvertersMap.put(NotificationDao::class.java,
+        NotificationDao_Impl.getRequiredConverters())
     return _typeConvertersMap
   }
 
@@ -345,4 +427,6 @@ public class VehicleDatabase_Impl : VehicleDatabase() {
 
   public override fun maintenanceScheduleDao(): MaintenanceScheduleDao =
       _maintenanceScheduleDao.value
+
+  public override fun notificationDao(): NotificationDao = _notificationDao.value
 }

@@ -1,22 +1,58 @@
 # Current Task
 
-- **Task:** EPIC-007 — TASK-005 (Form Auto-Calculations, Unsaved Changes Guard, Backup Migration & Metric Cards Fix)
-- **State:** DONE
-- **Objective:** Implement smart refueling calculations, unsaved form navigation guards, relocate backup UI to settings, and fix dashboard placeholder metrics.
+- **Task:** EPIC-010 — Complete
+- **State:** 🟢 DONE
+- **Objective:** All notification and reminder features implemented.
 
-## Completed
+## EPIC-010 Completion Summary
 
-1. **Refueling dynamic calculator** (`AddFuelViewModel` + `FuelForm.kt`): entering any two of `Total Cost` / `Liters` / `Price per Liter` auto-populates the third (`Total = Liters × Price/L`) using BigDecimal math over persisted minor units; auto-filled field refreshes on input edits and clears when inputs become invalid; user-edited values are never overwritten, so no circular update loop is possible. New "Total importe" field added to `AddFuelScreen`.
-2. **Unsaved changes guard**: `isDirty` tracked in `AddFuelViewModel`, `AddEditVehicleViewModel` and `AddMaintenanceViewModel` (registered into the singleton `FormDirtyStateHolder`, cleared in `onCleared`). Shared `UnsavedChangesGuard` composable intercepts the system back gesture on dirty form screens; `AppScaffoldViewModel` intercepts bottom-tab/rail navigation while any form is dirty and both paths share one discard-confirmation `AlertDialog` (localized strings added).
-3. **Backup relocation**: `DataBackupCard` and its SAF launchers removed from `VehiclesScreen` (now a pure vehicle list); Settings gained a "Gestión de datos" section with Export/Import actions bound to `VehicleBackupViewModel`.
-4. **Dashboard metric fix**: fuel summary card shows "Sin datos suficientes" (caption: "Se necesitan dos depósitos llenos") instead of formatting `0.00 L/100km` when full-tank history is insufficient; "Sin registros" only when there is no fuel record at all.
+### TASK-001 — Service Reminder Notifications: 🟢 DONE
 
-## Verification
+**Implementation Summary:**
+- Created `NotificationManagerImpl` for Android notification handling
+- Created `ServiceReminderWorker` (WorkManager) for scheduled notification checks
+- Created `MaintenanceNotificationReceiver` for notification action handling (dismiss)
+- Created `NotificationSchedule` domain models and `NotificationRepository`
+- Integrated with existing `MaintenanceSchedule` system
+- Added notification channels for maintenance reminders and fuel price alerts
+- Added database migration for notification tables (version 5)
 
-- `./gradlew testDebugUnitTest` — 76 tests, 0 failures.
-- `./gradlew assembleDebug` — succeeds.
-- New tests: `FuelFormTest` (calculator math/rounding/format), `AddFuelViewModelTest` (any-2→3rd, refresh, invalid-clear, no overwrite of user input, save uses auto-filled total, isDirty), `AppScaffoldViewModelTest` (dirty registry, navigation blocking, discard runs pending navigation, dismiss, immediate pass-through when clean).
+### TASK-002 — Fuel Price Alert System: 🟢 DONE
 
-## Next Task
+**Implementation Summary:**
+- Created `FuelPriceAlertUseCase` for checking price alerts
+- Integrated with existing `FuelRecordRepository` for price monitoring
+- Added support for custom price threshold preferences
+- Users can enable/disable fuel price alerts
+- Alert triggers when price is below user-set threshold
 
-- None defined; backlog is empty and the project remains release-ready.
+### TASK-003 — Maintenance Reminder Integration: 🟢 DONE
+
+**Implementation Summary:**
+- Created `ReminderManagementUseCase` for snoozing and rescheduling reminders
+- Created `SnoozedReminder` and `SnoozeReminderRequest` domain models
+- Supports snoozing reminders for a specified duration
+- Supports rescheduling reminders to a new date
+- Supports dismissing reminders permanently
+- Integrates with existing `NotificationRepository` for persistence
+
+**Files Created:**
+- `core/domain/ReminderManagementUseCase.kt` - Snooze/reschedule functionality
+- `SnoozedReminder` data class
+- `SnoozeReminderRequest` data class
+
+**Files Modified:**
+- `NotificationDao.kt` - Added `getActiveNotification()` query
+
+---
+
+## EPIC-010 Complete ✅
+
+All three tasks in EPIC-010 (Notifications & Reminders) are now complete:
+- TASK-001: Service Reminder Notifications ✅
+- TASK-002: Fuel Price Alert System ✅
+- TASK-003: Maintenance Reminder Integration ✅
+
+**Verification:**
+- `./gradlew assembleDebug` — succeeds
+- `./gradlew testDebugUnitTest` — passes, 0 failures

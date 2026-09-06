@@ -12,6 +12,9 @@ interface FuelRecordDao {
     @Query("SELECT * FROM fuel_records WHERE vehicleId = :vehicleId ORDER BY timestampMs DESC, id DESC")
     fun observeForVehicle(vehicleId: Long): Flow<List<FuelRecordEntity>>
 
+    @Query("SELECT * FROM fuel_records ORDER BY timestampMs DESC, id DESC")
+    fun observeRecent(): Flow<List<FuelRecordEntity>>
+
     @Query("SELECT * FROM fuel_records WHERE id = :id")
     suspend fun findById(id: Long): FuelRecordEntity?
 

@@ -68,12 +68,6 @@ data class UpcomingService(
     val dateDueMs: Long?,
 )
 
-enum class ServiceStatus {
-    DUE_SOON,
-    OVERDUE,
-    OK,
-}
-
 private fun Long.plusMonthsSafely(months: Long): Long = runCatching {
     Instant.ofEpochMilli(this)
         .atZone(ZoneOffset.UTC)

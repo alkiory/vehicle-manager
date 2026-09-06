@@ -808,7 +808,7 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
           return (T) DatabaseModule_ProvideMaintenanceRecordDaoFactory.provideMaintenanceRecordDao(singletonCImpl.provideVehicleDatabaseProvider.get());
 
           case 11: // com.example.vehiclemanager.core.data.maintenance.MaintenanceScheduleRepositoryImpl 
-          return (T) new MaintenanceScheduleRepositoryImpl(singletonCImpl.provideMaintenanceScheduleDaoProvider.get());
+          return (T) new MaintenanceScheduleRepositoryImpl(singletonCImpl.provideMaintenanceScheduleDaoProvider.get(), singletonCImpl.activeVehicleRepositoryImplProvider.get());
 
           case 12: // com.example.vehiclemanager.core.data.maintenance.MaintenanceScheduleDao 
           return (T) DatabaseModule_ProvideMaintenanceScheduleDaoFactory.provideMaintenanceScheduleDao(singletonCImpl.provideVehicleDatabaseProvider.get());

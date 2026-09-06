@@ -18,6 +18,9 @@ interface MaintenanceScheduleDao {
     @Query("SELECT * FROM maintenance_schedules ORDER BY id ASC")
     suspend fun findAll(): List<MaintenanceScheduleEntity>
 
+    @Query("SELECT * FROM maintenance_schedules ORDER BY id ASC")
+    fun observeAll(): Flow<List<MaintenanceScheduleEntity>>
+
     @Query("DELETE FROM maintenance_schedules")
     suspend fun deleteAll()
 

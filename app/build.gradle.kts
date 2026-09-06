@@ -78,6 +78,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.work.manager.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
 
     ksp(libs.androidx.room.compiler)
     ksp(libs.hilt.compiler)

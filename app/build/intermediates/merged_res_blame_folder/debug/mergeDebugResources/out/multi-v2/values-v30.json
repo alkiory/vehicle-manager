@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.vehiclemanager.app-mergeDebugResources-63:/values-v30/values-v30.xml",
+            "outputFile": "com.example.vehiclemanager.app-mergeDebugResources-68:/values-v30/values-v30.xml",
             "map": [
                 {
-                    "source": "/home/alkiory-dev/.gradle/caches/8.9/transforms/aed793511738fe0b86bb888751c5b722/transformed/jetified-material3-release/res/values-v30/values-v30.xml",
+                    "source": "/home/alkiory-dev/.gradle/caches/8.9/transforms/4b2355e9354e8b458f643c10afdd73b9/transformed/jetified-material3-release/res/values-v30/values-v30.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

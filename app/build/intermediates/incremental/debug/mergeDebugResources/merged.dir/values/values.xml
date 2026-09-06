@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="http://schemas.android.com/tools" xmlns:ns2="urn:oasis:names:tc:xliff:document:1.2">
     <attr format="reference" name="nestedScrollViewStyle"/>
+    <bool name="enable_system_alarm_service_default">true</bool>
+    <bool name="enable_system_foreground_service_default">true</bool>
+    <bool name="enable_system_job_service_default">false</bool>
+    <bool name="workmanager_test_configuration">false</bool>
     <color name="androidx_core_ripple_material_light">#1f000000</color>
     <color name="androidx_core_secondary_text_default_material_light">#8a000000</color>
     <color name="call_notification_answer_color">#1d873b</color>
@@ -193,6 +197,24 @@
     <string name="m3c_tooltip_pane_description">Tooltip</string>
     <string name="navigation_menu">"Navigation menu"</string>
     <string name="not_selected">Not selected</string>
+    <string name="notification_channel_fuel_price_description">Notifications when fuel prices are favorable</string>
+    <string name="notification_channel_fuel_price_name">Fuel Price Alerts</string>
+    <string name="notification_channel_maintenance_description">Notifications for upcoming maintenance services</string>
+    <string name="notification_channel_maintenance_name">Service Reminders</string>
+    <string name="notification_fuel_price_alert">Good fuel price!</string>
+    <string name="notification_fuel_price_enabled">Fuel price alerts</string>
+    <string name="notification_fuel_price_enabled_desc">Get notified when fuel prices are low</string>
+    <string name="notification_maintenance_enabled">Maintenance reminders</string>
+    <string name="notification_maintenance_enabled_desc">Get notified about upcoming services</string>
+    <string name="notification_permission_rationale">Enable notifications to receive reminders about upcoming services and fuel price alerts.</string>
+    <string name="notification_permission_title">Notifications</string>
+    <string name="notification_price_threshold">Alert when price below</string>
+    <string name="notification_reminder_days">Remind %1$d days before</string>
+    <string name="notification_service_due_soon">Service due soon</string>
+    <string name="notification_service_overdue">Service overdue!</string>
+    <string name="notification_service_upcoming">Upcoming service</string>
+    <string name="notification_settings_description">Configure when and how you receive notifications</string>
+    <string name="notification_settings_title">Notification settings</string>
     <string name="range_end">"Range end"</string>
     <string name="range_start">"Range start"</string>
     <string name="selected">Selected</string>
@@ -284,14 +306,23 @@
         <attr format="reference" name="fontProviderCerts"/>
         
         <attr name="fontProviderFetchStrategy">
-            
+            <!-- The blocking font fetch works as follows.
+              First, check the local cache, then if the requested font is not cached, request the
+              font from the provider and wait until it is finished.  You can change the length of
+              the timeout by modifying fontProviderFetchTimeout.  If the timeout happens, the
+              default typeface will be used instead. -->
             <enum name="blocking" value="0"/>
-            
+            <!-- The async font fetch works as follows.
+              First, check the local cache, then if the requested font is not cached, trigger a
+              request the font and continue with layout inflation. Once the font fetch succeeds, the
+              target text view will be refreshed with the downloaded font data. The
+              fontProviderFetchTimeout will be ignored if async loading is specified. -->
             <enum name="async" value="1"/>
         </attr>
         
         <attr format="integer" name="fontProviderFetchTimeout">
-            
+            <!-- A special value for the timeout. In this case, the blocking font fetching will not
+              timeout and wait until a reply is received from the font provider. -->
             <enum name="forever" value="-1"/>
         </attr>
         

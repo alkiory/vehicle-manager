@@ -4,17 +4,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Dashboard
-import androidx.compose.material.icons.filled.DirectionsCar
-import androidx.compose.material.icons.filled.LocalGasStation
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Build
-import androidx.compose.material.icons.outlined.Dashboard
-import androidx.compose.material.icons.outlined.DirectionsCar
-import androidx.compose.material.icons.outlined.LocalGasStation
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -34,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.size
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
@@ -43,6 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavDestination.Companion.hasRoute
+import com.example.vehiclemanager.core.ui.theme.AppIcons
 import com.example.vehiclemanager.feature.dashboard.DashboardScreen
 import com.example.vehiclemanager.feature.fuel.AddFuelScreen
 import com.example.vehiclemanager.feature.fuel.FuelDetailScreen
@@ -105,40 +96,40 @@ private val primaryDestinations = listOf(
     PrimaryDestination(
         label = "Inicio",
         shortLabel = "Inicio",
-        selectedIcon = Icons.Filled.Dashboard,
-        unselectedIcon = Icons.Outlined.Dashboard,
+        selectedIcon = AppIcons.NavHome,
+        unselectedIcon = AppIcons.NavHome,
         navigate = { it.navigateTo(DashboardRoute) },
         isSelected = { it?.hasRoute<DashboardRoute>() == true },
     ),
     PrimaryDestination(
         label = "Vehículos",
         shortLabel = "Vehículos",
-        selectedIcon = Icons.Filled.DirectionsCar,
-        unselectedIcon = Icons.Outlined.DirectionsCar,
+        selectedIcon = AppIcons.NavVehicles,
+        unselectedIcon = AppIcons.NavVehicles,
         navigate = { it.navigateTo(VehiclesRoute) },
         isSelected = { it?.hasRoute<VehiclesRoute>() == true },
     ),
     PrimaryDestination(
         label = "Combustible",
         shortLabel = "Combustible",
-        selectedIcon = Icons.Filled.LocalGasStation,
-        unselectedIcon = Icons.Outlined.LocalGasStation,
+        selectedIcon = AppIcons.NavFuel,
+        unselectedIcon = AppIcons.NavFuel,
         navigate = { it.navigateTo(FuelRoute) },
         isSelected = { it?.hasRoute<FuelRoute>() == true },
     ),
     PrimaryDestination(
         label = "Servicios",
         shortLabel = "Servicios",
-        selectedIcon = Icons.Filled.Build,
-        unselectedIcon = Icons.Outlined.Build,
+        selectedIcon = AppIcons.NavMaintenance,
+        unselectedIcon = AppIcons.NavMaintenance,
         navigate = { it.navigateTo(MaintenanceRoute) },
         isSelected = { it?.hasRoute<MaintenanceRoute>() == true },
     ),
     PrimaryDestination(
         label = "Ajustes",
         shortLabel = "Ajustes",
-        selectedIcon = Icons.Filled.Settings,
-        unselectedIcon = Icons.Outlined.Settings,
+        selectedIcon = AppIcons.NavSettings,
+        unselectedIcon = AppIcons.NavSettings,
         navigate = { it.navigateTo(SettingsRoute) },
         isSelected = { it?.hasRoute<SettingsRoute>() == true },
     ),
@@ -224,17 +215,33 @@ private fun AppNavigationBar(
                 onClick = { onDestinationSelected(destination) },
                 icon = {
                     Icon(
-                        imageVector = if (selected) destination.selectedIcon else destination.unselectedIcon,
+                        imageVector = destination.selectedIcon,
                         contentDescription = destination.label,
+                        tint = if (selected) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
+                        modifier = Modifier.size(24.dp),
                     )
                 },
-                label = { Text(text = destination.label) },
+                label = {
+                    Text(
+                        text = destination.label,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = if (selected) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
+                    )
+                },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
                 ),
             )
         }
@@ -256,17 +263,33 @@ private fun AppNavigationRail(
                 onClick = { onDestinationSelected(destination) },
                 icon = {
                     Icon(
-                        imageVector = if (selected) destination.selectedIcon else destination.unselectedIcon,
+                        imageVector = destination.selectedIcon,
                         contentDescription = destination.label,
+                        tint = if (selected) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
+                        modifier = Modifier.size(24.dp),
                     )
                 },
-                label = { Text(text = destination.label) },
+                label = {
+                    Text(
+                        text = destination.label,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (selected) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
+                    )
+                },
                 colors = NavigationRailItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
                 ),
             )
         }

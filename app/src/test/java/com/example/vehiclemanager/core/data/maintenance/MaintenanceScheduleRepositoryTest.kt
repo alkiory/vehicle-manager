@@ -1,6 +1,10 @@
 package com.example.vehiclemanager.core.data.maintenance
 
 import com.example.vehiclemanager.core.domain.MaintenanceSchedule
+import com.example.vehiclemanager.core.domain.ActiveVehicleRepository
+import com.example.vehiclemanager.core.domain.Vehicle
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
@@ -34,15 +38,22 @@ class MaintenanceScheduleRepositoryTest {
             lastPerformedKm = null,
             lastPerformedDateMs = 100,
         )
+        val vehicleStateFlow = MutableStateFlow<Vehicle?>(null)
         val repository = MaintenanceScheduleRepositoryImpl(
             object : MaintenanceScheduleDao {
                 override fun observeForVehicle(vehicleId: Long) = flowOf(listOf(schedule.toEntity()))
+                override fun observeAll() = flowOf(listOf(schedule.toEntity()))
                 override suspend fun findById(id: Long) = schedule.toEntity()
                 override suspend fun findAll() = listOf(schedule.toEntity())
                 override suspend fun deleteAll() = Unit
                 override suspend fun insert(schedule: MaintenanceScheduleEntity) = schedule.id
                 override suspend fun update(schedule: MaintenanceScheduleEntity) = Unit
                 override suspend fun delete(schedule: MaintenanceScheduleEntity) = Unit
+            },
+            object : ActiveVehicleRepository {
+                override val activeVehicle: kotlinx.coroutines.flow.StateFlow<Vehicle?> = vehicleStateFlow
+                override suspend fun setActiveVehicle(vehicleId: Long) = Unit
+                override suspend fun clearActiveVehicle() = Unit
             },
         )
 

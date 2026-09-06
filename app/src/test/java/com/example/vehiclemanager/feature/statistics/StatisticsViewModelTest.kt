@@ -86,6 +86,7 @@ class StatisticsViewModelTest {
         private val records: Flow<List<FuelRecord>>,
     ) : FuelRecordRepository {
         override fun observeFuelRecords(vehicleId: Long): Flow<List<FuelRecord>> = records
+        override fun observeRecentPrices(): Flow<List<FuelRecord>> = records
 
         override suspend fun getFuelRecord(id: Long): FuelRecord? = null
 

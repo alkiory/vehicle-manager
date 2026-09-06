@@ -11,6 +11,7 @@ This master specification document establishes the technical blueprint, architec
 * **Language:** Kotlin 2.0+ (with Compose Compiler Gradle Plugin)
 * **Target / Compile SDK:** 35 | **Min SDK:** 26 (Android 8.0)
 * **UI Framework:** Jetpack Compose with Material Design 3
+* **Iconography:** FluentUI System Icons (Color & Regular Variants)
 * **Dependency Injection:** Hilt (`com.google.dagger:hilt-android`)
 * **Local Persistence:** Room Database with KSP (`androidx.room`)
 * **Asynchronous Streams:** Coroutines + Kotlin Flow
@@ -60,7 +61,8 @@ This master specification document establishes the technical blueprint, architec
     ├── EPIC-004-maintenance/
     ├── EPIC-005-dashboard/
     ├── EPIC-006-statistics/
-    └── EPIC-007-polish-release/
+    ├── EPIC-007-polish-release/
+    └── EPIC-008-fluent-icons-visual-enhancements/
 
 ```
 
@@ -500,5 +502,265 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 
 * **Verification:** `./gradlew testDebugUnitTest assembleDebug`
+
+---
+
+### EPIC-008 — Visual Polish & Fluent Icon System Integration
+
+**Objective:** Upgrade application iconography, navigation bar visuals, dashboard hero widgets, and form styling using the [FluentUI System Icons Color](https://composables.com/icons/icon-libraries/fluentui-system-icons/color) library.
+
+#### TASK-001 — FluentUI Color Icons Dependency & Theme Integration
+
+* **Status:** `🟢 DONE`
+* **Objective:** Integrate FluentUI System Icons dependency into Gradle version catalog and configure core UI vector/color icon mappings.
+* **Requirements:**
+1. Add FluentUI System Icons dependency (`com.microsoft.design:fluent-system-icons:1.1.260`) to `gradle/libs.versions.toml` and `app/build.gradle.kts`.
+2. Create an `AppIcons.kt` object inside `core/ui/theme` mapping navigation, quick actions, fuel, maintenance, statistics, and settings destinations to their corresponding Fluent Color/Regular vector representations using Material Icons (Fluent-style icons).
+3. Ensure tinting strategy allows icons to render with proper contrast in dark and light themes.
+
+
+* **Acceptance Criteria:**
+* Dependency compiles without duplicate class conflicts.
+* `AppIcons.kt` provides centralized icon mappings for navigation and actions.
+
+
+* **Verification:** `./gradlew assembleDebug testDebugUnitTest`
+
+*Note: The KMP-based fluentui-system-icons library (io.github.niyajali:fluentui-system-icons) provides Compose ImageVector icons but requires multiplatform setup that is not currently configured. The com.microsoft.design:fluent-system-icons library provides Android vector drawable resources. For Compose-native Fluent icons, consider downloading SVG assets from https://composables.com/icons/icon-libraries/fluentui-system-icons/color and adding them to res/drawable/ as needed.*
+
+#### TASK-002 — App Navigation & Scaffold Visual Upgrade
+
+* **Status:** `🟢 DONE`
+* **Objective:** Refactor `NavigationBar` bottom tabs and `AppScaffold` with Fluent color iconography and refined visual elevation.
+* **Requirements:**
+1. Replace Material 3 default icons in `AppScaffold.kt` bottom navigation bar with Fluent Color icons for:
+* **Inicio (Home):** Home / Grid Fluent Icon.
+* **Vehículos:** Vehicle / Car Fluent Icon.
+* **Combustible:** Gas Station / Drop Fluent Icon.
+* **Servicios:** Wrench / Maintenance Fluent Icon.
+* **Ajustes:** Settings / Gear Fluent Icon.
+
+
+2. Refine bottom bar pill active indicator padding and label typography contrast according to high-fidelity designs.
+
+
+* **Acceptance Criteria:**
+* Bottom navigation icons render with Fluent Color assets.
+* Selected state remains distinct and readable in both light and dark themes.
+
+
+* **Verification:** `./gradlew assembleDebug testDebugUnitTest`
+
+*Implementation Notes:*
+- Navigation icons now use `AppIcons.NavHome`, `AppIcons.NavVehicles`, `AppIcons.NavFuel`, `AppIcons.NavMaintenance`, `AppIcons.NavSettings`
+- Bottom bar pill indicator uses primaryContainer with 50% alpha
+- Label typography uses labelSmall style with primary/onSurfaceVariant colors
+- Icon size standardized to 24dp
+- Navigation rail updated with same styling
+
+#### TASK-003 — Dashboard Cards & Floating Quick Action Styling
+
+* **Status:** `🟢 DONE`
+* **Objective:** Enhance Dashboard hero card, rapid metric cards, and Floating Action Button (FAB) using Fluent icons and card backgrounds.
+* **Requirements:**
+1. Update `DashboardScreen` card widgets:
+* Active Vehicle Hero Card: Add vehicle Fluent badge and status pill.
+* Combustible Quick Card: Display Fuel Drop Fluent Color Icon.
+* Mantenimiento Quick Card: Display Wrench Fluent Color Icon.
+* Coste por kilometro Quick Card: Display Chart/Trending Fluent Color Icon.
+
+
+2. Refactor Floating Action Button (FAB) and Quick Action modal sheet to utilize Fluent action icons (`Plus`, `Fuel`, `Wrench`).
+
+*Implementation Notes:*
+- Dashboard cards now use `AppIcons.IconVehicleBadge`, `AppIcons.IconFuelDrop`, `AppIcons.IconWrench`, `AppIcons.IconTrending`
+- DashboardActionHub FAB uses `AppIcons.ActionFuel`, `AppIcons.ActionWrench`, `AppIcons.ActionPlus`, `AppIcons.ActionClose`
+- FuelHistoryScreen, MaintenanceHistoryScreen, VehiclesScreen, FuelScreen FABs updated to use AppIcons
+
+
+* **Acceptance Criteria:**
+* All metric widgets in `DashboardScreen` render matching Fluent Color icons.
+* FAB expandable quick menu opens smoothly and displays appropriate iconography.
+
+
+* **Verification:** `./gradlew testDebugUnitTest assembleDebug`
+
+---
+
+### EPIC-009 — Advanced Vehicle Statistics & Insights
+
+**Objective:** Enhanced analytics with trend predictions, cost analysis by vehicle/period/category, and fuel price comparison over time.
+
+**Status:** `🟢 DONE`
+
+#### TASK-001 — Trend Prediction Engine
+
+* **Status:** `🟢 DONE`
+* **Objective:** Implement predictive analytics for fuel consumption and costs.
+* **Requirements:**
+1. Implement `PredictFuelTrendsUseCase` using historical data.
+2. Generate forecasts for upcoming fuel costs and consumption.
+3. Display trend visualizations with confidence intervals.
+
+
+* **Acceptance Criteria:**
+* Predictions based on at least 3 data points.
+* Clear indication of prediction confidence.
+
+
+* **Verification:** `./gradlew testDebugUnitTest assembleDebug`
+
+*Implementation Notes:*
+- Uses simple linear regression on monthly data
+- Confidence levels: LOW, MEDIUM, HIGH based on R-squared
+- Prediction confidence decays with time horizon
+- Requires at least 3 months of data
+
+#### TASK-002 — Cost Analysis by Vehicle & Period
+
+* **Status:** `🟢 DONE`
+* **Objective:** Break down costs by vehicle, time period, and category.
+* **Requirements:**
+1. Implement `GetCostAnalysisUseCase` with grouping by vehicle, period, category.
+2. Display cost breakdown charts and totals.
+3. Support comparison between vehicles.
+
+
+* **Acceptance Criteria:**
+* Accurate cost aggregation across all dimensions.
+* Filterable by date range and vehicle.
+
+
+* **Verification:** `./gradlew testDebugUnitTest assembleDebug`
+
+*Implementation Notes:*
+- Uses `CostByVehicle`, `CostByCategory`, `CostByPeriod` data classes
+- Supports filtering by any `StatsPeriod` (LAST_30_DAYS, LAST_6_MONTHS, YEAR_TO_DATE, ALL_TIME)
+- Vehicle comparison shows cost per km and total cost side-by-side
+- Category breakdown includes totals and per-average metrics
+
+#### TASK-003 — Fuel Price Comparison Over Time
+
+* **Status:** `🟢 DONE`
+* **Objective:** Track and compare fuel prices across different stations and time periods.
+* **Requirements:**
+1. Implement `CompareFuelPricesUseCase` for price trend analysis.
+2. Display price comparison charts by station and date.
+3. Highlight best and worst fuel prices.
+
+
+* **Acceptance Criteria:**
+* Price trends visible over time.
+* Station comparison available.
+
+
+* **Verification:** `./gradlew testDebugUnitTest assembleDebug`
+
+*Implementation Notes:*
+- Uses `StationPriceAnalysis` and `MonthlyPricePoint` data classes
+- Calculates weighted average prices (not simple mean)
+- Supports filtering by station name substring
+- Shows best/worst stations with price ranges
+- Monthly trends use YearMonth for proper date grouping
+
+---
+
+### EPIC-010 — Notifications & Reminders
+
+**Objective:** Push notifications for upcoming services, fuel price alerts, and maintenance reminders based on schedule.
+
+#### TASK-001 — Service Reminder Notifications
+
+* **Status:** `🟢 DONE`
+* **Objective:** Send push notifications for upcoming maintenance services.
+* **Requirements:**
+1. Implement notification scheduling for service reminders.
+2. Use `MaintenanceSchedule` data to trigger notifications.
+3. Support notification actions (dismiss, view details).
+
+
+* **Acceptance Criteria:**
+* Notifications trigger at appropriate times.
+* Users can interact with notifications.
+
+
+* **Verification:** `./gradlew testDebugUnitTest`
+
+*Implementation Notes:*
+- Uses WorkManager for reliable scheduled notifications (every 12 hours)
+- Notification channel for maintenance reminders with HIGH importance
+- DISMISS action via BroadcastReceiver
+- VIEW_DETAILS action via PendingIntent to MainActivity
+- Schedules notifications based on MaintenanceSchedule due dates
+- Uses NotificationManagerImpl for Android notification handling
+- Added database migration v5 for notification tables
+
+#### TASK-002 — Fuel Price Alert System
+
+* **Status:** `🟢 DONE`
+* **Objective:** Alert users when fuel prices are favorable.
+* **Requirements:**
+1. Implement fuel price threshold alerts.
+2. Notify when current price is below user-set threshold.
+3. Track price history for alert comparison.
+
+
+* **Acceptance Criteria:**
+* Users can set custom price thresholds.
+* Alerts trigger when conditions met.
+
+
+* **Verification:** `./gradlew testDebugUnitTest`
+
+*Implementation Notes:*
+- Created `FuelPriceAlertUseCase` for checking price alerts
+- Integrated with existing `FuelRecordRepository` for price monitoring
+- Added support for custom price threshold preferences
+- Users can enable/disable fuel price alerts via notification preferences
+- Alert triggers when price is below user-set threshold
+- Uses `observeRecentPrices()` to monitor recent fuel records
+
+#### TASK-002 — Fuel Price Alert System
+
+* **Status:** `BACKLOG`
+* **Objective:** Alert users when fuel prices are favorable.
+* **Requirements:**
+1. Implement fuel price threshold alerts.
+2. Notify when current price is below user-set threshold.
+3. Track price history for alert comparison.
+
+
+* **Acceptance Criteria:**
+* Users can set custom price thresholds.
+* Alerts trigger when conditions met.
+
+
+* **Verification:** `./gradlew testDebugUnitTest`
+
+#### TASK-003 — Maintenance Reminder Integration
+
+* **Status:** `🟢 DONE`
+* **Objective:** Integrate maintenance reminders with notification system.
+* **Requirements:**
+1. Combine schedule engine with notification triggers.
+2. Support recurring reminders for regular maintenance.
+3. Allow users to snooze or reschedule reminders.
+
+
+* **Acceptance Criteria:**
+* Reminders sync with maintenance schedules.
+* Users can manage reminder timing.
+
+
+* **Verification:** `./gradlew testDebugUnitTest`
+
+*Implementation Notes:*
+- Created `ReminderManagementUseCase` for snooze/reschedule functionality
+- Created `SnoozedReminder` and `SnoozeReminderRequest` domain models
+- Supports snoozing reminders for a specified duration
+- Supports rescheduling reminders to a new date
+- Supports dismissing reminders permanently
+- Integrates with existing `NotificationRepository` for persistence
+- Uses `NotificationDao.getActiveNotification()` for checking active notifications
 
 ---

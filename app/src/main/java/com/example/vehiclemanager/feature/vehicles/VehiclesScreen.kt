@@ -14,9 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.vehiclemanager.core.domain.Vehicle
 import com.example.vehiclemanager.core.ui.components.VehicleManagerAppBar
 import com.example.vehiclemanager.core.ui.components.VehicleManagerScreen
+import com.example.vehiclemanager.core.ui.theme.AppIcons
 
 @Composable
 fun VehiclesScreen(
@@ -57,7 +55,7 @@ fun VehiclesScreen(
                     contentDescription = "Añadir vehículo"
                 },
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                Icon(imageVector = AppIcons.ActionPlus, contentDescription = null)
             }
         },
     ) {
@@ -133,7 +131,7 @@ private fun VehicleListEmptyHint(onAddVehicle: () -> Unit) {
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector = Icons.Default.DirectionsCar,
+                    imageVector = AppIcons.IconVehicleBadge,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.size(28.dp),
@@ -155,7 +153,7 @@ private fun VehicleListEmptyHint(onAddVehicle: () -> Unit) {
                 onClick = onAddVehicle,
                 modifier = Modifier.padding(top = 12.dp),
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                Icon(imageVector = AppIcons.ActionPlus, contentDescription = null, modifier = Modifier.size(18.dp))
                 Text(text = "  Añadir vehículo")
             }
         }
@@ -197,7 +195,7 @@ private fun VehicleRow(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector = Icons.Default.DirectionsCar,
+                    imageVector = AppIcons.IconVehicleBadge,
                     contentDescription = null,
                     tint = if (isActive) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.size(22.dp),

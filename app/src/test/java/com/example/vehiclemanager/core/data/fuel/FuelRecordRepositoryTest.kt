@@ -57,6 +57,7 @@ class FuelRecordRepositoryTest {
         val repository = FuelRecordRepositoryImpl(
             object : FuelRecordDao {
                 override fun observeForVehicle(vehicleId: Long) = flowOf(listOf(record.toEntity()))
+                override fun observeRecent() = flowOf(listOf(record.toEntity()))
                 override suspend fun findById(id: Long) = record.toEntity()
                 override suspend fun findAll() = listOf(record.toEntity())
                 override suspend fun deleteAll() = Unit

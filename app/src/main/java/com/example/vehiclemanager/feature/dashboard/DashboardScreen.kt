@@ -14,14 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.DirectionsCar
-import androidx.compose.material.icons.filled.Opacity
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -48,6 +40,7 @@ import com.example.vehiclemanager.core.domain.FuelRecord
 import com.example.vehiclemanager.core.domain.UpcomingService
 import com.example.vehiclemanager.core.ui.components.VehicleManagerAppBar
 import com.example.vehiclemanager.core.ui.components.VehicleManagerScreen
+import com.example.vehiclemanager.core.ui.theme.AppIcons
 import com.example.vehiclemanager.core.ui.theme.HeroGradientEnd
 import com.example.vehiclemanager.core.ui.theme.HeroGradientStart
 import java.time.LocalTime
@@ -92,7 +85,7 @@ private fun DashboardContent(
         Box(modifier = modifier.padding(24.dp), contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
-                    imageVector = Icons.Default.DirectionsCar,
+                    imageVector = AppIcons.IconVehicleBadge,
                     contentDescription = null,
                     modifier = Modifier.size(48.dp),
                     tint = MaterialTheme.colorScheme.primary,
@@ -166,7 +159,7 @@ private fun GreetingHeader() {
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector = Icons.Default.Person,
+                imageVector = AppIcons.NavHome,
                 contentDescription = "Perfil",
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
             )
@@ -222,7 +215,7 @@ private fun VehicleHeroCard(vehicleName: String, odometerKm: Long) {
                 )
             }
             Icon(
-                imageVector = Icons.Default.DirectionsCar,
+                imageVector = AppIcons.IconVehicleBadge,
                 contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier.size(40.dp),
@@ -260,7 +253,7 @@ private fun QuickSummarySection(
         ) {
             QuickSummaryCard(
                 modifier = Modifier.weight(1f),
-                icon = Icons.Default.Opacity,
+                icon = AppIcons.IconFuelDrop,
                 accentColor = MaterialTheme.colorScheme.primary,
                 accentContainer = MaterialTheme.colorScheme.primaryContainer,
                 label = "Combustible",
@@ -277,7 +270,7 @@ private fun QuickSummarySection(
             )
             QuickSummaryCard(
                 modifier = Modifier.weight(1f),
-                icon = Icons.Default.Build,
+                icon = AppIcons.IconWrench,
                 accentColor = MaterialTheme.colorScheme.secondary,
                 accentContainer = MaterialTheme.colorScheme.secondaryContainer,
                 label = "Mantenimiento",
@@ -288,7 +281,7 @@ private fun QuickSummarySection(
         Box(modifier = Modifier.padding(top = 12.dp)) {
             QuickSummaryCard(
                 modifier = Modifier.fillMaxWidth(),
-                icon = Icons.Default.TrendingUp,
+                icon = AppIcons.IconTrending,
                 accentColor = MaterialTheme.colorScheme.tertiary,
                 accentContainer = MaterialTheme.colorScheme.tertiaryContainer,
                 label = "Coste por kilómetro",
@@ -362,7 +355,7 @@ private fun DashboardActionHub(
                     onAddFuel()
                 },
                 text = { Text(text = "Añadir repostaje") },
-                icon = { Icon(imageVector = Icons.Default.Opacity, contentDescription = null) },
+                icon = { Icon(imageVector = AppIcons.ActionFuel, contentDescription = null) },
                 modifier = Modifier.semantics { contentDescription = "Añadir repostaje" },
             )
             ExtendedFloatingActionButton(
@@ -371,7 +364,7 @@ private fun DashboardActionHub(
                     onAddMaintenance()
                 },
                 text = { Text(text = "Añadir servicio") },
-                icon = { Icon(imageVector = Icons.Default.Build, contentDescription = null) },
+                icon = { Icon(imageVector = AppIcons.ActionWrench, contentDescription = null) },
                 modifier = Modifier.semantics { contentDescription = "Añadir servicio" },
             )
         }
@@ -380,7 +373,7 @@ private fun DashboardActionHub(
             modifier = Modifier.semantics { contentDescription = "Acciones rápidas" },
         ) {
             Icon(
-                imageVector = if (expanded) Icons.Default.Close else Icons.Default.Add,
+                imageVector = if (expanded) AppIcons.ActionClose else AppIcons.ActionPlus,
                 contentDescription = null,
             )
         }

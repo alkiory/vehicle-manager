@@ -13,6 +13,11 @@ data class MaintenanceSchedule(
 interface MaintenanceScheduleRepository {
     fun observeSchedules(vehicleId: Long): kotlinx.coroutines.flow.Flow<List<MaintenanceSchedule>>
 
+    /**
+     * Observe schedules for the currently active vehicle.
+     */
+    fun observeSchedulesForActiveVehicle(): kotlinx.coroutines.flow.Flow<List<MaintenanceSchedule>>
+
     suspend fun getSchedule(id: Long): MaintenanceSchedule?
 
     suspend fun insertSchedule(schedule: MaintenanceSchedule): Long

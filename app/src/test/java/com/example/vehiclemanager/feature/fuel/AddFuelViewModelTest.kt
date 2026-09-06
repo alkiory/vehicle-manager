@@ -156,6 +156,8 @@ class AddFuelViewModelTest {
         var inserted: FuelRecord? = null
         override fun observeFuelRecords(vehicleId: Long): Flow<List<FuelRecord>> =
             MutableStateFlow(emptyList())
+        override fun observeRecentPrices(): Flow<List<FuelRecord>> =
+            MutableStateFlow(emptyList())
 
         override suspend fun getFuelRecord(id: Long): FuelRecord? = null
         override suspend fun insertFuelRecord(record: FuelRecord): Long {

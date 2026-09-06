@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Opacity
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -23,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.vehiclemanager.core.ui.components.VehicleManagerAppBar
 import com.example.vehiclemanager.core.ui.components.VehicleManagerScreen
+import com.example.vehiclemanager.core.ui.theme.AppIcons
 
 @Composable
 fun FuelScreen(
@@ -32,7 +30,7 @@ fun FuelScreen(
         topBar = { VehicleManagerAppBar(title = "Combustible") },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddFuel) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Añadir repostaje")
+                Icon(imageVector = AppIcons.ActionFuel, contentDescription = "Añadir repostaje")
             }
         },
     ) {
@@ -50,7 +48,7 @@ fun FuelScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector = Icons.Default.Opacity,
+                    imageVector = AppIcons.IconFuelDrop,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.size(28.dp),
@@ -68,7 +66,7 @@ fun FuelScreen(
                 modifier = Modifier.padding(top = 8.dp),
             )
             Button(onClick = onAddFuel, modifier = Modifier.padding(top = 20.dp)) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                Icon(imageVector = AppIcons.ActionPlus, contentDescription = null, modifier = Modifier.size(18.dp))
                 Text(text = "  Añadir repostaje")
             }
         }

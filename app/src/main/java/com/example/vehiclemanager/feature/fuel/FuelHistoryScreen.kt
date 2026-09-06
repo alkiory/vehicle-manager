@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.vehiclemanager.core.domain.FuelRecord
 import com.example.vehiclemanager.core.ui.components.VehicleManagerAppBar
 import com.example.vehiclemanager.core.ui.components.VehicleManagerScreen
+import com.example.vehiclemanager.core.ui.theme.AppIcons
 import java.text.DateFormat
 import java.util.Date
 
@@ -70,7 +69,7 @@ fun FuelHistoryScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddFuel) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Añadir repostaje")
+                Icon(imageVector = AppIcons.ActionFuel, contentDescription = "Añadir repostaje")
             }
         },
     ) {

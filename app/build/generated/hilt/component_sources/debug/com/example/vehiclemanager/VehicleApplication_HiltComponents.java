@@ -1,5 +1,6 @@
 package com.example.vehiclemanager;
 
+import androidx.hilt.work.HiltWrapper_WorkerFactoryModule;
 import com.example.vehiclemanager.core.data.database.BackupDataModule;
 import com.example.vehiclemanager.core.data.database.DatabaseModule;
 import com.example.vehiclemanager.core.data.fuel.FuelDataModule;
@@ -149,6 +150,7 @@ public final class VehicleApplication_HiltComponents {
           DatabaseModule.class,
           FuelDataModule.class,
           HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule.class,
+          HiltWrapper_WorkerFactoryModule.class,
           MaintenanceDataModule.class,
           MaintenanceScheduleDataModule.class,
           ThemeDataModule.class,

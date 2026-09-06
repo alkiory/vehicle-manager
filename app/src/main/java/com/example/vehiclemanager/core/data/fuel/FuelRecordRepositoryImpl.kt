@@ -13,6 +13,10 @@ class FuelRecordRepositoryImpl @Inject constructor(
         .observeForVehicle(vehicleId)
         .map { entities -> entities.map(FuelRecordEntity::toDomain) }
 
+    override fun observeRecentPrices(): Flow<List<FuelRecord>> = fuelRecordDao
+        .observeRecent()
+        .map { entities -> entities.map(FuelRecordEntity::toDomain) }
+
     override suspend fun getFuelRecord(id: Long): FuelRecord? = fuelRecordDao
         .findById(id)
         ?.toDomain()

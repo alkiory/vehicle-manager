@@ -120,7 +120,7 @@ data class MonthlyFuelPrice(
     val averagePricePerLiterCents: Long,
 )
 
-private fun StatsPeriod.startDateMs(currentDateMs: Long): Long? = when (this) {
+fun StatsPeriod.startDateMs(currentDateMs: Long): Long? = when (this) {
     StatsPeriod.LAST_30_DAYS -> currentDateMs.minusDaysSafely(30)
     StatsPeriod.LAST_6_MONTHS -> currentDateMs.minusMonthsSafely(6)
     StatsPeriod.YEAR_TO_DATE -> Instant.ofEpochMilli(currentDateMs)

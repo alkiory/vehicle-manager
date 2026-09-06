@@ -19,4 +19,25 @@
     <string name="unsaved_changes_message">Your changes have not been saved yet. If you leave this screen they will be lost.</string>
     <string name="unsaved_changes_discard">Discard</string>
     <string name="unsaved_changes_keep">Keep editing</string>
+
+    <!-- Notification strings -->
+    <string name="notification_channel_maintenance_name">Service Reminders</string>
+    <string name="notification_channel_maintenance_description">Notifications for upcoming maintenance services</string>
+    <string name="notification_channel_fuel_price_name">Fuel Price Alerts</string>
+    <string name="notification_channel_fuel_price_description">Notifications when fuel prices are favorable</string>
+
+    <string name="notification_service_overdue">Service overdue!</string>
+    <string name="notification_service_due_soon">Service due soon</string>
+    <string name="notification_service_upcoming">Upcoming service</string>
+    <string name="notification_fuel_price_alert">Good fuel price!</string>
+    <string name="notification_settings_title">Notification settings</string>
+    <string name="notification_settings_description">Configure when and how you receive notifications</string>
+    <string name="notification_maintenance_enabled">Maintenance reminders</string>
+    <string name="notification_maintenance_enabled_desc">Get notified about upcoming services</string>
+    <string name="notification_fuel_price_enabled">Fuel price alerts</string>
+    <string name="notification_fuel_price_enabled_desc">Get notified when fuel prices are low</string>
+    <string name="notification_reminder_days">Remind %1$d days before</string>
+    <string name="notification_price_threshold">Alert when price below</string>
+    <string name="notification_permission_title">Notifications</string>
+    <string name="notification_permission_rationale">Enable notifications to receive reminders about upcoming services and fuel price alerts.</string>
 </resources>

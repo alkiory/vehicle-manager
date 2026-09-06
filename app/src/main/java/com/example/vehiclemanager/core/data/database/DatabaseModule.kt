@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.vehiclemanager.core.data.fuel.FuelRecordDao
 import com.example.vehiclemanager.core.data.maintenance.MaintenanceRecordDao
 import com.example.vehiclemanager.core.data.maintenance.MaintenanceScheduleDao
+import com.example.vehiclemanager.core.data.notification.NotificationDao
 import com.example.vehiclemanager.core.data.vehicle.VehicleDao
 import dagger.Module
 import dagger.Provides
@@ -24,7 +25,7 @@ object DatabaseModule {
         context,
         VehicleDatabase::class.java,
         DATABASE_NAME,
-    ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build()
+    ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build()
 
     @Provides
     @Singleton
@@ -43,6 +44,11 @@ object DatabaseModule {
     @Singleton
     fun provideMaintenanceScheduleDao(database: VehicleDatabase): MaintenanceScheduleDao =
         database.maintenanceScheduleDao()
+
+    @Provides
+    @Singleton
+    fun provideNotificationDao(database: VehicleDatabase): NotificationDao =
+        database.notificationDao()
 
     private const val DATABASE_NAME = "vehicle_manager.db"
 }
