@@ -15,6 +15,7 @@ coroutines = "1.9.0"
 dataStore = "1.1.1"
 workManager = "2.10.0"
 hiltWork = "1.2.0"
+splashScreen = "1.0.1"
 junit = "4.13.2"
 androidxTestJunit = "1.2.1"
 androidxTestCore = "1.6.1"
@@ -44,6 +45,7 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-work-manager-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
 androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWork" }
 androidx-work-manager-gcm = { module = "androidx.work:work-gcm", version.ref = "workManager" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
 androidx-work-manager-testing = { module = "androidx.work:work-testing", version.ref = "workManager" }
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }

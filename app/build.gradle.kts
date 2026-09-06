@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.work.manager.runtime.ktx)
     implementation(libs.androidx.hilt.work)
+    implementation(libs.androidx.core.splashscreen)
 
     ksp(libs.androidx.room.compiler)
     ksp(libs.hilt.compiler)

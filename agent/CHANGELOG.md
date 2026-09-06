@@ -233,9 +233,74 @@ All tasks in EPIC-008 (Visual Polish & Fluent Icon System Integration) are now c
 
 ---
 
+---
+
+## EPIC-012 — Custom Application Icon & Animated Startup Screen (DONE)
+
+### TASK-001 — Adaptive App Launcher Icon Design (DONE)
+
+- Created vector drawable `ic_launcher_foreground.xml` with:
+  - Vehicle silhouette iconography
+  - Fuel drop icon
+  - Blue (#3D5AFE) circular background
+- Created vector drawable `ic_launcher_background.xml` with dark navy (#1A237E) background
+- Created adaptive icon definitions in `res/mipmap-anydpi-v26/`:
+  - `ic_launcher.xml` (square)
+  - `ic_launcher_round.xml` (round)
+- Created fallback vector icons for all density buckets: mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi, nodpi
+- Added `Theme.SplashScreen` configuration in `res/values/themes.xml`
+- Added `splash_background` color (#1A237E)
+- Updated `AndroidManifest.xml` with:
+  - `android:icon="@mipmap/ic_launcher"`
+  - `android:roundIcon="@mipmap/ic_launcher_round"`
+  - Activity theme `@style/Theme.App.Starting`
+- Added `androidx.core:core-splashscreen` dependency for splash screen support
+- Icon designed to fit within 75% safe zone for adaptive icon masks
+
+**Verification:** `./gradlew assembleDebug testDebugUnitTest` — builds and tests pass.
+
+### TASK-002 — Animated Startup Splash Screen Integration (DONE)
+
+- Created `SplashScreenAnimation` composable with:
+  - Scale animation (0 → 1, 800ms, FastOutSlowInEasing)
+  - Alpha/fade animation (0 → 1, 600ms with 200ms delay)
+  - 120dp icon size centered on screen
+- Updated `MainActivity` to:
+  - Call `installSplashScreen()` before `setContent()`
+  - Pass splashScreen to `VehicleManagerApp` composable
+  - Use `splashScreen.setKeepOnScreenCondition { false }` to dismiss after animation
+- Added `LaunchedEffect` to trigger splash screen dismissal after composition
+- Animation uses AndroidX Compose animation APIs:
+  - `animateFloatAsState` for smooth interpolations
+  - `FastOutSlowInEasing` for natural motion feel
+- Splash screen displays app icon with smooth entrance animation before transitioning to main app
+
+**Verification:** `./gradlew assembleDebug testDebugUnitTest` — builds and tests pass.
+
+---
+
+## EPIC-012 Complete ✅
+
+Both tasks in EPIC-012 are now complete:
+- TASK-001: Adaptive App Launcher Icon Design ✅
+- TASK-002: Animated Startup Splash Screen Integration ✅
+
+The app now features:
+- Custom branded launcher icon with vehicle + fuel drop iconography
+- Adaptive icon support for all Android versions (API 26+)
+- Fallback icons for older devices
+- Animated splash screen on app launch
+- Smooth scale/fade animations (800ms scale, 600ms fade)
+- Professional app launch experience
+
+---
+
 ## Next Steps
 
-### EPIC-011 Remaining
-- Add time picker dialog for HH:MM selection
-- Add validation error display
-- Consider adding notification sound preferences
+### EPIC-013 — Offline Local Storage & Device Lifecycle Persistence Verification
+- TASK-001: Room DB & DataStore Cold Boot Persistence Audit (BACKLOG)
+- TASK-002: Database Schema Auto-Migration & Schema Safety (BACKLOG)
+
+Other potential future epics:
+- EPIC-014: Advanced widget support
+- EPIC-015: CSV/Excel import functionality

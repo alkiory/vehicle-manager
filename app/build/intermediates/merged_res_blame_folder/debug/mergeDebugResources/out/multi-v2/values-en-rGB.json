@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.vehiclemanager.app-mergeDebugResources-68:/values-en-rGB/values-en-rGB.xml",
+            "outputFile": "com.example.vehiclemanager.app-mergeDebugResources-69:/values-en-rGB/values-en-rGB.xml",
             "map": [
                 {
-                    "source": "/home/alkiory-dev/.gradle/caches/8.9/transforms/bea8066f265d499ed6f827a5d9dd02f7/transformed/core-1.15.0/res/values-en-rGB/values-en-rGB.xml",
+                    "source": "/home/alkiory-dev/.gradle/caches/8.9/transforms/9e3c83937884453519ab5196a6d9e6e9/transformed/core-1.15.0/res/values-en-rGB/values-en-rGB.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "/home/alkiory-dev/.gradle/caches/8.9/transforms/39c2ed1607e3dcf58d9c385946201e99/transformed/jetified-foundation-release/res/values-en-rGB/values-en-rGB.xml",
+                    "source": "/home/alkiory-dev/.gradle/caches/8.9/transforms/d5a36e27ad7e50574f8f93f229578758/transformed/jetified-foundation-release/res/values-en-rGB/values-en-rGB.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
@@ -38,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "/home/alkiory-dev/.gradle/caches/8.9/transforms/d472081ce74ef9ae42aea669a766e8de/transformed/jetified-ui-release/res/values-en-rGB/values-en-rGB.xml",
+                    "source": "/home/alkiory-dev/.gradle/caches/8.9/transforms/aaec2ec42058dc88102a517055f09d61/transformed/jetified-ui-release/res/values-en-rGB/values-en-rGB.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -55,7 +55,7 @@
                     }
                 },
                 {
-                    "source": "/home/alkiory-dev/.gradle/caches/8.9/transforms/4b2355e9354e8b458f643c10afdd73b9/transformed/jetified-material3-release/res/values-en-rGB/values-en-rGB.xml",
+                    "source": "/home/alkiory-dev/.gradle/caches/8.9/transforms/fb32906f3838cfe40a0876818566f21d/transformed/jetified-material3-release/res/values-en-rGB/values-en-rGB.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

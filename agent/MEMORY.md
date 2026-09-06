@@ -94,10 +94,39 @@ The Statistics screen provides:
 
 ---
 
-## Upcoming Epics
+---
 
-### EPIC-012 — (TBD)
-- Future enhancements can be added here
+## EPIC-012 — Custom Application Icon & Animated Startup Screen
+
+### TASK-001 — Adaptive App Launcher Icon Design (DONE)
+
+- Created vector drawable `ic_launcher_foreground.xml` with:
+  - Vehicle silhouette iconography
+  - Fuel drop icon
+  - Blue (#3D5AFE) circular background
+- Created vector drawable `ic_launcher_background.xml` with dark navy (#1A237E) background
+- Created adaptive icon definitions in `res/mipmap-anydpi-v26/`:
+  - `ic_launcher.xml` (square)
+  - `ic_launcher_round.xml` (round)
+- Created fallback vector icons for all density buckets: mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi, nodpi
+- Added `Theme.SplashScreen` configuration in `res/values/themes.xml`
+- Added `splash_background` color (#1A237E)
+- Updated `AndroidManifest.xml` with:
+  - `android:icon="@mipmap/ic_launcher"`
+  - `android:roundIcon="@mipmap/ic_launcher_round"`
+  - Activity theme `@style/Theme.App.Starting`
+- Added `androidx.core:core-splashscreen` dependency for splash screen support
+- Icon designed to fit within 75% safe zone for adaptive icon masks
+
+### TASK-002 — Animated Startup Splash Screen Integration (DONE)
+
+---
+
+## EPIC-012 Complete ✅
+
+Both tasks in EPIC-012 are complete:
+- TASK-001: Adaptive App Launcher Icon Design ✅
+- TASK-002: Animated Startup Splash Screen Integration ✅
 
 ---
 

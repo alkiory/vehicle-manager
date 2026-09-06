@@ -1,5 +1,10 @@
 R_DEF: Internal format may change without notice
 local
+color splash_background
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+mipmap ic_launcher
+mipmap ic_launcher_round
 string add_vehicle
 string add_vehicle_content_description
 string app_name
@@ -50,4 +55,6 @@ string unsaved_changes_message
 string unsaved_changes_title
 string vehicles_description
 string vehicles_title
+style Theme.App.Starting
+style Theme.App.Starting.Legacy
 style Theme.VehicleManager

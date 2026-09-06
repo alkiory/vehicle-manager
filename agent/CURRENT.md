@@ -1,51 +1,73 @@
 # Current Task
 
-- **Task:** EPIC-011 — TASK-001 (Reminder Preferences UI & Data Layer)
-- **State:** IN_PROGRESS (UI Complete - Time Picker Enhanced)
-- **Objective:** Settings screen now has reminder configuration section.
+- **Task:** EPIC-012 — Complete
+- **State:** 🟢 DONE
+- **Objective:** Custom launcher icon and animated splash screen implemented.
 
-## Implementation Summary (TASK-001)
+## EPIC-012 Completion Summary
+
+### TASK-001 — Adaptive App Launcher Icon Design: 🟢 DONE
 
 **Completed:**
-✅ Created `ReminderPreferences` domain model with all required fields
-✅ Created `ReminderPreferencesRepository` with DataStore persistence
-✅ Created `ReminderPreferencesDataStore` for DataStore operations
-✅ Created `ReminderPreferencesRepositoryImpl` as Hilt-injected implementation
-✅ Created `ReminderDataModule` for Hilt bindings
-✅ Updated `SettingsViewModel` to handle reminder preferences
-✅ Added "Recordatorios" section to Settings screen UI
-✅ Added localization strings
-✅ Implemented time display (HH:MM) for notification time
+- Created `ic_launcher_foreground.xml` with vehicle + fuel drop iconography
+- Created `ic_launcher_background.xml` with dark navy background
+- Created adaptive icon definitions in `mipmap-anydpi-v26/`
+- Created fallback vector icons for all density buckets
+- Created `Theme.SplashScreen` configuration in `themes.xml`
+- Added `splash_background` color
+- Updated `AndroidManifest.xml` with icon references and splash theme
+- Added `androidx.core:core-splashscreen` dependency
 
-**UI Features Added:**
-- Distance de antelación (km): Input numérico
-- Días de antelación: Input numérico
-- Hora de notificación: Display HH:MM
-- Notificación de repostaje: Switch toggle
-- Notificación de presión de neumáticos: Switch toggle
-- Vibrar al notificar: Switch toggle
+**Icon Design:**
+- Foreground: White vehicle silhouette + fuel drop on blue (#3D5AFE) circle
+- Background: Dark navy (#1A237E) for consistent brand identity
+- Adaptive icon with proper 25% safe zone margins
 
-**Files Created:**
-- `core/domain/ReminderPreferences.kt`
-- `core/domain/ReminderPreferencesRepository.kt`
-- `core/data/settings/ReminderPreferencesDataStore.kt`
-- `core/data/settings/ReminderPreferencesRepositoryImpl.kt`
-- `core/data/settings/ReminderDataModule.kt`
+### TASK-002 — Animated Startup Splash Screen Integration: 🟢 DONE
 
-**Files Modified:**
-- `feature/settings/SettingsViewModel.kt`
-- `feature/settings/SettingsScreen.kt`
-- `res/values/strings.xml`
+**Completed:**
+- Added `SplashScreenAnimation` composable with scale and fade animations
+- Icon scales from 0 to 1 with FastOutSlowInEasing over 800ms
+- Icon fades in with 200ms delay over 600ms
+- Splash screen automatically dismissed after animation completes
+- `installSplashScreen()` called before `setContent()` in MainActivity
+- Theme.App.Starting configured in themes.xml with proper icon and background
+- Uses ic_launcher_foreground drawable for splash icon
+- `splashScreen.setKeepOnScreenCondition { false }` to dismiss after animation
+- AnimatedVisibility composable for smooth transition to main app
 
----
-
-## EPIC-011 Progress
-
-### TASK-001 — Reminder Preferences UI & Data Layer: IN_PROGRESS (90%)
-- Core functionality complete
-- Time picker display implemented
+**Animation Details:**
+- Scale animation: 0 → 1 (800ms, FastOutSlowInEasing)
+- Alpha animation: 0 → 1 (600ms, 200ms delay, FastOutSlowInEasing)
+- Icon size: 120dp centered in screen
+- Smooth transition to AppScaffold after animation completes
 
 **Verification:**
 - `./gradlew assembleDebug` — succeeds
 - `./gradlew testDebugUnitTest` — passes, 0 failures
 
+---
+
+## EPIC-012 Complete ✅
+
+Both tasks in EPIC-012 are now complete:
+- TASK-001: Adaptive App Launcher Icon Design ✅
+- TASK-002: Animated Startup Splash Screen Integration ✅
+
+The app now has a custom branded launcher icon with:
+- Vehicle + fuel drop iconography
+- Adaptive icon support for all Android versions
+- Animated splash screen on app launch
+- Smooth scale/fade animations
+
+---
+
+## Ready for Next Epic
+
+### EPIC-013 — Offline Local Storage & Device Lifecycle Persistence Verification
+- TASK-001: Room DB & DataStore Cold Boot Persistence Audit (BACKLOG)
+- TASK-002: Database Schema Auto-Migration & Schema Safety (BACKLOG)
+
+Other potential future epics:
+- EPIC-014: Advanced widget support
+- EPIC-015: CSV/Excel import functionality

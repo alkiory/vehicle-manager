@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="splash_background">#1A237E</color>
     <string name="add_vehicle">Add vehicle</string>
     <string name="add_vehicle_content_description">Add vehicle</string>
     <string name="app_name">Vehicle Manager</string>
@@ -50,5 +51,15 @@
     <string name="unsaved_changes_title">Discard unsaved changes?</string>
     <string name="vehicles_description">Manage your vehicles and keep a portable backup of your data.</string>
     <string name="vehicles_title">Vehicles</string>
-    <style name="Theme.VehicleManager" parent="android:style/Theme.Material.Light.NoActionBar"/>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.VehicleManager</item>
+    </style>
+    <style name="Theme.App.Starting.Legacy" parent="Theme.VehicleManager">
+        <item name="android:windowBackground">@color/splash_background</item>
+    </style>
+    <style name="Theme.VehicleManager" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowSplashScreenAnimationDuration">300</item>
+    </style>
 </resources>

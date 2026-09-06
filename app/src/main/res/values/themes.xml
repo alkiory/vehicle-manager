@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Main app theme -->
+    <style name="Theme.VehicleManager" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowSplashScreenAnimationDuration">300</item>
+    </style>
+
+    <!-- Splash screen theme for API 31+ -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.VehicleManager</item>
+    </style>
+
+    <!-- Splash screen theme for API 26-30 (uses legacy splash) -->
+    <style name="Theme.App.Starting.Legacy" parent="Theme.VehicleManager">
+        <item name="android:windowBackground">@color/splash_background</item>
+    </style>
+</resources>
