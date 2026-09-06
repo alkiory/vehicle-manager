@@ -40,6 +40,7 @@ object AppIcons {
     val NavFuel = Icons.Filled.LocalGasStation
     val NavMaintenance = Icons.Filled.Build
     val NavSettings = Icons.Filled.Settings
+    val NavChart = Icons.Filled.TrendingUp
 
     // Quick actions / FAB
     val ActionPlus = Icons.Filled.Add
@@ -85,6 +86,7 @@ enum class NavIcon(val vector: ImageVector) {
     Fuel(Icons.Filled.LocalGasStation),
     Maintenance(Icons.Filled.Build),
     Settings(Icons.Filled.Settings),
+    Chart(Icons.Filled.TrendingUp),
 }
 
 /**

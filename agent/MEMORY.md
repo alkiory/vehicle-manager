@@ -49,6 +49,26 @@
 - **Navigation Rail:** Uses same icon and color conventions as bottom navigation bar
 - **Content Descriptions:** Each navigation item has proper contentDescription for accessibility
 
+---
+
+## Navigation Structure
+
+The app has 6 main navigation tabs:
+1. **Inicio** - Dashboard with vehicle summary and quick actions
+2. **Vehículos** - Vehicle list and management
+3. **Estadísticas** - Statistics and charts (period-based: 30 días, 6 meses, este año, todo)
+4. **Combustible** - Fuel history and refueling
+5. **Servicios** - Maintenance history
+6. **Ajustes** - App settings and data management
+
+The Statistics screen provides:
+- Period selector chips for filtering data
+- Summary card with total costs breakdown
+- Bar chart for monthly expenditure
+- Line chart for fuel price trends
+
+---
+
 ## Upcoming Epics
 
 ### EPIC-011 — (TBD)

@@ -186,6 +186,24 @@ All tasks in EPIC-008 (Visual Polish & Fluent Icon System Integration) are now c
 
 ---
 
+---
+
+## Navigation Enhancement
+
+### Statistics Tab Added to Main Navigation
+
+- Added "Estadísticas" tab to bottom navigation bar and navigation rail
+- Uses `AppIcons.NavChart` (TrendingUp icon) for the tab
+- Provides access to statistics screen with:
+  - Period selector: 30 días, 6 meses, Este año, Todo
+  - Resumen card: Coste total, Combustible, Mantenimiento, Distancia, Coste/km, Gasto mensual medio
+  - Gráfico de gasto mensual (barras)
+  - Gráfico de tendencia de precio del combustible (líneas)
+- Statistics screen already existed in `feature/statistics/StatisticsScreen.kt` but was not accessible from main navigation
+- Verification: `./gradlew assembleDebug testDebugUnitTest` — builds and tests pass
+
+---
+
 ## Next Steps
 
 ### EPIC-011 — (TBD)

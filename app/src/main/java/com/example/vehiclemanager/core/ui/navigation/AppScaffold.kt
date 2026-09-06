@@ -110,6 +110,14 @@ private val primaryDestinations = listOf(
         isSelected = { it?.hasRoute<VehiclesRoute>() == true },
     ),
     PrimaryDestination(
+        label = "Estadísticas",
+        shortLabel = "Estadísticas",
+        selectedIcon = AppIcons.NavChart,
+        unselectedIcon = AppIcons.NavChart,
+        navigate = { it.navigateTo(StatsRoute) },
+        isSelected = { it?.hasRoute<StatsRoute>() == true },
+    ),
+    PrimaryDestination(
         label = "Combustible",
         shortLabel = "Combustible",
         selectedIcon = AppIcons.NavFuel,
