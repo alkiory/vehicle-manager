@@ -21,6 +21,8 @@ import com.example.vehiclemanager.core.data.maintenance.MaintenanceRecordDao;
 import com.example.vehiclemanager.core.data.maintenance.MaintenanceRecordRepositoryImpl;
 import com.example.vehiclemanager.core.data.maintenance.MaintenanceScheduleDao;
 import com.example.vehiclemanager.core.data.maintenance.MaintenanceScheduleRepositoryImpl;
+import com.example.vehiclemanager.core.data.settings.ReminderPreferencesDataStore;
+import com.example.vehiclemanager.core.data.settings.ReminderPreferencesRepositoryImpl;
 import com.example.vehiclemanager.core.data.theme.ThemePreferenceRepositoryImpl;
 import com.example.vehiclemanager.core.data.vehicle.ActiveVehicleDataModule_Companion_ProvideActiveVehicleDataStoreFactory;
 import com.example.vehiclemanager.core.data.vehicle.ActiveVehicleRepositoryImpl;
@@ -586,7 +588,7 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
           return (T) new MaintenanceHistoryViewModel(singletonCImpl.activeVehicleRepositoryImplProvider.get(), singletonCImpl.bindMaintenanceRecordRepositoryProvider.get());
 
           case 8: // com.example.vehiclemanager.feature.settings.SettingsViewModel 
-          return (T) new SettingsViewModel(singletonCImpl.themePreferenceRepositoryImplProvider.get());
+          return (T) new SettingsViewModel(singletonCImpl.themePreferenceRepositoryImplProvider.get(), singletonCImpl.reminderPreferencesRepositoryImplProvider.get());
 
           case 9: // com.example.vehiclemanager.feature.statistics.StatisticsViewModel 
           return (T) new StatisticsViewModel(singletonCImpl.activeVehicleRepositoryImplProvider.get(), singletonCImpl.bindFuelRecordRepositoryProvider.get(), singletonCImpl.bindMaintenanceRecordRepositoryProvider.get(), new CalculateVehicleStatsUseCase());
@@ -708,6 +710,10 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
 
     private Provider<MaintenanceScheduleRepository> bindMaintenanceScheduleRepositoryProvider;
 
+    private Provider<ReminderPreferencesDataStore> reminderPreferencesDataStoreProvider;
+
+    private Provider<ReminderPreferencesRepositoryImpl> reminderPreferencesRepositoryImplProvider;
+
     private Provider<RoomVehicleBackupRepository> roomVehicleBackupRepositoryProvider;
 
     private Provider<VehicleBackupRepository> bindVehicleBackupRepositoryProvider;
@@ -737,7 +743,9 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
       this.provideMaintenanceScheduleDaoProvider = DoubleCheck.provider(new SwitchingProvider<MaintenanceScheduleDao>(singletonCImpl, 12));
       this.maintenanceScheduleRepositoryImplProvider = new SwitchingProvider<>(singletonCImpl, 11);
       this.bindMaintenanceScheduleRepositoryProvider = DoubleCheck.provider((Provider) maintenanceScheduleRepositoryImplProvider);
-      this.roomVehicleBackupRepositoryProvider = new SwitchingProvider<>(singletonCImpl, 13);
+      this.reminderPreferencesDataStoreProvider = DoubleCheck.provider(new SwitchingProvider<ReminderPreferencesDataStore>(singletonCImpl, 14));
+      this.reminderPreferencesRepositoryImplProvider = DoubleCheck.provider(new SwitchingProvider<ReminderPreferencesRepositoryImpl>(singletonCImpl, 13));
+      this.roomVehicleBackupRepositoryProvider = new SwitchingProvider<>(singletonCImpl, 15);
       this.bindVehicleBackupRepositoryProvider = DoubleCheck.provider((Provider) roomVehicleBackupRepositoryProvider);
     }
 
@@ -813,7 +821,13 @@ public final class DaggerVehicleApplication_HiltComponents_SingletonC {
           case 12: // com.example.vehiclemanager.core.data.maintenance.MaintenanceScheduleDao 
           return (T) DatabaseModule_ProvideMaintenanceScheduleDaoFactory.provideMaintenanceScheduleDao(singletonCImpl.provideVehicleDatabaseProvider.get());
 
-          case 13: // com.example.vehiclemanager.core.data.database.RoomVehicleBackupRepository 
+          case 13: // com.example.vehiclemanager.core.data.settings.ReminderPreferencesRepositoryImpl 
+          return (T) new ReminderPreferencesRepositoryImpl(singletonCImpl.reminderPreferencesDataStoreProvider.get());
+
+          case 14: // com.example.vehiclemanager.core.data.settings.ReminderPreferencesDataStore 
+          return (T) new ReminderPreferencesDataStore(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 15: // com.example.vehiclemanager.core.data.database.RoomVehicleBackupRepository 
           return (T) new RoomVehicleBackupRepository(singletonCImpl.provideVehicleDatabaseProvider.get(), singletonCImpl.provideVehicleDaoProvider.get(), singletonCImpl.provideFuelRecordDaoProvider.get(), singletonCImpl.provideMaintenanceRecordDaoProvider.get(), singletonCImpl.provideMaintenanceScheduleDaoProvider.get(), singletonCImpl.activeVehicleRepositoryImplProvider.get());
 
           default: throw new AssertionError(id);

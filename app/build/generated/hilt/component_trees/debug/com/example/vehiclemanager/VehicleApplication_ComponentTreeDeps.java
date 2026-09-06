@@ -25,6 +25,7 @@ import hilt_aggregated_deps._com_example_vehiclemanager_core_data_database_Datab
 import hilt_aggregated_deps._com_example_vehiclemanager_core_data_fuel_FuelDataModule;
 import hilt_aggregated_deps._com_example_vehiclemanager_core_data_maintenance_MaintenanceDataModule;
 import hilt_aggregated_deps._com_example_vehiclemanager_core_data_maintenance_MaintenanceScheduleDataModule;
+import hilt_aggregated_deps._com_example_vehiclemanager_core_data_settings_ReminderDataModule;
 import hilt_aggregated_deps._com_example_vehiclemanager_core_data_theme_ThemeDataModule;
 import hilt_aggregated_deps._com_example_vehiclemanager_core_data_vehicle_ActiveVehicleDataModule;
 import hilt_aggregated_deps._com_example_vehiclemanager_core_data_vehicle_VehicleDataModule;
@@ -98,6 +99,7 @@ import hilt_aggregated_deps._dagger_hilt_android_internal_modules_HiltWrapper_Ac
         _com_example_vehiclemanager_core_data_fuel_FuelDataModule.class,
         _com_example_vehiclemanager_core_data_maintenance_MaintenanceDataModule.class,
         _com_example_vehiclemanager_core_data_maintenance_MaintenanceScheduleDataModule.class,
+        _com_example_vehiclemanager_core_data_settings_ReminderDataModule.class,
         _com_example_vehiclemanager_core_data_theme_ThemeDataModule.class,
         _com_example_vehiclemanager_core_data_vehicle_ActiveVehicleDataModule.class,
         _com_example_vehiclemanager_core_data_vehicle_VehicleDataModule.class,

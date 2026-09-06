@@ -40,4 +40,19 @@
     <string name="notification_price_threshold">Alert when price below</string>
     <string name="notification_permission_title">Notifications</string>
     <string name="notification_permission_rationale">Enable notifications to receive reminders about upcoming services and fuel price alerts.</string>
+
+    <!-- Reminder Settings -->
+    <string name="reminder_settings_title">Recordatorios</string>
+    <string name="reminder_settings_description">Configura cuándo y cómo recibir recordatorios</string>
+    <string name="reminder_advance_distance_label">Distancia de antelación</string>
+    <string name="reminder_advance_distance_hint">Ej: 500</string>
+    <string name="reminder_advance_distance_unit">km antes</string>
+    <string name="reminder_advance_days_label">Días de antelación</string>
+    <string name="reminder_advance_days_hint">Ej: 7</string>
+    <string name="reminder_advance_days_unit">días antes</string>
+    <string name="reminder_notification_time_label">Mejor hora para notificar</string>
+    <string name="reminder_notification_time_format">%02d:%02d</string>
+    <string name="reminder_fuel_enabled">Notificación de repostaje</string>
+    <string name="reminder_tire_pressure_enabled">Notificación de presión de neumáticos</string>
+    <string name="reminder_vibrate_enabled">Vibrar al notificar</string>
 </resources>

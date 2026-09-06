@@ -204,7 +204,38 @@ All tasks in EPIC-008 (Visual Polish & Fluent Icon System Integration) are now c
 
 ---
 
+---
+
+## EPIC-011 — Enhanced Notification Settings
+
+### TASK-001 — Reminder Preferences UI & Data Layer (IN_PROGRESS)
+
+- Created `ReminderPreferences` domain model with:
+  - `advanceDistanceKm`: Distance before service due to show notification
+  - `advanceDays`: Days before service due to show notification
+  - `notificationTimeHours`/`notificationTimeMinutes`: Preferred notification time
+  - `fuelNotificationsEnabled`: Toggle for fuel notifications
+  - `tirePressureNotificationsEnabled`: Toggle for tire pressure alerts
+  - `vibrateOnNotification`: Toggle for vibration
+- Created `ReminderPreferencesRepository` interface with DataStore persistence
+- Created `ReminderPreferencesDataStore` for DataStore operations
+- Created `ReminderPreferencesRepositoryImpl` as Hilt-injected implementation
+- Created `ReminderDataModule` for Hilt bindings
+- Updated `SettingsViewModel` to combine theme and reminder preferences
+- Added "Recordatorios" section to Settings screen with:
+  - Numeric input for advance distance (km)
+  - Numeric input for advance days
+  - Time display (HH:MM) for notification time
+  - Switches for fuel notifications, tire pressure notifications, vibrate
+- Added localization strings for all new UI elements
+
+**Verification:** `./gradlew assembleDebug testDebugUnitTest` — builds and tests pass.
+
+---
+
 ## Next Steps
 
-### EPIC-011 — (TBD)
-- Future enhancements can be added here
+### EPIC-011 Remaining
+- Add time picker dialog for HH:MM selection
+- Add validation error display
+- Consider adding notification sound preferences

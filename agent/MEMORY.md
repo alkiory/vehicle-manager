@@ -69,9 +69,34 @@ The Statistics screen provides:
 
 ---
 
+---
+
+## EPIC-011 — Enhanced Notification Settings (IN_PROGRESS)
+
+### Reminder Preferences Architecture
+- **Domain**: `ReminderPreferences` data class, `ReminderPreferencesRepository` interface
+- **Data**: `ReminderPreferencesDataStore` (DataStore), `ReminderPreferencesRepositoryImpl`
+- **Presentation**: `SettingsViewModel` (combined state), `SettingsScreen` (new "Recordatorios" section)
+
+### Preferences Stored
+- `advanceDistanceKm`: Long - Distance in km before service due
+- `advanceDays`: Int - Days before service due
+- `notificationTimeHours`: Int - Hour for notification (0-23)
+- `notificationTimeMinutes`: Int - Minute for notification (0-59)
+- `fuelNotificationsEnabled`: Boolean - Fuel notification toggle
+- `tirePressureNotificationsEnabled`: Boolean - Tire pressure notification toggle
+- `vibrateOnNotification`: Boolean - Vibration toggle
+
+### Persistence
+- Uses Android DataStore Preferences
+- Preferences file: "reminder_preferences"
+- All preferences have sensible defaults
+
+---
+
 ## Upcoming Epics
 
-### EPIC-011 — (TBD)
+### EPIC-012 — (TBD)
 - Future enhancements can be added here
 
 ---

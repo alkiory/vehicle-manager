@@ -6,6 +6,7 @@ import com.example.vehiclemanager.core.data.database.DatabaseModule;
 import com.example.vehiclemanager.core.data.fuel.FuelDataModule;
 import com.example.vehiclemanager.core.data.maintenance.MaintenanceDataModule;
 import com.example.vehiclemanager.core.data.maintenance.MaintenanceScheduleDataModule;
+import com.example.vehiclemanager.core.data.settings.ReminderDataModule;
 import com.example.vehiclemanager.core.data.theme.ThemeDataModule;
 import com.example.vehiclemanager.core.data.vehicle.ActiveVehicleDataModule;
 import com.example.vehiclemanager.core.data.vehicle.VehicleDataModule;
@@ -153,6 +154,7 @@ public final class VehicleApplication_HiltComponents {
           HiltWrapper_WorkerFactoryModule.class,
           MaintenanceDataModule.class,
           MaintenanceScheduleDataModule.class,
+          ReminderDataModule.class,
           ThemeDataModule.class,
           ActivityRetainedCBuilderModule.class,
           ServiceCBuilderModule.class,

@@ -1,35 +1,51 @@
 # Current Task
 
-- **Task:** EPIC-010 — Complete & Bug Fixes
-- **State:** 🟢 DONE
-- **Objective:** Notifications complete + odometer persistence bug fixed
+- **Task:** EPIC-011 — TASK-001 (Reminder Preferences UI & Data Layer)
+- **State:** IN_PROGRESS (UI Complete - Time Picker Enhanced)
+- **Objective:** Settings screen now has reminder configuration section.
 
-## Recent Changes (Bug Fixes & UI Enhancements)
+## Implementation Summary (TASK-001)
 
-### Bug Fix: Fuel Odometer Persistence
-- **Issue:** Vehicle odometer not updating after saving fuel records
-- **Fix:** `AddFuelViewModel` now updates `primaryOdometerKm` via `VehicleRepository`
-- Added `VehicleRepository` dependency injection
-- Matches existing behavior in `AddMaintenanceViewModel`
+**Completed:**
+✅ Created `ReminderPreferences` domain model with all required fields
+✅ Created `ReminderPreferencesRepository` with DataStore persistence
+✅ Created `ReminderPreferencesDataStore` for DataStore operations
+✅ Created `ReminderPreferencesRepositoryImpl` as Hilt-injected implementation
+✅ Created `ReminderDataModule` for Hilt bindings
+✅ Updated `SettingsViewModel` to handle reminder preferences
+✅ Added "Recordatorios" section to Settings screen UI
+✅ Added localization strings
+✅ Implemented time display (HH:MM) for notification time
 
-### UI Enhancement: Fuel Form Total Cost Field
-- Added visible `totalCost` input to `AddFuelScreen`
-- Field order: Odometer → Price/Liter → Total Cost → Liters
-- Auto-calculated fields display as read-only
+**UI Features Added:**
+- Distance de antelación (km): Input numérico
+- Días de antelación: Input numérico
+- Hora de notificación: Display HH:MM
+- Notificación de repostaje: Switch toggle
+- Notificación de presión de neumáticos: Switch toggle
+- Vibrar al notificar: Switch toggle
 
-## EPIC-010 Completion Summary
+**Files Created:**
+- `core/domain/ReminderPreferences.kt`
+- `core/domain/ReminderPreferencesRepository.kt`
+- `core/data/settings/ReminderPreferencesDataStore.kt`
+- `core/data/settings/ReminderPreferencesRepositoryImpl.kt`
+- `core/data/settings/ReminderDataModule.kt`
 
-All three tasks in EPIC-010 (Notifications & Reminders) are complete:
-- TASK-001: Service Reminder Notifications ✅
-- TASK-002: Fuel Price Alert System ✅
-- TASK-003: Maintenance Reminder Integration ✅
+**Files Modified:**
+- `feature/settings/SettingsViewModel.kt`
+- `feature/settings/SettingsScreen.kt`
+- `res/values/strings.xml`
+
+---
+
+## EPIC-011 Progress
+
+### TASK-001 — Reminder Preferences UI & Data Layer: IN_PROGRESS (90%)
+- Core functionality complete
+- Time picker display implemented
 
 **Verification:**
 - `./gradlew assembleDebug` — succeeds
 - `./gradlew testDebugUnitTest` — passes, 0 failures
 
----
-
-## Ready for Next Task
-
-EPIC-010 is complete. Ready to proceed with new features or enhancements.

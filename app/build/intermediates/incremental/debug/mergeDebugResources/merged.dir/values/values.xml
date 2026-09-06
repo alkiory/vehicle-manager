@@ -217,6 +217,19 @@
     <string name="notification_settings_title">Notification settings</string>
     <string name="range_end">"Range end"</string>
     <string name="range_start">"Range start"</string>
+    <string name="reminder_advance_days_hint">Ej: 7</string>
+    <string name="reminder_advance_days_label">Días de antelación</string>
+    <string name="reminder_advance_days_unit">días antes</string>
+    <string name="reminder_advance_distance_hint">Ej: 500</string>
+    <string name="reminder_advance_distance_label">Distancia de antelación</string>
+    <string name="reminder_advance_distance_unit">km antes</string>
+    <string name="reminder_fuel_enabled">Notificación de repostaje</string>
+    <string name="reminder_notification_time_format">%02d:%02d</string>
+    <string name="reminder_notification_time_label">Mejor hora para notificar</string>
+    <string name="reminder_settings_description">Configura cuándo y cómo recibir recordatorios</string>
+    <string name="reminder_settings_title">Recordatorios</string>
+    <string name="reminder_tire_pressure_enabled">Notificación de presión de neumáticos</string>
+    <string name="reminder_vibrate_enabled">Vibrar al notificar</string>
     <string name="selected">Selected</string>
     <string name="state_empty">Empty</string>
     <string name="state_off">Off</string>
@@ -306,23 +319,14 @@
         <attr format="reference" name="fontProviderCerts"/>
         
         <attr name="fontProviderFetchStrategy">
-            <!-- The blocking font fetch works as follows.
-              First, check the local cache, then if the requested font is not cached, request the
-              font from the provider and wait until it is finished.  You can change the length of
-              the timeout by modifying fontProviderFetchTimeout.  If the timeout happens, the
-              default typeface will be used instead. -->
+            
             <enum name="blocking" value="0"/>
-            <!-- The async font fetch works as follows.
-              First, check the local cache, then if the requested font is not cached, trigger a
-              request the font and continue with layout inflation. Once the font fetch succeeds, the
-              target text view will be refreshed with the downloaded font data. The
-              fontProviderFetchTimeout will be ignored if async loading is specified. -->
+            
             <enum name="async" value="1"/>
         </attr>
         
         <attr format="integer" name="fontProviderFetchTimeout">
-            <!-- A special value for the timeout. In this case, the blocking font fetching will not
-              timeout and wait until a reply is received from the font provider. -->
+            
             <enum name="forever" value="-1"/>
         </attr>
         
