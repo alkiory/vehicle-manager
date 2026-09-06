@@ -33,6 +33,11 @@ android {
                 "proguard-rules.pro",
             )
         }
+        debug {
+            // Esto cambia el ID en debug a: com.example.vehiclemanager.debug
+            applicationIdSuffix = ".debug"
+            resValue("string", "app_name", "Vehicle Manager (Dev)")
+        }
     }
 
     compileOptions {
