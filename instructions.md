@@ -256,5 +256,110 @@ $$\text{BACKLOG} \longrightarrow \text{READY} \longrightarrow \text{IN\_PROGRESS
 
 ---
 
-### EPIC-014 — (TBD)
-- Future enhancements can be added here
+### EPIC-014 — Refactorización de Estadísticas, Timeline Drivvo y Autonomía
+
+**Objetivo:** Corregir los cálculos de distancia recorrida y coste por km, unificar el feed histórico en la pantalla de Inicio al estilo Drivvo y agregar el estimado de km restantes para el próximo repostaje.
+
+#### TASK-001 — Corrección del Cálculo de Distancia Recorrida y Coste por Km
+* **Status:** `🟢 DONE`
+* **Objective:** Refactorizar `CalculateVehicleStatsUseCase` para usar el odómetro inicial del vehículo como punto de referencia base cuando no existan suficientes repostajes.
+* **Requirements:**
+  1. Utilizar `Vehicle.initialOdometerKm` como baseline.
+  2. $\text{Distancia Recorrida} = \text{Odómetro Máximo Actual} - \text{Odómetro Inicial}$.
+  3. $\text{Coste por Km} = \frac{\text{Gasto Total (Combustible + Mantenimiento)}}{\text{Distancia Recorrida}}$. Si la distancia es $> 0$, retornar el valor exacto en centavos/km en lugar de `InsufficientData`.
+* **Acceptance Criteria:**
+  * Al ingresar un único repostaje que suba el odómetro (ej: de 188,107 km a 188,427 km), la distancia recorrida refleja inmediatamente `320 km` y el coste por km computa $\frac{50.00}{320} = 0.156\text{ €/km}$.
+* **Verification:** `./gradlew testDebugUnitTest`
+
+#### TASK-002 — Timeline Histórico Unificado en Inicio (Estilo Drivvo)
+* **Status:** `🟢 DONE`
+* **Objective:** Implementar un feed cronológico vertical en `DashboardScreen` que unifique eventos de repostaje, servicios y odómetro.
+* **Requirements:**
+  1. Crear `GetUnifiedTimelineUseCase` unificando `FuelRecord` y `MaintenanceRecord` ordenados por `timestampMs` descendente.
+  2. Diseñar la línea de tiempo Compose (`TimelineItem`) con conector vertical e iconos temáticos:
+     * Repostajes: Icono de gasolinera con importe, litros y precio/L.
+     * Mantenimientos: Icono de servicio con taller y costo.
+
+**Implementation Summary:**
+- Created `GetUnifiedTimelineUseCase` in `core/domain` unifying fuel and maintenance records
+- Timeline sorted by timestamp descending (most recent first)
+- Includes `groupByMonth()` method for month-based grouping with spending totals
+- Created sealed class `TimelineEvent` with `FuelRecordEvent` and `MaintenanceRecordEvent` subtypes
+- Created `TimelineMonth` data class for month separators
+- Updated `DashboardViewModel` to include timeline data
+- Added `TimelineSection` composable to `DashboardScreen`
+- Timeline items feature:
+  - Vertical connector line for visual continuity
+  - Thematic icons (fuel station for refuel, wrench for maintenance)
+  - Event details (station name, liters, price/L for fuel; title, workshop for maintenance)
+  - Date and time display
+  - Cost displayed in primary color
+- Month separators (e.g., "ENERO 2026") with total spent that month
+- Empty state when no activities exist
+  3. Agregar separadores de mes (ej. "AGOSTO 2026") con el total gastado en ese período.
+* **Acceptance Criteria:**
+  * La pantalla de Inicio muestra la línea de tiempo completa desplazable.
+* **Verification:** `./gradlew testDebugUnitTest assembleDebug`
+
+#### TASK-003 — Estimador de Autonomía y Próximo Repostaje
+* **Status:** `🟢 DONE`
+* **Objective:** Calcular y mostrar en la tarjeta principal de Inicio los kilómetros estimados restantes antes del próximo repostaje.
+* **Requirements:**
+  1. Implementar `EstimateRemainingRangeUseCase`:
+     $$\text{Autonomía} = \left(\frac{\text{Último nivel cargado (L)}}{\text{Consumo Promedio } (L/100\text{km})}\right) \times 100$$
+  2. Si el consumo medio no está disponible, proyectar basado en el promedio histórico de km entre repostajes.
+  3. Mostrar tarjeta en Inicio: *"Próximo repostaje estimado en X km"*.
+* **Acceptance Criteria:**
+  * La tarjeta de Inicio muestra el widget dinámico de autonomía restante.
+* **Verification:** `./gradlew testDebugUnitTest`
+
+---
+
+### EPIC-015 — UI/UX Layout Fixes, Cost/Km Math Correction & Overdue Service Tracking
+
+**Objetivo:** Corregir el cálculo de coste por kilómetro, convertir la barra de navegación inferior a estilo solo íconos, asegurar la integración del timeline unificado en el Dashboard, e implementar alertas de servicios vencidos.
+
+#### TASK-001 — Corrección del Cálculo de Coste por Kilómetro
+* **Status:** `🟢 DONE`
+* **Objective:** Corregir el cálculo de coste por km para usar euros en lugar de centavos.
+* **Requirements:**
+  1. Fórmula correcta: $\text{Coste/Km} = \frac{\text{Total Cost (EUR)}}{\text{Total Distance (KM)}}$
+  2. Ejemplo: 639.00 EUR / 1992 KM = **0.32 €/km** (no 32.07)
+  3. La UI debe mostrar el sufijo de moneda apropiado (€/km).
+* **Acceptance Criteria:**
+  * El cálculo muestra valores reales en euros por kilómetro.
+* **Verification:** `./gradlew testDebugUnitTest assembleDebug`
+
+#### TASK-002 — Barra de Navegación Inferior Solo Íconos
+* **Status:** `🟢 DONE`
+* **Objective:** Convertir la NavigationBar a layout solo íconos sin textos.
+* **Requirements:**
+  1. En `AppScaffold.kt`, usar `alwaysShowLabel = false` en `NavigationBarItem`.
+  2. Eliminar labels o usar composables vacíos `label = { }`.
+  3. Mantener `contentDescription` en todos los íconos para accesibilidad.
+* **Acceptance Criteria:**
+  * La barra de navegación inferior muestra solo íconos limpios y espaciados.
+* **Verification:** `./gradlew testDebugUnitTest assembleDebug`
+
+#### TASK-003 — Integración del Timeline Unificado en Dashboard
+* **Status:** `🟢 DONE`
+* **Objective:** Asegurar que el TimelineSection se renderice explícitamente en DashboardScreen.
+* **Requirements:**
+  1. TimelineSection debajo de las tarjetas hero.
+  2. Verificar que nuevos eventos aparecen instantáneamente en el feed.
+  3. Tarjetas cronológicas con conector vertical.
+* **Acceptance Criteria:**
+  * La pantalla de Inicio muestra la línea de tiempo completa desplazable.
+* **Verification:** `./gradlew testDebugUnitTest assembleDebug`
+
+#### TASK-004 — Alertas de Seguimiento de Servicios Vencidos
+* **Status:** `🟢 DONE`
+* **Objective:** Mostrar alertas de servicios vencidos y permitir registro rápido.
+* **Requirements:**
+  1. Si una fecha/odómetro de servicio programado ha pasado sin mantenimiento registrado, mostrar tarjeta de alerta "OVERDUE / PENDING REGISTRATION".
+  2. Tarjeta de alerta en Dashboard con botón para registrar servicio completado.
+  3. Notificación de seguimiento: "Did you complete your scheduled service? Tap to log it."
+* **Acceptance Criteria:**
+  * Servicios vencidos se muestran prominentemente en el Dashboard.
+  * El usuario puede registrar un servicio completado directamente desde la alerta.
+* **Verification:** `./gradlew testDebugUnitTest assembleDebug`

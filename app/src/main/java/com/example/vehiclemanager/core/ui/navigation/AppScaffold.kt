@@ -221,6 +221,7 @@ private fun AppNavigationBar(
             NavigationBarItem(
                 selected = selected,
                 onClick = { onDestinationSelected(destination) },
+                alwaysShowLabel = false,
                 icon = {
                     Icon(
                         imageVector = destination.selectedIcon,
@@ -233,17 +234,7 @@ private fun AppNavigationBar(
                         modifier = Modifier.size(24.dp),
                     )
                 },
-                label = {
-                    Text(
-                        text = destination.label,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = if (selected) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        },
-                    )
-                },
+                label = { },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.primary,
