@@ -1,18 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-
-    <!-- Simple white circle for splash screen - matches vehicle/fuel theme -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M54,54m-25,0a25,25 0,1 1,50 0a25,25 0,1 1,-50 0"/>
-
-    <!-- Simple vehicle outline inside circle -->
-    <path
-        android:fillColor="#1A237E"
-        android:pathData="M35,65 L35,58 L40,58 L42,50 L66,50 L68,58 L73,58 L73,65 L69,65 L68,61 L38,61 L37,65 Z"/>
-
-</vector>
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/vehiclemanagericon"
+    android:gravity="center" />
