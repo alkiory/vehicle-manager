@@ -27,14 +27,14 @@ class GetDashboardSummaryUseCase @Inject constructor() {
             )
         }
 
-        val costPerKmCentsX100 = calculateCostPerKm(fuelRecords)
+        val costPerKmEurosX1000 = calculateCostPerKm(fuelRecords)
 
         return DashboardSummary(
             activeVehicle = activeVehicle,
             latestFuelRecord = latestFuelRecord,
             averageConsumptionLitersPer100KmX100 =
                 (consumption as? FuelConsumptionResult.Calculated)?.litersPer100KmX100,
-            costPerKmCentsX100 = costPerKmCentsX100,
+            costPerKmEurosX1000 = costPerKmEurosX1000,
             maintenanceAlerts = upcomingServices.filter { it.status != ServiceStatus.OK },
             upcomingServices = upcomingServices,
         )
@@ -47,11 +47,13 @@ class GetDashboardSummaryUseCase @Inject constructor() {
         )
         val minOdometer = sorted.first().odometerKm
         val maxOdometer = sorted.last().odometerKm
-        val distanceKm = abs(maxOdometer - minOdometer)
+        val distanceKm = maxOdometer - minOdometer
         if (distanceKm <= 0) return null
         val totalCostCents = fuelRecords.sumOf { it.totalCostCents }
         if (totalCostCents <= 0) return null
-        return (totalCostCents * 100L) / distanceKm
+        // Calculate cost per km in euros: (totalCostCents / 100) / distanceKm
+        // Return value in thousandths of euros ( euros * 1000 ) for precision
+        return ((totalCostCents / 100L) * 1000L) / distanceKm
     }
 }
 
@@ -59,7 +61,7 @@ data class DashboardSummary(
     val activeVehicle: Vehicle? = null,
     val latestFuelRecord: FuelRecord? = null,
     val averageConsumptionLitersPer100KmX100: Long? = null,
-    val costPerKmCentsX100: Long? = null,
+    val costPerKmEurosX1000: Long? = null,
     val maintenanceAlerts: List<UpcomingService> = emptyList(),
     val upcomingServices: List<UpcomingService> = emptyList(),
 )
